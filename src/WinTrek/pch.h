@@ -12,6 +12,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <time.h>
+#include <chrono>
 
 //
 // Windows headers

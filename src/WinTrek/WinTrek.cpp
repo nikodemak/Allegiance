@@ -2741,8 +2741,12 @@ public:
 
 		debugf("Reading FFGain, MouseSensitivity\n");
 
+		char szMouseSensitivityDefault[20];
+		//sprintf(szMouseSensitivityDefault, "%f", 1.0f / 512.0f); // Original defaults
+		sprintf(szMouseSensitivityDefault, "0.5"); // Makes BT happy anyway?
+
 		m_pnumFFGain = new ModifiableNumber((float)LoadPreference("FFGain", 10000)); //Imago #187 
-		m_pnumMouseSens = new ModifiableNumber(atof(LoadPreference("MouseSensitivity", "1.0"))); //Imago #215 8/10
+		m_pnumMouseSens = new ModifiableNumber(atof(LoadPreference("MouseSensitivity", szMouseSensitivityDefault))); //Imago #215 8/10
 
 		debugf("TrekResources::Initialize() - Loading fonts.\n");
 
@@ -2924,7 +2928,8 @@ public:
         // Create the virtual joystick image
         //
 
-        m_pjoystickImage = CreateJoystickImage(1.0f / 512.0f);
+		//m_pnumMouseSens
+        m_pjoystickImage = CreateJoystickImage(m_pnumMouseSens->GetValue());
 
         //
         // Initialize what's needed to show the splash screen
@@ -11111,9 +11116,15 @@ public:
         //
 
         if (m_pjoystickImage->GetJoystickEnabled()) {
+
+			
+
             js->controls.jsValues[c_axisYaw  ] = m_pjoystickImage->GetValue(0)->GetValue();
             js->controls.jsValues[c_axisPitch] = m_pjoystickImage->GetValue(1)->GetValue();
             js->controls.jsValues[c_axisRoll ] = 0;
+
+			//debugf("current jsValue: yaw: %f, pitch: %f\n", js->controls.jsValues[c_axisYaw], js->controls.jsValues[c_axisPitch]);
+
         } else {
             if (m_ptrekInput->IsTrekKeyDown(TK_RollModifier, bReadKeyboard)) {
                 js->controls.jsValues[c_axisYaw ] = 0;

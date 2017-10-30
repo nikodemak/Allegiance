@@ -153,10 +153,19 @@ void TopPane::UpdateBits()
 		}
 
 		ZTrace("m_bNeedPaint == true");
-        CalcPaint(); 
-        m_bNeedPaint = true;
-        m_bPaintAll = true;
+        
+		//std::chrono::high_resolution_clock::time_point currentTime = std::chrono::high_resolution_clock::now();
 
+		CalcPaint();
+
+		//std::chrono::duration<double> time_span = std::chrono::duration_cast<std::chrono::duration<double>>(std::chrono::high_resolution_clock::now() - currentTime);
+
+		//debugf("CalcPaint time: %f\n", time_span.count());
+
+
+		m_bNeedPaint = true;
+		m_bPaintAll = true;
+	
         ZTrace("after CalcPaint() m_bPaintAll  ==" + ZString(m_bPaintAll ));
 
 		WinPoint offset( 0, 0 );

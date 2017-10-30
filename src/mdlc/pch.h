@@ -35,6 +35,8 @@
 #include "stdio.h"
 #include "windows.h"
 
+#include <chrono>
+
 #include "zlib.h"
 #include "engine.h"
 #include "effect.h"

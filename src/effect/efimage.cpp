@@ -174,7 +174,43 @@ public:
 
     void MouseMove(IInputProvider* pprovider, const Point& pointMouse, bool bCaptured, bool bInside)
     {
-        if (m_bJoystickEnabled) {
+		float mouseMaxX = 640;
+		float mouseMaxY = 480;
+
+		mouseMaxX += mouseMaxX * m_sensitivity;
+		mouseMaxY += mouseMaxY * m_sensitivity;
+
+		//debugf("MouseMove: x: %f, y: %f, sensitivity: %f \n", pointMouse.X(), pointMouse.Y(), m_sensitivity);
+
+		if (m_bJoystickEnabled) {
+			if (m_bJustEnabled) {
+				pprovider->SetCursorPos(Point(mouseMaxX / 2, mouseMaxY / 2));
+				m_bJustEnabled = false;
+			}
+			else {
+				float pointMouseX = pointMouse.X();
+				float pointMouseY = pointMouse.Y();
+
+				if (pointMouseX > mouseMaxX)
+					pointMouseX = mouseMaxX;
+
+				if (pointMouseY > mouseMaxY)
+					pointMouseY = mouseMaxY;
+
+				float axisPositionX = -1 * (pointMouseX - mouseMaxX / 2) / (mouseMaxX / 2);
+				float axisPositionY = -1 * (pointMouseY - mouseMaxY / 2) / (mouseMaxY / 2);
+
+				//debugf("new axis x: %f, y: %f\n", axisPositionX, axisPositionY);
+
+				m_ppnumber[0]->SetValue(axisPositionX);
+				m_ppnumber[1]->SetValue(axisPositionY);
+			}
+
+
+		}
+
+
+        /*if (m_bJoystickEnabled) {
             if (m_bJustEnabled) {
                 m_bJustEnabled = false;
             } else {
@@ -198,7 +234,7 @@ public:
             }
 
             pprovider->SetCursorPos(Point(320, 240));
-        }
+        }*/
     }
 
     //NYI WheelMove Imago m_ppnumber[2]

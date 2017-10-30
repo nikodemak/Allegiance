@@ -141,6 +141,8 @@ EngineWindow::EngineWindow(	EngineApp *			papp,
 				m_bClickBreak(true), //Imago 7/10 #37
 				m_pEngineApp(papp)
 {
+	m_hrcLastInterval = std::chrono::high_resolution_clock::now();
+
     //
     // Button Event Sink
     //
@@ -1186,6 +1188,8 @@ bool EngineWindow::ShouldDrawFrame()
     }
 }
 
+
+
 void EngineWindow::DoIdle()
 {
     //
@@ -1193,6 +1197,19 @@ void EngineWindow::DoIdle()
     //
 
     UpdateInput();
+
+	/*std::chrono::high_resolution_clock::time_point currentTime = std::chrono::high_resolution_clock::now();
+
+	std::chrono::duration<double> time_span = std::chrono::duration_cast<std::chrono::duration<double>>(currentTime - m_hrcLastInterval);
+
+	debugf("Interval time: %f\n", time_span.count());
+
+	if (time_span.count() < .013F)
+		return;*/
+
+	
+
+	//m_hrcLastInterval = currentTime;
 
     //
     // Switch fullscreen state if requested

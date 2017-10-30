@@ -167,6 +167,9 @@ protected:
     double                     m_fps;  
     double                     m_mspf; 
 
+	std::chrono::high_resolution_clock::time_point m_hrcLastInterval;
+
+
     //////////////////////////////////////////////////////////////////////////////
     //
     // Methods

@@ -9,6 +9,8 @@
 
 #define __MODULE__ "Effect"
 
+#include <chrono>
+
 #include "effect.h"
 #include "efart.h"
 
