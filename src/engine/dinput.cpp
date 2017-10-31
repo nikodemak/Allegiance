@@ -238,7 +238,7 @@ public:
         m_point(0, 0),
         m_vvalueObject(3),
         m_bEnabled(false),
-        m_bBuffered(true),
+        m_bBuffered(false), // BT - 10/17 - Changing mouse from buffered input to direct.
         m_pbuttonEventSource(ButtonEvent::Source::Create()),
 		m_pLogFile(pLogFile),
 		m_z(0) //Imago 8/12/09
@@ -273,11 +273,25 @@ public:
 
         //Imago 8/14/09
         if (m_vvalueObject[2] != NULL) {
-            m_vbuttonObject.SetCount(10);
+
+			// BT - 10/17 - Changing mouse from buffered input to direct.
+			while (m_vbuttonObject.GetCount() < 8)
+			{
+				ButtonDDInputObject* pobject =
+					new ButtonDDInputObject(
+						"Dummy Button",
+						0x0000FFFFUL,
+						GUID_Button
+					);
+
+				m_vbuttonObject.PushEnd(pobject);
+			}
+
             ButtonDDInputObject* pobject = new ButtonDDInputObject("Wheel Up",0x00000301UL,GUID_ZAxis);
-            m_vbuttonObject.Set(8,pobject);
+			m_vbuttonObject.PushEnd(pobject);
+
             pobject = new ButtonDDInputObject("Wheel Down",0x00000401UL,GUID_ZAxis);
-            m_vbuttonObject.Set(9,pobject);
+			m_vbuttonObject.PushEnd(pobject);
            
         }
 
@@ -569,7 +583,8 @@ public:
 
         int count = m_vbuttonObject.GetCount();
 
-        for (int index = 0; index < count; index++) {
+		// BT - 10/17 - Changing mouse from buffered input to direct.
+        for (int index = 0; index < count && index < 8; index++) {
             bool               bDown = ((dims.rgbButtons[index] & 0x80) != 0);
             ModifiableBoolean* pbool = m_vbuttonObject[index]->GetValue();
 

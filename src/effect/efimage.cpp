@@ -174,43 +174,46 @@ public:
 
     void MouseMove(IInputProvider* pprovider, const Point& pointMouse, bool bCaptured, bool bInside)
     {
-		float mouseMaxX = 640;
-		float mouseMaxY = 480;
+		// BT - 10/17 - Messing with alternate mouse input method. Might delete this later on.
+		//float mouseMaxX = 480;
+		//float mouseMaxY = 480;
 
-		mouseMaxX += mouseMaxX * m_sensitivity;
-		mouseMaxY += mouseMaxY * m_sensitivity;
+		//mouseMaxX += mouseMaxX * m_sensitivity;
+		//mouseMaxY += mouseMaxY * m_sensitivity;
 
-		//debugf("MouseMove: x: %f, y: %f, sensitivity: %f \n", pointMouse.X(), pointMouse.Y(), m_sensitivity);
+		////debugf("MouseMove: x: %f, y: %f, sensitivity: %f \n", pointMouse.X(), pointMouse.Y(), m_sensitivity);
 
-		if (m_bJoystickEnabled) {
-			if (m_bJustEnabled) {
-				pprovider->SetCursorPos(Point(mouseMaxX / 2, mouseMaxY / 2));
-				m_bJustEnabled = false;
-			}
-			else {
-				float pointMouseX = pointMouse.X();
-				float pointMouseY = pointMouse.Y();
+		//if (m_bJoystickEnabled) {
+		//	if (m_bJustEnabled) {
+		//		pprovider->SetCursorPos(Point(mouseMaxX / 2, mouseMaxY / 2));
+		//		m_bJustEnabled = false;
+		//	}
+		//	else {
+		//		float pointMouseX = pointMouse.X();
+		//		float pointMouseY = pointMouse.Y();
 
-				if (pointMouseX > mouseMaxX)
-					pointMouseX = mouseMaxX;
-
-				if (pointMouseY > mouseMaxY)
-					pointMouseY = mouseMaxY;
-
-				float axisPositionX = -1 * (pointMouseX - mouseMaxX / 2) / (mouseMaxX / 2);
-				float axisPositionY = -1 * (pointMouseY - mouseMaxY / 2) / (mouseMaxY / 2);
-
-				//debugf("new axis x: %f, y: %f\n", axisPositionX, axisPositionY);
-
-				m_ppnumber[0]->SetValue(axisPositionX);
-				m_ppnumber[1]->SetValue(axisPositionY);
-			}
+		//		//float distanceFromOrigin = sqrt(pow((mouseMaxX / 2 - pointMouseX), 2) + pow((mouseMaxY / 2 - pointMouseY), 2));
+		//		//if(distanceFromOrigin > mouseMaxX / 2)
 
 
-		}
+		//		if (pointMouseX > mouseMaxX)
+		//			pointMouseX = mouseMaxX;
+
+		//		if (pointMouseY > mouseMaxY)
+		//			pointMouseY = mouseMaxY;
+
+		//		float axisPositionX = -1 * (pointMouseX - mouseMaxX / 2) / (mouseMaxX / 2);
+		//		float axisPositionY = -1 * (pointMouseY - mouseMaxY / 2) / (mouseMaxY / 2);
+
+		//		//debugf("new axis x: %f, y: %f\n", axisPositionX, axisPositionY);
+
+		//		m_ppnumber[0]->SetValue(axisPositionX);
+		//		m_ppnumber[1]->SetValue(axisPositionY);
+		//	}
+		//}
 
 
-        /*if (m_bJoystickEnabled) {
+        if (m_bJoystickEnabled) {
             if (m_bJustEnabled) {
                 m_bJustEnabled = false;
             } else {
@@ -234,7 +237,7 @@ public:
             }
 
             pprovider->SetCursorPos(Point(320, 240));
-        }*/
+        }
     }
 
     //NYI WheelMove Imago m_ppnumber[2]
