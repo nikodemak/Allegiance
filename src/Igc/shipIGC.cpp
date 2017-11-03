@@ -2428,20 +2428,16 @@ void    CshipIGC::ExecuteShipMove(Time          timeStart,
             else
                 l = 1.0f;
 
-			//l += .5f;
-
             float   tm = GetTorqueMultiplier() * thrustToVelocity;
             for (int i = 0; (i < 3); i++)
             {
                 float   desiredRate = m_controls.jsValues[i] * l * m_myHullType.GetMaxTurnRate(i);
                 float   maxDelta = tm * m_myHullType.GetTurnTorque(i);
 
-				maxDelta *= 10;
-
                 if (desiredRate < m_turnRates[i] - maxDelta)
                     m_turnRates[i] -= maxDelta;
                 else if (desiredRate > m_turnRates[i] + maxDelta)
-                    m_turnRates[i] += maxDelta; 
+                    m_turnRates[i] += maxDelta;
                 else
                     m_turnRates[i] = desiredRate;
             }
