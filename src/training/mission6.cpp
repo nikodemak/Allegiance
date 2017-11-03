@@ -86,7 +86,15 @@ namespace Training
 		// tm_6_01
 		// Okay, Cadet, here's your Advanced Fighter. There's a base 
 		// outpost here in case you need to replenish yourself.
-        pGoalList->AddGoal (CreatePlaySoundGoal (tm_6_01Sound));
+        //pGoalList->AddGoal (CreatePlaySoundGoal (tm_6_01Sound));
+
+		{
+			Goal*   pGoal = CreatePlaySoundGoal(tm_6_01Sound);
+			pGoal->AddStartAction(new SetDisplayModeAction(TrekWindow::cmCockpit));
+			//pGoal->AddStartAction(new MessageAction("Watch the chat to see what the enemy craft are after."));
+			pGoalList->AddGoal(pGoal);
+		}
+
 
         // wait two more seconds
         pGoalList->AddGoal (new Goal (new ElapsedTimeCondition (2.0f)));
@@ -97,7 +105,7 @@ namespace Training
 		// them. Watch your message stream to see what they're up to.
         {
             Goal*   pGoal = CreatePlaySoundGoal (tm_6_02Sound);
-            pGoal->AddStartAction (new SetDisplayModeAction (TrekWindow::cmCockpit));
+            //pGoal->AddStartAction (new SetDisplayModeAction (TrekWindow::cmCockpit));
             pGoal->AddStartAction (new MessageAction ("Watch the chat to see what the enemy craft are after."));
             pGoalList->AddGoal (pGoal);
         }
