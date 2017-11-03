@@ -161,6 +161,14 @@ public:
         IshipIGC*       pshipSource = trekClient.GetShip()->GetSourceShip();
         IclusterIGC*    pcluster = pshipSource->GetCluster();
 
+		ControlData controlData = trekClient.GetShip()->GetControls();
+
+		Rect        mouseRect = GetViewRect()->GetValue();
+		Point		mousePoint = mouseRect.Center() + Point(controlData.jsValues[0] * -240, controlData.jsValues[1] * -240); // = mouseRect.TransformNDCToImage(Point(10, 10));
+		//debugf("%f, %f\n", controlData.jsValues[0], controlData.jsValues[1]);
+		pcontext->SetBlendMode(BlendModeAdd);
+		pcontext->DrawImage3D(m_psurfaceLeadInRange, Color(0.33f, 0.33f, 0.33f, 0.5f), true, mousePoint);
+
         if (pcluster)
         {
             bool            bIisInRange = false;
