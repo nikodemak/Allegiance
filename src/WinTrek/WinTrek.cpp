@@ -2746,8 +2746,8 @@ public:
 		debugf("Reading FFGain, MouseSensitivity\n");
 
 		char szMouseSensitivityDefault[20];
-		//sprintf(szMouseSensitivityDefault, "%f", 1.0f / 512.0f); // Original defaults
-		sprintf(szMouseSensitivityDefault, "0.5"); // Makes BT happy anyway?
+		sprintf(szMouseSensitivityDefault, "%f", 1.0f / 512.0f); // Original defaults
+		//sprintf(szMouseSensitivityDefault, "0.5"); // Makes BT happy anyway?
 
 		m_pnumFFGain = new ModifiableNumber((float)LoadPreference("FFGain", 10000)); //Imago #187 
 		m_pnumMouseSens = new ModifiableNumber(atof(LoadPreference("MouseSensitivity", szMouseSensitivityDefault))); //Imago #215 8/10
