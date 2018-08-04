@@ -46,7 +46,7 @@ void CVBIBManager::Initialise( )
 		if ((CD3DDevice9::Get()->IsHardwareVP())) {
 			m_iMaxNumBuffers = 256;
 			m_iDefaultBufferSize = 65536;
-			m_iDefaultBufferPool = D3DPOOL_MANAGED;
+			m_iDefaultBufferPool = ALLEG_D9EX_IF(D3DPOOL_DEFAULT, D3DPOOL_MANAGED);
 			m_iDynamicBufferPool = D3DPOOL_DEFAULT;
 		} else {
 			m_iMaxNumBuffers = 128;

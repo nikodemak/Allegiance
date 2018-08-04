@@ -267,7 +267,7 @@ HRESULT CVRAMManager::CreateTexture(TEXHANDLE	texHandle,
     bool		bSystemMemory,
     const char *szTextureName /*= NULL*/,
     uint32_t		dwUsageFlags /*= 0*/,
-    D3DPOOL		texPool /*= D3DPOOL_MANAGED*/)
+    D3DPOOL		texPool /*= D3DPOOL_DEFAULT*/)
 {
 	HRESULT hr;
 	UINT uiNumLevels = 1;
@@ -432,7 +432,7 @@ HRESULT CVRAMManager::CreateTextureD3DX(TEXHANDLE				texHandle,
 		uiNumLevels,
 		0,
 		D3DFMT_UNKNOWN,
-		D3DPOOL_MANAGED,
+        ALLEG_D9EX_IF(D3DPOOL_DEFAULT, D3DPOOL_MANAGED),
 		D3DX_DEFAULT,
 		D3DX_DEFAULT,
 		bColorKey ? 0xFF000000 : 0,

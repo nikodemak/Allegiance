@@ -126,8 +126,8 @@ public:
                 m_size.Y(),
                 false,
                 szTextureName,
-                0,
-                bSystemMemory ? D3DPOOL_SCRATCH : D3DPOOL_MANAGED
+                D3DUSAGE_DYNAMIC,
+                bSystemMemory ? D3DPOOL_SCRATCH : ALLEG_D9EX_IF(D3DPOOL_DEFAULT, D3DPOOL_MANAGED)
             );
             ZAssert( hr == D3D_OK );
             m_ppf = new PixelFormat(pVRAMMan->GetTextureFormat(m_hTexture));

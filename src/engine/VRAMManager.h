@@ -140,7 +140,7 @@ public:
 								bool		bSystemMemory,
                                 const char *	szTextureName = NULL,
                                 uint32_t		dwUsageFlags = 0,
-								D3DPOOL		texPool = D3DPOOL_MANAGED );
+								D3DPOOL		texPool = D3DPOOL_DEFAULT );
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	HRESULT		CreateTextureD3DX(	TEXHANDLE				texHandle,
