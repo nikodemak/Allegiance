@@ -451,7 +451,7 @@ public:
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 private:
 	// Access functions.
-	const LPDIRECT3DDEVICE9EX Device(); // BT - 10/17 - If the D3D device becomes null, re-create it to get it up and rolling again.
+	const ALLEG_D9EX_IF(LPDIRECT3DDEVICE9EX, LPDIRECT3DDEVICE9) Device(); // BT - 10/17 - If the D3D device becomes null, re-create it to get it up and rolling again.
 
 	// State initialisation functions.
 	void		InitialiseDeviceStateCache( SD3D9DeviceStateCache * pCache );

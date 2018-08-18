@@ -818,8 +818,10 @@ HRESULT	CD3DDevice9::ResetDevice(	bool	bWindowed,
 		m_sDevSetupParams.dwMaxTextureSize = 256 << g_DX9Settings.m_iMaxTextureSize;
 		m_sDevSetupParams.maxTextureSize = (CD3DDevice9::EMaxTextureSize) g_DX9Settings.m_iMaxTextureSize;
 
+#ifdef ALLEG_D9EX
         // this only has an effect in fullscreen mode
         hr = m_sD3DDev9.pD3DDevice->SetMaximumFrameLatency(1);
+#endif
 
 		// Perform the reset.
 		hr = m_sD3DDev9.pD3DDevice->Reset( &m_sD3DDev9.d3dPresParams ); //imago changed 6/29/09 to fall thru  //Fix memory leak -Imago 8/2/09
@@ -962,7 +964,7 @@ HRESULT CD3DDevice9::SetRTDepthStencil( )
 }
 
 // BT - 10/17 - If the D3D device becomes null, re-create it to get it up and rolling again.
-const LPDIRECT3DDEVICE9EX CD3DDevice9::Device()
+const ALLEG_D9EX_IF(LPDIRECT3DDEVICE9EX, LPDIRECT3DDEVICE9) CD3DDevice9::Device()
 { 
 	if (m_sD3DDev9.pD3DDevice == nullptr)
 	{
