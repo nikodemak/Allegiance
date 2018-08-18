@@ -126,7 +126,7 @@ public:
                 m_size.Y(),
                 false,
                 szTextureName,
-                D3DUSAGE_DYNAMIC,
+                ALLEG_D9EX_IF(bSystemMemory ? 0 : D3DUSAGE_DYNAMIC, 0),
                 bSystemMemory ? D3DPOOL_SCRATCH : ALLEG_D9EX_IF(D3DPOOL_DEFAULT, D3DPOOL_MANAGED)
             );
             ZAssert( hr == D3D_OK );
