@@ -959,12 +959,11 @@ public:
         HANDLE handleThreadAllWork = threadAllWork->Start();
 
         m_pscreenLoading = nullptr;
-        m_cleanableEvaluateFrame = std::move(pengineWindow->GetEvaluateFrameEventSource()->AddSinkManaged(new CallbackValueSink<Time>([this, threadAllWork, movies](Time time) {
-            if (movies->PeekIsRunning() == false) {
-                this->GetEngineWindow()->SetRenderingEnabled(true);
-            }
 
+        m_cleanableEvaluateFrame = std::move(pengineWindow->GetEvaluateFrameEventSource()->AddSinkManaged(new CallbackValueSink<Time>([this, threadAllWork, movies](Time time) {
             if (threadAllWork->PeekIsRunning() == false) {
+                this->GetEngineWindow()->SetRenderingEnabled(true);
+
                 //both the movie and the init is done. Stop the loading screen.
                 if (m_pscreenLoading) {
                     m_pscreenLoading = nullptr;
@@ -981,6 +980,8 @@ public:
                 }
             }
             else if (movies->PeekIsRunning() == false) {
+                this->GetEngineWindow()->SetRenderingEnabled(true);
+
                 //movies are done but the init isn't yet. Start the loading screen
                 if (!m_pscreenLoading) {
                     m_pscreenLoading = std::make_shared<LoadingScreen>(this);

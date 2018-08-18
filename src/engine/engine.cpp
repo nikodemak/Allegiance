@@ -271,7 +271,7 @@ private:
     //
     //////////////////////////////////////////////////////////////////////////////
 
-    void SetFocusWindow(Window* pwindow, bool bStartFullscreen)
+    void SetFocusWindow(Window* pwindow)
     {
         //
         // This function can only be called once
@@ -282,7 +282,6 @@ private:
 		//OutputDebugString("\n\nCalling SetFocusWindow() ONLY SUPPOSED TO HAPPEN ONCE!\n");
 
         m_hwndFocus			= pwindow->GetHWND();
-        m_bFullscreen->SetValue(bStartFullscreen);
 		g_hwndMainWindow	= m_hwndFocus;
     }
 

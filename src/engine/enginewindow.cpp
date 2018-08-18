@@ -298,7 +298,7 @@ void EngineWindow::SetEngine(Engine* pengine) {
     m_pengine = pengine;
 
     // Tell the engine we are the window
-    GetEngine()->SetFocusWindow(this, m_pPreferredFullscreen->GetValue());
+    GetEngine()->SetFocusWindow(this);
 
     //
     // These rects track the size of the window
@@ -1131,6 +1131,11 @@ bool EngineWindow::ShouldDrawFrame()
 
 void EngineWindow::DoIdle()
 {
+    if (m_bRenderingEnabled == false) {
+        m_pevaluateFrameEventSource->Trigger(m_timeCurrent);
+        return;
+    }
+
     //
     // Update the input values
     //
