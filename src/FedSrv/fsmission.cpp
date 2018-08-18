@@ -1480,6 +1480,31 @@ void    CFSMission::SetLeaderID(SideID sideID, ShipID shipID)
     }
 }
 
+// BT - WOPR - Moved this out of the header to keep things consitent
+CFSPlayer * CFSMission::GetOwner()
+{
+	if (m_misdef.iSideMissionOwner == NA)
+		return NULL;
+	else
+		return GetLeader(m_misdef.iSideMissionOwner);
+}
+
+// BT - WOPR - Let bots change the mission owner.
+void CFSMission::SetOwner(short iSide)
+{
+	m_misdef.iSideMissionOwner = iSide;
+
+	CFSPlayer * currentMissionOwner = GetLeader(iSide);
+
+	BEGIN_PFM_CREATE(g.fm, pfmSetMissionOwner, CS, SET_MISSION_OWNER)
+		END_PFM_CREATE
+
+	pfmSetMissionOwner->shipID = currentMissionOwner->GetShipID();
+	pfmSetMissionOwner->sideID = iSide;
+
+	g.fm.SendMessages(GetGroupMission(), FM_GUARANTEED, FM_FLUSH);
+}
+
 void CFSMission::SetLeader(CFSPlayer * pfsPlayer)
 {
   assert(pfsPlayer);
@@ -4012,10 +4037,57 @@ void CFSMission::SendMissionInfo(CFSPlayer * pfsPlayer, IsideIGC*   pside)
 
     SideID  sideID = pside->GetObjectID();
 
+	// Send all clusters, and what that side sees in them
+	const ClusterListIGC * pclstlist = pMission->GetClusters();
+	ClusterLinkIGC * pclstlink;
 
-    // Send all clusters, and what that side sees in them
-    const ClusterListIGC * pclstlist = pMission->GetClusters();
-    ClusterLinkIGC * pclstlink;
+	// BT - WOPR - Bots can't see tha map preview, so give them a cluster over view, but without position. 
+	BEGIN_PFM_CREATE(g.fm, pfmClusterInfo, S, CLUSTERINFO)
+	END_PFM_CREATE
+
+	ZeroMemory(pfmClusterInfo->clusterIDs, sizeof(pfmClusterInfo->clusterIDs));
+	ZeroMemory(pfmClusterInfo->homeSectors, sizeof(pfmClusterInfo->homeSectors));
+	ZeroMemory(pfmClusterInfo->warpFromClusterIDs, sizeof(pfmClusterInfo->warpFromClusterIDs));
+	ZeroMemory(pfmClusterInfo->warpToClusterIDs, sizeof(pfmClusterInfo->warpToClusterIDs));
+
+	// The last element in these lists should always be -1;
+	pfmClusterInfo->clusterIDs[0] = -1;
+	pfmClusterInfo->warpFromClusterIDs[0] = -1;
+	pfmClusterInfo->warpToClusterIDs[0] = -1;
+
+	int clusterIndex = 0;
+	int warpIndex = 0;
+
+	for (pclstlink = pclstlist->first(); pclstlink; pclstlink = pclstlink->next())
+	{
+		IclusterIGC * pcluster = pclstlink->data();
+
+		pfmClusterInfo->clusterIDs[clusterIndex] = pcluster->GetObjectID();
+		pfmClusterInfo->homeSectors[clusterIndex] = pcluster->GetHomeSector();
+		clusterIndex++;
+
+		pfmClusterInfo->clusterIDs[clusterIndex] = -1;
+
+		const WarpListIGC * pwarplist = pcluster->GetWarps();
+		WarpLinkIGC * pwarplink;
+		for (pwarplink = pwarplist->first(); pwarplink; pwarplink = pwarplink->next())
+		{
+			IwarpIGC * warp = pwarplink->data();
+
+			pfmClusterInfo->warpFromClusterIDs[warpIndex] = warp->GetCluster()->GetObjectID();
+			pfmClusterInfo->warpToClusterIDs[warpIndex] = warp->GetDestination()->GetCluster()->GetObjectID();
+					
+			warpIndex++;
+
+			pfmClusterInfo->warpFromClusterIDs[warpIndex] = -1;
+			pfmClusterInfo->warpToClusterIDs[warpIndex] = -1;
+		}
+	}
+
+	// BT - WOPR - End.
+
+
+    
     for (pclstlink = pclstlist->first(); pclstlink; pclstlink = pclstlink->next())
     {
         IclusterIGC * pcluster = pclstlink->data();
@@ -5347,6 +5419,11 @@ void CFSMission::PlayerReadyChange(CFSPlayer * pfsPlayer)
 void CFSMission::CheckForSideAllReady(IsideIGC * pside)
 {
   SideID sideid = pside->GetObjectID();
+
+  // If a player is moved to NOAT at the same time another player is joining, an assert will fire.
+  if (sideid <= NA)
+	  return;
+
   if (GetCountOfPlayers(pside, false) < m_misdef.misparms.nMinPlayersPerTeam)
     SetReady(sideid, false);
   else if (GetForceReady(pside->GetObjectID()))
