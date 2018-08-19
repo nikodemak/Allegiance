@@ -285,6 +285,9 @@ EngineWindow::EngineWindow(	EngineConfigurationWrapper* pConfiguration,
 
 	devLog.OutputString("CVertexGenerator::Get()->Initialise( );\n");
 
+    debugf("Initialize enginewindow font");
+    m_pfontFPS = CreateEngineFont("Verdana", 12, 0, false, false, false);
+
     m_pnumberTime = new ModifiableNumber(Time::Now() - m_timeStart);
 }
 
@@ -336,8 +339,6 @@ void EngineWindow::SetModeler(Modeler* pmodeler) {
     debugf("EngineWindow: Setting modeler");
 
     m_pmodeler = pmodeler;
-
-    m_pfontFPS = GetModeler()->GetNameSpace("model")->FindFont("defaultFont");
 }
 
 void EngineWindow::StartClose()
