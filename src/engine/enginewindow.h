@@ -55,21 +55,6 @@ protected:
         }
     };
 
-    class MenuCommandSink : public IMenuCommandSink {
-    private:
-        EngineWindow* m_pwindow;
-
-    public:    
-        MenuCommandSink(EngineWindow* pwindow) :
-            m_pwindow(pwindow)
-        {
-        }
-
-        void OnMenuCommand(IMenuItem* pitem);
-    };
-
-    friend class MenuCommandSink;
-
     //////////////////////////////////////////////////////////////////////////////
     //
     // Static Members
@@ -152,21 +137,6 @@ protected:
     TRef<TEvent<bool>::SourceImpl> m_pactivateEventSource;
 
     //
-    // menu
-    //
-
-    TRef<IMenuCommandSink>     m_pmenuCommandSink;
-    TRef<IMenuItem>            m_pitemDevice;
-//    TRef<IMenuItem>            m_pitemRenderer;
-    TRef<IMenuItem>            m_pitemResolution;
-    TRef<IMenuItem>            m_pitemRendering;
-    TRef<IMenuItem>            m_pitemBPP; // KGJV 32B
-  //  TRef<IMenuItem>            m_pitemAllowSecondary;
-//    TRef<IMenuItem>            m_pitemAllow3DAcceleration;
-    TRef<IMenuItem>            m_pitemHigherResolution;
-    TRef<IMenuItem>            m_pitemLowerResolution;
-
-    //
     // Performance
     //
 
@@ -222,13 +192,11 @@ protected:
     // menu
     //
 
-    void    OnEngineWindowMenuCommand(IMenuItem* pitem);
     ZString GetRendererString();
     ZString GetDeviceString();
     ZString GetResolutionString();
     ZString GetRenderingString();
     ZString GetPixelFormatString(); // KGJV 32B
-    void    UpdateMenuStrings();
 
 public:
     EngineWindow(
@@ -285,8 +253,6 @@ public:
     TEvent<bool>::Source* GetActivateEventSource() {
         return m_pactivateEventSource;
     }
-
-    TRef<IPopup> GetEngineMenu(IEngineFont* pfont);
 
     RectValue* GetScreenRectValue();
     RectValue* GetRenderRectValue();

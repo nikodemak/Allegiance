@@ -16,17 +16,6 @@ bool g_bLuaDebug = false;
 
 //////////////////////////////////////////////////////////////////////////////
 //
-// MenuCommandSink
-//
-//////////////////////////////////////////////////////////////////////////////
-
-void EngineWindow::MenuCommandSink::OnMenuCommand(IMenuItem* pitem)
-{
-    m_pwindow->OnEngineWindowMenuCommand(pitem);
-}
-
-//////////////////////////////////////////////////////////////////////////////
-//
 // Static members
 //
 //////////////////////////////////////////////////////////////////////////////
@@ -250,10 +239,6 @@ EngineWindow::EngineWindow(	EngineConfigurationWrapper* pConfiguration,
     m_timeCurrent   = 
     m_timeStart     = Time::Now();
     m_timeLastClick = 0;
-
-    // menu
-    m_pmenuCommandSink  = new MenuCommandSink(this);
-	
 
     // Start the callback
     EnableIdleFunction();
@@ -722,11 +707,6 @@ void EngineWindow::SetSizeable(bool bSizeable)
     if (m_bSizeable != bSizeable) {
         m_bSizeable = bSizeable;
 
-        if (m_pitemHigherResolution) {
-            m_pitemHigherResolution->SetEnabled(m_bSizeable);
-            m_pitemLowerResolution->SetEnabled(m_bSizeable);
-        }
-
         Invalidate();
     }
 }
@@ -809,46 +789,6 @@ void EngineWindow::SetImage(Image* pimage)
     m_pwrapImage->SetImage(pimage);
 }
 
-//////////////////////////////////////////////////////////////////////////////
-//
-//
-//
-//////////////////////////////////////////////////////////////////////////////
-
-#define idmHigherResolution    1
-#define idmLowerResolution     2
-#define idmAllow3DAcceleration 3
-#define idmAllowSecondary      4
-#define idmBrightnessUp        5
-#define idmBrightnessDown      6
-
-TRef<IPopup> EngineWindow::GetEngineMenu(IEngineFont* pfont)
-{
-    TRef<IMenu> pmenu =
-        CreateMenu(
-            GetModeler(),
-            pfont,
-            m_pmenuCommandSink
-        );
-
-                                 pmenu->AddMenuItem(idmBrightnessUp       , "Brightness Up"                                   , 'U');
-                                 pmenu->AddMenuItem(idmBrightnessDown     , "Brightness Down"                                 , 'D');
-                                 pmenu->AddMenuItem(0                     , "------------------------------------------------"     );
-    m_pitemHigherResolution    = pmenu->AddMenuItem(idmHigherResolution   , "Higher Resolution"                               , 'H');
-    m_pitemLowerResolution     = pmenu->AddMenuItem(idmLowerResolution    , "Lower Resolution"                                , 'L');
-								 pmenu->AddMenuItem(0                     , "------------------------------------------------"     );
-                                 pmenu->AddMenuItem(0                     , "Current device state                            ", 'C');
-                                 pmenu->AddMenuItem(0	                  , "------------------------------------------------"     );
-    m_pitemDevice              = pmenu->AddMenuItem(0                     , GetDeviceString()                                      );
-//    m_pitemRenderer            = pmenu->AddMenuItem(0                     , GetRendererString()                                    );
-    m_pitemResolution          = pmenu->AddMenuItem(0                     , GetResolutionString()                                  );
-    m_pitemRendering           = pmenu->AddMenuItem(0                     , GetRenderingString()                                   );
-    m_pitemBPP                 = pmenu->AddMenuItem(0                     , GetPixelFormatString()                                 ); // KGJV 32B
-
-    return pmenu;
-}
-
-
 ZString EngineWindow::GetResolutionString()
 {
     Point size = GetScreenRectValue()->GetValue().Size();
@@ -884,33 +824,6 @@ ZString EngineWindow::GetRendererString()
 ZString EngineWindow::GetDeviceString()
 {
     return "Device: " + GetEngine()->GetDeviceName();
-}
-
-void EngineWindow::UpdateMenuStrings()
-{
-    if (m_pitemDevice) {
-        m_pitemDevice             ->SetString(GetDeviceString()             );
-//        m_pitemRenderer           ->SetString(GetRendererString()           );
-        m_pitemResolution         ->SetString(GetResolutionString()         );
-        m_pitemRendering          ->SetString(GetRenderingString()          );
-        m_pitemBPP                ->SetString(GetPixelFormatString()        );
-    }
-}
-
-void EngineWindow::OnEngineWindowMenuCommand(IMenuItem* pitem)
-{
-    switch (pitem->GetID()) 
-	{
-		// DISABLE THE higher/lower resolution option - to be reinstated at some point.
-		//Imago reinstated 6/26/09
-		case idmHigherResolution:
-            ChangeFullscreenSize(true);
-            break;
-
-        case idmLowerResolution:
-            ChangeFullscreenSize(false);
-            break;
-    }
 }
 
 ZString EngineWindow::GetFPSString(float fps, float mspf, Context* pcontext)
@@ -1169,7 +1082,6 @@ void EngineWindow::DoIdle()
 
 			UpdateWindowStyle();
 			UpdateRectValues();
-			UpdateMenuStrings();
 			UpdateSurfacePointer();
         }
 

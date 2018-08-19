@@ -556,7 +556,6 @@ public:
 		// Perform post window creation initialisation. Initialise the time value.
         SetEngine(m_pengine);
         SetModeler(m_pmodeler);
-		InitialiseTime();
 
         GetModeler()->SetSite(new ModelerSiteImpl());
 
@@ -1499,7 +1498,8 @@ public:
 
         switch (pitem->GetID()) {
             case idmOptions:
-                return GetEngineMenu(GetFont());
+                //rock: broken
+                //return GetEngineMenu(GetFont());
                 break;
         }
 
