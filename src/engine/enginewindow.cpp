@@ -1429,6 +1429,12 @@ void EngineWindow::HandleMouseMessage(UINT message, const Point& point, UINT nFl
                 break;
 
             case WM_MOUSEMOVE:
+                //verify that the mouse has indeed moved. Spurious MOUSEMOVE events are sometimes generated with no change after a click (mouse hardware dependent?)
+                Point difference = point - m_ppointMouse->GetValue();
+                if (difference.X() == 0 && difference.Y() == 0) {
+                    break;
+                }
+                
                 m_timeLastMouseMove = m_timeCurrent;
                 m_timeLastClick     = 0;
                 m_ppointMouse->SetValue(point);
