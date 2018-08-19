@@ -253,9 +253,6 @@ public:
     // EngineWindow methods
     //
 
-	// Added so that we could reorganise the device creation order.
-	void			InitialiseTime();
-
     // These need to be set here before this object is fully functional
     void SetEngine(Engine* pengine);
     void SetModeler(Modeler* modeler);

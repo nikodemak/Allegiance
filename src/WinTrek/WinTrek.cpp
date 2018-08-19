@@ -1121,6 +1121,8 @@ public:
     TRef<ModifiableColorValue> m_pcolorHUDshadows;
     TRef<ModifiableColorValue> m_pcolorTargetHUD;
 
+    TRef<ModifiableNumber>     m_pModelerTime;
+
     //
     // Screens
     //
@@ -2550,8 +2552,9 @@ public:
 		debugf("performing PostWindowCreationInit.\n");
 
 		// Perform post window creation initialisation. Initialise the time value.
+        TRef<INameSpace> pnsModel = m_pmodeler->GetNameSpace("model");
+        CastTo(m_pModelerTime, pnsModel->FindMember("time"));
 		m_pEngineWindow->SetModeler(m_pmodeler);
-        m_pEngineWindow->InitialiseTime();
 
         // Setup the popup container
         m_ppopupContainer = papp->GetPopupContainer();
@@ -5371,6 +5374,8 @@ public:
             if (m_screen != ScreenIDCombat)
                 return;
         }
+
+        m_pModelerTime->SetValue(time - m_pEngineWindow->GetTimeStart());
 
         float dtime = m_fDeltaTime = (float)(time - m_timeLastFrame);
         ZAssert(dtime >= 0);
