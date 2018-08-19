@@ -76,7 +76,6 @@ protected:
     TRef<ValueList> m_pConfigurationUpdater;
 
     TRef<Engine>               m_pengine;
-    TRef<Modeler>              m_pmodeler;
     TRef<InputEngine>          m_pinputEngine;
     TRef<ButtonEvent::Sink>    m_pbuttonEventSink;
     TRef<ModifiablePointValue> m_ppointMouse;
@@ -223,12 +222,10 @@ public:
 
     // These need to be set here before this object is fully functional
     void SetEngine(Engine* pengine);
-    void SetModeler(Modeler* modeler);
 
     Number*          GetTime()           { return m_pnumberTime;             }
     Time             GetTimeStart()      { return m_timeStart;               }
     Engine*          GetEngine()         { return m_pengine;                 }
-    Modeler*         GetModeler()        { return m_pmodeler;                }
     bool             GetFullscreen()     { return m_pengine->IsFullscreen(); }
     bool             GetShowFPS()        { return m_bFPS;                    }
     InputEngine*     GetInputEngine()    { return m_pinputEngine;            }

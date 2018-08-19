@@ -124,7 +124,6 @@ EngineWindow::EngineWindow(	EngineConfigurationWrapper* pConfiguration,
 ) :
 				Window(NULL, rect, strTitle, ZString(), 0, hmenu),
 				m_pengine(nullptr),
-				m_pmodeler(nullptr),
 				m_offsetWindowed(rect.Min()),
 				m_bSizeable(true),
 				m_bMinimized(false),
@@ -320,12 +319,6 @@ void EngineWindow::SetEngine(Engine* pengine) {
     );
 }
 
-void EngineWindow::SetModeler(Modeler* pmodeler) {
-    debugf("EngineWindow: Setting modeler");
-
-    m_pmodeler = pmodeler;
-}
-
 void EngineWindow::StartClose()
 {
     PostMessage(WM_CLOSE);
@@ -346,12 +339,6 @@ void EngineWindow::OnClose()
     m_pwrapImage            = NULL;
     m_ptransformImageCursor = NULL;
     m_ptranslateTransform   = NULL;
-
-    //modeler is set late, so check if it exists first
-    if (m_pmodeler) {
-        m_pmodeler->Terminate();
-    }
-    m_pmodeler = NULL;
 
     m_pengine->TerminateEngine();
 

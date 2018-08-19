@@ -659,7 +659,7 @@ TRef<UpdatingConfiguration> g_pConfiguration = new UpdatingConfiguration(
 TrekWindow* GetWindow()     { return g_ptrekWindow;               }
 EngineWindow* GetEngineWindow() { return g_ptrekWindow->GetEngineWindow(); }
 Engine*     GetEngine()     { return GetEngineWindow()->GetEngine();  }
-Modeler*    GetModeler()    { return GetEngineWindow()->GetModeler(); }
+Modeler*    GetModeler()    { return g_ptrekWindow->GetModeler(); }
 UpdatingConfiguration* GetConfiguration() { return g_pConfiguration; }
 
 /*
@@ -2554,7 +2554,6 @@ public:
 		// Perform post window creation initialisation. Initialise the time value.
         TRef<INameSpace> pnsModel = m_pmodeler->GetNameSpace("model");
         CastTo(m_pModelerTime, pnsModel->FindMember("time"));
-		m_pEngineWindow->SetModeler(m_pmodeler);
 
         // Setup the popup container
         m_ppopupContainer = papp->GetPopupContainer();

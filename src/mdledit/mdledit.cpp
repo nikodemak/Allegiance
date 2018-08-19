@@ -509,6 +509,9 @@ public:
 
     TRef<TestGeo>          m_ptestGeo;
 
+    //
+    TRef<Modeler> m_pmodeler;
+    Modeler*         GetModeler() { return m_pmodeler; }
 
     //////////////////////////////////////////////////////////////////////////////
     //
@@ -555,7 +558,6 @@ public:
 
 		// Perform post window creation initialisation. Initialise the time value.
         SetEngine(m_pengine);
-        SetModeler(m_pmodeler);
 
         GetModeler()->SetSite(new ModelerSiteImpl());
 
