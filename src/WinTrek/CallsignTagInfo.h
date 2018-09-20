@@ -1,41 +1,35 @@
 #pragma once
 
-#include "WinTrek.H"
-
-class CallsignSquad {
-
+// BT - STEAM
+class CallsignTagInfo
+{
 private:
-    ZString m_tag;
-    std::vector<ZString> m_availableTokens;
-    static ZString CleanupSquadTag(ZString tag);
-public:
-    CallsignSquad(ZString tag, std::vector<ZString> vAvailableTokens);
-
-    const std::vector<ZString>& GetAvailableOfficerTokens() const;
-
-    ZString GetCleanedTag() const;
-};
-
-std::shared_ptr<CallsignSquad> CreateSquadFromSteam(CSteamID squadSteamClanId, CSteamID userSteamId);
-
-class CallsignHandler {
-private:
-    TRef<GameConfigurationWrapper> m_pconfiguration;
-    std::vector<std::shared_ptr<CallsignSquad>> m_squads;
-
-    static ZString CleanupCallsign(ZString callsign);
+	
+	ZString FixupCallsignTag(ZString callsignTag);
+	void LoadFromRegistry();
+	void SaveToRegistry();
+	void UpdateStringValues(ZString selectedToken);
 
 public:
-    CallsignHandler(const TRef<GameConfigurationWrapper>& pconfiguration, const std::vector<std::shared_ptr<CallsignSquad>>& squads);
+	ZString m_callsignTag;
+	ZString m_callsignToken;
+	uint64	m_steamGroupID;
+	int		m_index;
+	bool	m_isOfficer;
 
-    std::vector<std::shared_ptr<CallsignSquad>> GetAvailableSquads();
+	CallsignTagInfo();
+	CallsignTagInfo(ZString callsignTag, uint64 steamGroupID, int index, bool isOfficer);
 
-    std::shared_ptr<CallsignSquad> GetSquadForTag(ZString tag);
+	ZString GetAvailableTokens();
+	
+	void SetSteamGroupID(uint64 steamGroupID, ZString callsignTag);
+	void SetToken(ZString token);
 
-    TRef<StringValue> GetCleanedFullCallsign();
+	ZString Render(ZString callsign);
 
-    static bool IsValidCallsign(ZString callsign);
+
+	inline bool operator == (const CallsignTagInfo& compare) const { return m_steamGroupID == compare.m_steamGroupID; }
+	inline  bool operator > (const CallsignTagInfo& compare) const { return m_steamGroupID > compare.m_steamGroupID; }
+
+
 };
-
-std::shared_ptr<CallsignHandler> CreateCallsignHandlerFromSteam(const TRef<GameConfigurationWrapper>& pconfiguration);
-

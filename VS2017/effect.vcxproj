@@ -59,8 +59,8 @@
     <IntDir Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">..\objs$(PlatformToolset)\$(Configuration)\$(ProjectName)\</IntDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">..\objs$(PlatformToolset)\$(Configuration)\$(ProjectName)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">..\objs$(PlatformToolset)\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">$(DXSDK_DIR)\Include;$(IncludePath)</IncludePath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">$(DXSDK_DIR)\Include;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">$(IncludePath);$(DXSDK_DIR)\Include;</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">$(IncludePath);$(DXSDK_DIR)\Include;</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">
     <ClCompile>
@@ -128,6 +128,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\src\effect\efwindow.cpp" />
     <ClCompile Include="..\src\effect\explosion.cpp" />
     <ClCompile Include="..\src\effect\framedata.cpp" />
     <ClCompile Include="..\src\effect\gamestate.cpp" />
@@ -160,6 +161,7 @@
     <ClInclude Include="..\src\effect\efimage.h" />
     <ClInclude Include="..\src\effect\efpane.h" />
     <ClInclude Include="..\src\effect\efpopup.h" />
+    <ClInclude Include="..\src\effect\efwindow.h" />
     <ClInclude Include="..\src\effect\explosion.h" />
     <ClInclude Include="..\src\effect\framedata.h" />
     <ClInclude Include="..\src\effect\gamestate.h" />

@@ -54,10 +54,6 @@ public:
 
 };
 
-std::shared_ptr<UiScreenConfiguration> UiScreenConfiguration::Create(std::string path, std::map<std::string, std::shared_ptr<Exposer>> map) {
-    return std::make_shared<UiScreenConfigurationImpl>(path, map);
-}
-
 std::shared_ptr<UiScreenConfiguration> UiScreenConfiguration::Create(std::string path, std::map<std::string, std::function<bool()>> event_listeners, std::map<std::string, std::shared_ptr<Exposer>> map) {
     
     std::for_each(event_listeners.begin(), event_listeners.end(),
@@ -66,7 +62,7 @@ std::shared_ptr<UiScreenConfiguration> UiScreenConfiguration::Create(std::string
         map[p.first] = tmp;
     });
 
-    return UiScreenConfiguration::Create(path, map);
+    return std::make_shared<UiScreenConfigurationImpl>(path, map);
 }
 
 Loader::Loader(sol::state& lua, Engine* pEngine, const std::shared_ptr<IFileLoader>& pFileLoader)
