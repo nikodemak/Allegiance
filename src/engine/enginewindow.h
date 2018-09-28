@@ -8,8 +8,7 @@
 #include "engine.h"
 #include "inputengine.h"
 #include "menu.h"
-
-#include "Configuration.h"
+#include "VideoSettingsDX9.h"
 
 class Context;
 class EngineApp;
@@ -56,21 +55,6 @@ protected:
         }
     };
 
-    class MenuCommandSink : public IMenuCommandSink {
-    private:
-        EngineWindow* m_pwindow;
-
-    public:    
-        MenuCommandSink(EngineWindow* pwindow) :
-            m_pwindow(pwindow)
-        {
-        }
-
-        void OnMenuCommand(IMenuItem* pitem);
-    };
-
-    friend class MenuCommandSink;
-
     //////////////////////////////////////////////////////////////////////////////
     //
     // Static Members
@@ -88,19 +72,16 @@ protected:
     //
     //////////////////////////////////////////////////////////////////////////////
 
-    TRef<UpdatingConfiguration> m_pConfiguration;
+    TRef<EngineConfigurationWrapper> m_pConfiguration;
+    TRef<ValueList> m_pConfigurationUpdater;
 
     TRef<Engine>               m_pengine;
-    TRef<Modeler>              m_pmodeler;
     TRef<InputEngine>          m_pinputEngine;
     TRef<ButtonEvent::Sink>    m_pbuttonEventSink;
-    TRef<MouseInputStream>     m_pmouse;
     TRef<ModifiablePointValue> m_ppointMouse;
-	EngineApp *					m_pEngineApp;
 
     TRef<Surface>              m_psurface;
     TRef<ICaption>             m_pcaption;
-    WinRect                    m_rectWindowed;
 
     TRef<IKeyboardInput>       m_pkeyboardInput;
 
@@ -108,8 +89,7 @@ protected:
     TRef<WrapImage>            m_pwrapImage;
     TRef<TransformImage>       m_ptransformImageCursor;
     TRef<TranslateTransform2>  m_ptranslateTransform;
-    TRef<Image>                m_pimageCursor;
-    TRef<IPopupContainer>      m_ppopupContainer;
+    TRef<WrapImage>            m_pimageCursor;
 
     WinPoint                   m_offsetWindowed;
 
@@ -129,6 +109,7 @@ protected:
 	bool						m_bWindowStateMinimised;
 	bool						m_bWindowStateRestored;
 	bool						m_bClickBreak;
+    bool m_bRenderingEnabled;
 
     int                        m_modeIndex;
 
@@ -150,20 +131,9 @@ protected:
 
     TRef<ButtonEvent::Sink>    m_peventSink;
 
-    //
-    // menu
-    //
-
-    TRef<IMenuCommandSink>     m_pmenuCommandSink;
-    TRef<IMenuItem>            m_pitemDevice;
-//    TRef<IMenuItem>            m_pitemRenderer;
-    TRef<IMenuItem>            m_pitemResolution;
-    TRef<IMenuItem>            m_pitemRendering;
-    TRef<IMenuItem>            m_pitemBPP; // KGJV 32B
-  //  TRef<IMenuItem>            m_pitemAllowSecondary;
-//    TRef<IMenuItem>            m_pitemAllow3DAcceleration;
-    TRef<IMenuItem>            m_pitemHigherResolution;
-    TRef<IMenuItem>            m_pitemLowerResolution;
+    TRef<EventSourceImpl> m_pcloseEventSource;
+    TRef<TEvent<Time>::SourceImpl> m_pevaluateFrameEventSource;
+    TRef<TEvent<bool>::SourceImpl> m_pactivateEventSource;
 
     //
     // Performance
@@ -221,18 +191,15 @@ protected:
     // menu
     //
 
-    void    OnEngineWindowMenuCommand(IMenuItem* pitem);
     ZString GetRendererString();
     ZString GetDeviceString();
     ZString GetResolutionString();
     ZString GetRenderingString();
     ZString GetPixelFormatString(); // KGJV 32B
-    void    UpdateMenuStrings();
 
 public:
     EngineWindow(
-              EngineApp*   papp,
-        UpdatingConfiguration* pConfiguration,
+        EngineConfigurationWrapper* pConfiguration,
         const ZString&     strCommandLine,
         const ZString&     strTitle         = ZString(),
               bool         bStartFullscreen = false,
@@ -253,24 +220,36 @@ public:
     // EngineWindow methods
     //
 
-	// Added so that we could reorganise the device creation order.
-	void			InitialiseTime();
-	void			PostWindowCreationInit();
+    // These need to be set here before this object is fully functional
+    void SetEngine(Engine* pengine);
 
     Number*          GetTime()           { return m_pnumberTime;             }
     Time             GetTimeStart()      { return m_timeStart;               }
     Engine*          GetEngine()         { return m_pengine;                 }
-    Modeler*         GetModeler()        { return m_pmodeler;                }
     bool             GetFullscreen()     { return m_pengine->IsFullscreen(); }
     bool             GetShowFPS()        { return m_bFPS;                    }
-    IPopupContainer* GetPopupContainer() { return m_ppopupContainer;         }
     InputEngine*     GetInputEngine()    { return m_pinputEngine;            }
     const Point&     GetMousePosition()  { return m_ppointMouse->GetValue(); }
     ModifiablePointValue* GetMousePositionModifiable() { return m_ppointMouse; }
 	Time&		   	 GetMouseActivity()  { return m_timeLastMouseMove;		 } //Imago: Added to adjust AFK status from mouse movment
     bool             GetActive()         { return m_bActive;                 }
+    const TRef<IKeyboardInput>& GetKeyboardInput() { return m_pkeyboardInput; };
 
-    TRef<IPopup> GetEngineMenu(IEngineFont* pfont);
+    void SetRenderingEnabled(bool bEnabled) {
+        m_bRenderingEnabled = bEnabled;
+    }
+
+    IEventSource* GetOnCloseEventSource() {
+        return m_pcloseEventSource;
+    }
+
+    TEvent<Time>::Source* GetEvaluateFrameEventSource() {
+        return m_pevaluateFrameEventSource;
+    }
+
+    TEvent<bool>::Source* GetActivateEventSource() {
+        return m_pactivateEventSource;
+    }
 
     RectValue* GetScreenRectValue();
     RectValue* GetRenderRectValue();
@@ -279,11 +258,12 @@ public:
     void SetSizeable(bool bSizeable);
     void SetFullscreenSize(const Vector& point);
     void ChangeFullscreenSize(bool bLarger);
-    void SetMouseEnabled(bool bEnable);
 
     WinPoint GetSize();
     WinPoint GetWindowedSize();
     WinPoint GetFullscreenSize();
+
+    TRef<PointValue> GetResolution();
 
     void OutputPerformanceCounters();
     void SetImage(Image* pimage);
@@ -308,12 +288,11 @@ public:
 
     virtual ZString GetFPSString(float dtime, float mspf, Context* pcontext);
 
-    virtual void EvaluateFrame(Time time) {}
     virtual void RenderSizeChanged(bool bSmaller) {
         int x = (int)m_pengine->GetResolutionSizeModifiable()->GetValue().X();
         int y = (int)m_pengine->GetResolutionSizeModifiable()->GetValue().Y();
-        m_pConfiguration->GetInt("Graphics.ResolutionX", x)->SetValue((float)x);
-        m_pConfiguration->GetInt("Graphics.ResolutionY", y)->SetValue((float)y);
+        m_pConfiguration->GetGraphicsResolutionX()->SetValue((float)x);
+        m_pConfiguration->GetGraphicsResolutionY()->SetValue((float)y);
     }
 
     //
