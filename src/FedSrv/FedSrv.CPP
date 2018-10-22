@@ -5912,11 +5912,15 @@ HRESULT FedSrvSiteBase::OnAppMessage(FedMessaging * pthis, CFMConnection & cnxnF
         pqd->dwConnectionID = cnxnFrom.GetID();
 
 		// BT - STEAM
-		if (g.bEnforceSteamDRM == true)
+		if (g.bEnforceSteamDRM == true && strcmp(pqd->szCDKey, g.szBotAuthenticationGuid) != 0)
 		{
 			Strcpy(pqd->szDrmHash, pfmLogon->drmHash);
 			pqd->steamID = pfmLogon->steamID;
-			int tokenCRC = MemoryCRC(pfmLogon->steamAuthTicket, pfmLogon->steamAuthTicketLength);
+
+			int tokenCRC = 0;
+
+			if(pfmLogon->steamAuthTicketLength < sizeof(pfmLogon->steamAuthTicket))
+				tokenCRC = MemoryCRC(pfmLogon->steamAuthTicket, pfmLogon->steamAuthTicketLength);
 
 			// BT - STEAM - Enable anyone in the Microsoft Allegiance - Developer group to connect to the game server with any client.
 			if (CSteamUserGroupStatus::IsMemberOfDevelopersGroup(pqd->steamID) == false)
@@ -10972,17 +10976,17 @@ class ThingSiteImpl : public ThingSite
                                                                 PlayerScoreObject * pso = pfsShip->GetPlayerScoreObject();
                                                                 pso->AddTargetSpot();
                                                                 if (pfsShip->IsPlayer())
-                                                                    pfsShip->GetPlayer()->GetSteamAchievements()->AwardIGCAchievements(c_achmProbeSpot); //Xynth This is good, we can do this
+                                                                    pfsShip->GetPlayer()->GetSteamAchievements()->AwardIGCAchievements(c_achmProbeSpot);
                                                             }
                                                         }
-                                                        //else if (s->GetObjectType() == OT_ship) {
-                                                        //    IshipIGC* spottingShip = (IshipIGC*)s;
-                                                            //if (spottingShip->GetPilotType() >= c_ptPlayer) {
-                                                            //    CFSShip* pfsShip = (CFSShip*)(spottingShip->GetPrivateData());
-                                                            //    PlayerScoreObject * pso = pfsShip->GetPlayerScoreObject();
-                                                                //pso->AddTargetSpot(); //Xynth let's not do this, this is bad
-                                                            //}
-                                                        //}
+                                                        else if (s->GetObjectType() == OT_ship) {
+                                                            IshipIGC* spottingShip = (IshipIGC*)s;
+                                                            if (spottingShip->GetPilotType() >= c_ptPlayer) {
+                                                                CFSShip* pfsShip = (CFSShip*)(spottingShip->GetPrivateData());
+                                                                PlayerScoreObject * pso = pfsShip->GetPlayerScoreObject();
+                                                                pso->AddTargetSpot();
+                                                            }
+                                                        }
                                                         //mark hv ship as previously spotted, no matter by whom
                                                         pSpottedShip->MarkPreviouslySpotted();
                                                     }
