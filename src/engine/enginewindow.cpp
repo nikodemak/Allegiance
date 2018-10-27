@@ -916,6 +916,17 @@ void EngineWindow::RenderPerformanceCounters(Surface* psurface)
         int row_index = 0;
 
         psurface->DrawString(m_pfontFPS, color, WinPoint(1, 1 + row_index++ * ysize), m_strPerformance1);
+        psurface->DrawString(m_pfontFPS, color, WinPoint(1, 1 + row_index++ * ysize), "");
+        {
+            std::string str = fmt::format("{:<20s} ", "ms/frame avg (max)");
+            for (const auto& average : m_timings.begin()->second.getMap()) {
+                str += fmt::format(
+                    "    #{:<12d}",
+                    average.first
+                );
+            }
+            psurface->DrawString(m_pfontFPS, color, WinPoint(1, 1 + row_index++ * ysize), str.c_str());
+        }
         
         for (const auto& entries : m_timings) {
             std::string str = fmt::format("{:<20} ", entries.first);
