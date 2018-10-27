@@ -691,7 +691,7 @@ public:
 			m_button = button;
 			if (bDown) {
                 if (m_pprovider != NULL && button == 0) { //imago 7/10/09
-                    assert(false); // we should not have a timer set before the button is pressed
+                    ZAssert(false); // we should not have a timer set before the button is pressed
                     m_pprovider->GetTimer()->RemoveSink(m_peventSinkDelegate);
                 }
 

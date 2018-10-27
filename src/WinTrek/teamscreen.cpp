@@ -649,7 +649,7 @@ private:
                 }
             }
 
-            assert(vectCivs.GetCount() >= 1);
+            ZAssert(vectCivs.GetCount() >= 1);
             
             ZString strResult;
 
@@ -1734,7 +1734,7 @@ public:
             int   maxPlayers;
 
             SideLinkIGC*   psl = trekClient.m_pCoreIGC->GetSides()->first();
-            assert (psl);
+            ZAssert (psl);
             IsideIGC*   psideMin;
             IsideIGC*   psideMax = psideMin = psl->data();
             minPlayers = maxPlayers = psl->data()->GetShips()->n();
@@ -2708,7 +2708,7 @@ public:
 
     bool OnButtonBack()
     {
-        assert(!m_pmsgBox);
+        ZAssert(!m_pmsgBox);
         if (m_pmsgBox)
         {
             // dismiss the "waiting to be accepted..." popup
@@ -2835,8 +2835,8 @@ public:
     bool OnCancelRequest()
     {
         // KGJV #104: called when cancelling a request to join a team
-        // assert to do: m_sideToJoin should be valid  and match last POSITIONREQ message
-        //assert(m_lastToJoinSend == NA);
+        // ZAssert to do: m_sideToJoin should be valid  and match last POSITIONREQ message
+        //ZAssert(m_lastToJoinSend == NA);
         debugf("TeamScreen::OnCancelRequest: %d\n",m_lastToJoinSend);
         if (m_pmsgBox)
         {
@@ -2908,7 +2908,7 @@ public:
         if (m_pmsgBox)
         {
             // clicks shouldn't be sneaking through the message box
-            assert(false);
+            ZAssert(false);
             return true;
         }
 
@@ -2977,7 +2977,7 @@ public:
             //        false
             //    );
 
-            //assert(m_lastToJoinSend == NA); // check for no previous unanswered or cancelled request
+            //ZAssert(m_lastToJoinSend == NA); // check for no previous unanswered or cancelled request
             m_lastToJoinSend = m_sideToJoin;
             UpdateButtonStates();
             UpdatePromptText();
@@ -3020,7 +3020,7 @@ public:
         if (!pplayer)
         {
             // should never happen - the button should be disabled.
-            assert(false);
+            ZAssert(false);
             return true;
         }
 
@@ -3251,7 +3251,7 @@ public:
         else
         {
             // button should be disabled in this case
-            assert(false);
+            ZAssert(false);
         }
 
         return true;
@@ -3632,7 +3632,7 @@ public:
 					break;
 
                 default:
-                    assert(false);
+                    ZAssert(false);
                 case DPR_Other:
                     strReason = "You were not able to join the team.";
                     break;

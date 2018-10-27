@@ -234,8 +234,8 @@ public:
     {
         pnumber->Update();
         SetValue(pnumber->GetValue(), true);
-        assert(m_psurface);
-        assert(m_minValue < m_maxValue);
+        ZAssert(m_psurface);
+        ZAssert(m_minValue < m_maxValue);
 
         InternalSetSize(m_psurface->GetSize());
         NeedPaint();

@@ -834,7 +834,7 @@ public:
 	  {
 		  int	highNibble = HexDigitToInt (str[ichar++]);
 		  int	lowNibble =	HexDigitToInt (str[ichar++]);
-		  assert ((highNibble	>= 0) && (lowNibble	>= 0));
+		  ZAssert ((highNibble	>= 0) && (lowNibble	>= 0));
 		  return ((highNibble	<< 4) |	lowNibble);
 	  }
 

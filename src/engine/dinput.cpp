@@ -1245,7 +1245,7 @@ public:
 
             //
             // The MS Gamepad will return error from this funtion if the mode button is pressed
-            // Don't assert in that case.  Just don't unpack the data.
+            // Don't ZAssert in that case.  Just don't unpack the data.
             //
 
             hr = m_pdid->GetDeviceState(m_sizeData, m_pbyteData);

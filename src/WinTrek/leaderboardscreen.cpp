@@ -114,7 +114,7 @@ public:
 
         int GetColOffset(StatsColumn col)
         {
-            assert(col >= 0 && col < maxCol);
+            ZAssert(col >= 0 && col < maxCol);
 
             if (col == 0)
                 return 0;

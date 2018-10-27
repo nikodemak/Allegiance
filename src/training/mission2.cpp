@@ -107,7 +107,7 @@ namespace Training
 
         // put the commander ship in the scene
         IshipIGC*   pCommander = pCore->GetShip(m_commanderID);
-        assert(pCommander);
+        ZAssert(pCommander);
         Vector      position(500.0f, 0.0f, 0.0f);
         pCommander->SetPosition(position);
         pCommander->SetOrientation(Orientation(pCommander->GetOrientation().GetForward() * -1.0f, position * -1.0f));

@@ -370,7 +370,7 @@ public:
         m_pCivIds = new int[cNames];
         m_pStats = new CCharacterStats[cNames];
         int cInts = FillIntegerArray(pns, m_pCivIds, "CivIDs");
-        assert(cInts == cNames);
+        ZAssert(cInts == cNames);
 
         OnCivChange(); // init civImage
 
@@ -547,7 +547,7 @@ public:
                 if (i == m_cCivs)
                 {
                     //MessageBox(0, "Unknown CivID; CharInfoScreen.mdl is not in sync with AllClub's database.", "Error", 0);
-                    //assert(0);
+                    //ZAssert(0);
                     break;
                 }
                 else
@@ -600,7 +600,7 @@ public:
                 if (i == m_cCivs)
                 {
                     //MessageBox(0, "Unknown CivID; CharInfoScreen.mdl is not in sync with AllClub's database.", "Error", 0);
-                    assert(0);
+                    ZAssert(0);
                     break;
                 }
                 else

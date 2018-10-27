@@ -80,7 +80,7 @@ bool IsServerAllowed(const char *ip)
 HRESULT LobbyServerSite::OnAppMessage(FedMessaging * pthis, CFMConnection & cnxnFrom, FEDMESSAGE * pfm)
 {
   CFLServer * pServer = CFLServer::FromConnection(cnxnFrom);
-  assert(pServer);
+  ZAssert(pServer);
 
   cnxnFrom.ResetAbsentCount();
   
@@ -467,7 +467,7 @@ int LobbyServerSite::OnMessageBox(FedMessaging * pthis, const char * strText, co
 #ifndef NO_MSG_CRC
 void LobbyServerSite::OnBadCRC(FedMessaging * pthis, CFMConnection & cnxn, BYTE * pMsg, DWORD cbMsg)
 {
-  assert(0); // we should never get a bad crc from one of our own servers.
+  ZAssert(0); // we should never get a bad crc from one of our own servers.
 }
 #endif
 
@@ -488,7 +488,7 @@ CFLServer::CFLServer(CFMConnection * pcnxn) :
   m_iMaxGames(20),		   // KGJV #114
   m_iCurGames(0)	// Imago
 {
-  assert(m_pcnxn);
+  ZAssert(m_pcnxn);
   m_pcnxn->SetPrivateData((DWORD) this); // set up two-way link between connection and this
 
   m_pCounters = g_pLobbyApp->AllocatePerServerCounters(pcnxn->GetName());  

@@ -1515,7 +1515,7 @@ public:
 
     bool OnPickServer(GUID guidSession)
     {
-        assert (!trekClient.LoggedOn());
+        ZAssert (!trekClient.LoggedOn());
         m_guidSession = guidSession;
 
         //
@@ -1645,7 +1645,7 @@ public:
         BaseClient::ConnectInfo ci;
         ci.guidSession = m_guidSession;
         strcpy(ci.szName, m_strCharacterName);        
-        assert(strlen(m_strPassword) < c_cbGamePassword);
+        ZAssert(strlen(m_strPassword) < c_cbGamePassword);
 
         trekClient.ConnectToServer(ci, NA, Time::Now(), m_strPassword, true);
 

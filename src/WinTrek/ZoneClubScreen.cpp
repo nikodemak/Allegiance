@@ -213,7 +213,7 @@ public:
         m_bConnectLobby = bConnectLobby;
         m_screenPostConnect = screenid;
 
-        assert (!trekClient.LoggedOn() && !trekClient.m_fm.IsConnected());
+        ZAssert (!trekClient.LoggedOn() && !trekClient.m_fm.IsConnected());
         HRESULT hr = E_FAIL;
 #ifdef USEAUTH
         TRef<IZoneAuthClient> pzac;
@@ -255,7 +255,7 @@ public:
             DWORD cbZoneTicket;
             DWORD cbName = sizeof(ci.szName);
             ZSucceeded(pzac->GetTicket(&ci.pZoneTicket, &cbZoneTicket, ci.szName, &cbName));
-            assert(cbName <= sizeof(ci.szName));
+            ZAssert(cbName <= sizeof(ci.szName));
             ci.cbZoneTicket = cbZoneTicket;
 
             if(m_bConnectLobby)
@@ -622,7 +622,7 @@ public:
                             trekClient.m_pAutoDownload = CreateAutoDownload();
 
                         IAutoUpdateSink * pAutoUpdateSink = trekClient.OnBeginAutoUpdate(this, false);
-                        assert(pAutoUpdateSink);
+                        ZAssert(pAutoUpdateSink);
 
                         trekClient.m_pAutoDownload->SetFTPSite(PCC(trekClient.GetCfgInfo().strFilelistSite),
                                                                PCC(trekClient.GetCfgInfo().strFilelistDirectory),
@@ -735,7 +735,7 @@ public:
         //
         // User must have pressed Okay button after error
         //
-        assert(m_pmsgBox);
+        ZAssert(m_pmsgBox);
         GetWindow()->GetPopupContainer()->ClosePopup(m_pmsgBox);
         GetWindow()->RestoreCursor();
 
@@ -818,7 +818,7 @@ public:
             if (g_fZoneAuth)
             {
                 ZSucceeded(pzac->GetTicket(&ci.pZoneTicket, &cbZoneTicket, ci.szName, &cbName));
-                assert(cbName <= sizeof(ci.szName));
+                ZAssert(cbName <= sizeof(ci.szName));
                 ci.cbZoneTicket = cbZoneTicket;
             }
             else

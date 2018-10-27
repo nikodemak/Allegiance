@@ -113,7 +113,7 @@ struct  JoystickResults
 
 float   GetThrottle(ImodelIGC*  pmodel)
 {
-    assert (pmodel);
+    ZAssert (pmodel);
     if (trekClient.GetShip()->GetParentShip() == NULL)
     {
         float speed      = pmodel->GetVelocity().Length();
@@ -147,7 +147,7 @@ TRef<IMessageBox> CreateMessageBox(
     debugf("Creating message box with text \"%s\"\n", (const char*)str);
 
     if (fAddDefaultButton) {
-        assert(pbutton == NULL);
+        ZAssert(pbutton == NULL);
 
         TRef<Surface> psurfaceButton = GetModeler()->LoadImage("btnokbmp", true)->GetSurface();
 
@@ -198,7 +198,7 @@ ImodelIGC*  GetCurrentTarget(void)
 
 int   GetSimilarTargetMask(ImodelIGC* pmodel)
 {
-    assert (pmodel);
+    ZAssert (pmodel);
 
     ObjectType  type = pmodel->GetObjectType();
 
@@ -438,7 +438,7 @@ class   CameraControl
 
         void    SetToModel(ImodelIGC* pmodel)
         {
-            assert (pmodel);
+            ZAssert (pmodel);
             SetPosition(pmodel->GetPosition());
             SetOrientation(pmodel->GetOrientation());
         }
@@ -1843,7 +1843,7 @@ public:
                         myRank++;
                 }
             }
-            assert (psideTop != NULL);
+            ZAssert (psideTop != NULL);
 
             if (myRank == 1)
             {
@@ -1922,7 +1922,7 @@ public:
             }
             else
             {
-                assert (pshipTop);
+                ZAssert (pshipTop);
 
                 //Another side is the top rank
                 pgrid->SetString(2, 0, c_rank[0]);
@@ -2163,8 +2163,8 @@ public:
                     m_pconsoleImage = ConsoleImage::Create(GetEngine(), m_pviewport);
                     {
                         IsideIGC*   pside = trekClient.GetShip()->GetSide();
-                        assert (pside);
-                        assert (pside->GetObjectID() >= 0);
+                        ZAssert (pside);
+                        ZAssert (pside->GetObjectID() >= 0);
                         m_pconsoleImage->SetDisplayMDL(pside->GetCivilization()->GetHUDName());
                     }
                     m_pwrapImageConsole->SetImage(m_pconsoleImage);
@@ -3072,7 +3072,7 @@ public:
     {
         TRef<Image> pimageCursor;
         CastTo(pimageCursor, (Value*)GetModeler()->GetNameSpace("cursor")->FindMember(m_pszCursor));
-        assert(pimageCursor);
+        ZAssert(pimageCursor);
         m_pEngineWindow->SetCursorImage(pimageCursor);
     }
 
@@ -3080,7 +3080,7 @@ public:
     {
         TRef<Image> pimageCursor;
         CastTo(pimageCursor, (Value*)GetModeler()->GetNameSpace("cursor")->FindMember(AWF_CURSOR_WAIT));
-        assert(pimageCursor);
+        ZAssert(pimageCursor);
         m_pEngineWindow->SetCursorImage(pimageCursor);
     }
 
@@ -3507,7 +3507,7 @@ public:
         else
         {
             IshipIGC*   pshipParent = trekClient.GetShip()->GetParentShip();
-            assert (pshipParent);
+            ZAssert (pshipParent);
 
             float   minDot = pshipParent->GetHullType()->GetHardpointData(turret).minDot;
             if (minDot < -0.75f)
@@ -4314,7 +4314,7 @@ public:
                 SetViewMode(trekClient.GetShip()->IsGhost() ? vmCommand : vmHangar);
                 PositionCommandView(NULL, 0.0f);
                 StartSound(personalJumpSound);
-                assert (trekClient.GetShip()->IsGhost() || trekClient.GetViewCluster() == NULL);
+                ZAssert (trekClient.GetShip()->IsGhost() || trekClient.GetViewCluster() == NULL);
             }
         }
     }
@@ -4482,7 +4482,7 @@ public:
                 break;
 
             case vmCombat:
-                assert (trekClient.GetViewCluster() == NULL);
+                ZAssert (trekClient.GetViewCluster() == NULL);
                 SetCameraMode(cmCockpit);
                 m_pwrapImageBackdrop->SetImage(trekClient.GetCluster() ? m_pgroupImage3D : Image::GetEmpty());
 				m_pscreen = NULL;
@@ -4490,15 +4490,15 @@ public:
                 break;
 
             case vmOverride:
-                assert(false); // must call OverrideCamera()
+                ZAssert(false); // must call OverrideCamera()
                 break;
 
             case vmUI:
-                assert(false); // must call screen()
+                ZAssert(false); // must call screen()
                 break;
 
             default:
-                assert(false);
+                ZAssert(false);
                 break;
             }
 
@@ -4598,7 +4598,7 @@ public:
                         const Vector&       position2,
                         float               length)
     {
-        assert ((position2 - position1).LengthSquared() > 0.0f);
+        ZAssert ((position2 - position1).LengthSquared() > 0.0f);
         Vector      axis = (position2 - position1).Normalize();
         // GetOrthogonalVector does not return consistent results, which
         // causes an unsightly jump when tracking the camera. I replaced it with
@@ -4616,7 +4616,7 @@ public:
             dot_product = up * axis;
             if (fabsf (dot_product) > 0.95f)
                 up = orientation.GetRight ();
-            assert (up * axis < 0.95f);
+            ZAssert (up * axis < 0.95f);
         }
         Vector      side = CrossProduct (axis, up);
 
@@ -4742,7 +4742,7 @@ public:
         {
             bool        bJiggle = false;
 
-            assert (trekClient.GetShip()->GetBaseHullType() || trekClient.GetShip()->GetParentShip());
+            ZAssert (trekClient.GetShip()->GetBaseHullType() || trekClient.GetShip()->GetParentShip());
 
             IshipIGC*   pshipSource = trekClient.GetShip()->GetSourceShip();
 
@@ -4767,7 +4767,7 @@ public:
                 const Vector*  poffset;
                 if (pshipSource != trekClient.GetShip())
                 {
-                    assert (trekClient.GetShip()->GetParentShip() != NULL);
+                    ZAssert (trekClient.GetShip()->GetParentShip() != NULL);
                     Mount   turretID = trekClient.GetShip()->GetTurretID();
                     if (turretID != NA)
                     {
@@ -4834,7 +4834,7 @@ public:
                 }
                 else
                 {
-                    assert (ExternalCamera(m_cm));
+                    ZAssert (ExternalCamera(m_cm));
 
                     Orientation         orientationBfr;
                     Vector              positionBfr;
@@ -5172,7 +5172,7 @@ public:
 
     void OrientCommandView(void)
     {
-        assert (CommandCamera(m_cm));
+        ZAssert (CommandCamera(m_cm));
 
         Orientation o;
         if (m_cm == cmExternalCommandView34)
@@ -5183,7 +5183,7 @@ public:
         }
         else
         {
-            assert (m_cm == cmExternalCommandViewTD);
+            ZAssert (m_cm == cmExternalCommandViewTD);
 
             o.Reset();
         }
@@ -5202,7 +5202,7 @@ public:
         else
         {
             IshipIGC*   pship = trekClient.GetShip()->GetSourceShip();
-            assert (pship);
+            ZAssert (pship);
 
             *pposition = pship->GetPosition();
             *pradiusMin = 5.0f + pship->GetRadius() * 2.0f;
@@ -5238,10 +5238,10 @@ public:
 	// mdvalley: the func return type has to be explicit now.
     virtual void UpdateCommandView(void)
     {
-        assert (CommandCamera(m_cm));
+        ZAssert (CommandCamera(m_cm));
 
         IclusterIGC*    pcluster = trekClient.GetCluster();
-        assert (pcluster);
+        ZAssert (pcluster);
 
         if (!m_pconsoleImage->DrawSelectionBox())
         {
@@ -5448,7 +5448,7 @@ public:
 
         if (pcluster && m_screen == ScreenIDCombat)
         {
-            assert (m_screen == ScreenIDCombat);
+            ZAssert (m_screen == ScreenIDCombat);
             m_frameID++;
 
             Rect rectImage = m_pviewport->GetViewRect()->GetValue();
@@ -5465,7 +5465,7 @@ public:
             //
 
             const ModelListIGC* models = pcluster->GetPickableModels();
-            assert (models);
+            ZAssert (models);
 
             double   angleToPixels = double(rectImage.Size().X()) / double(m_cameraControl.GetFOV());
 
@@ -5502,7 +5502,7 @@ public:
             //
             {
                 SetTargetGeo(pmodelTarget);
-                assert (m_pconsoleImage);
+                ZAssert (m_pconsoleImage);
                 m_pconsoleImage->GetConsoleData()->SetTarget(pmodelTarget);
             }
 
@@ -5712,7 +5712,7 @@ public:
                                             distanceToEdge = d;
                                     }
                                 }
-                                assert (distanceToEdge >= 0.0f);
+                                ZAssert (distanceToEdge >= 0.0f);
                             }
                             g_fdInfo.objects_insector[type]++;
 
@@ -6349,7 +6349,7 @@ public:
                     up.z = 0.0f;
 
                     float   l = (float)sqrt(up.x * up.x + up.y * up.y);
-                    assert (l != 0.0f);
+                    ZAssert (l != 0.0f);
 
 
                     Vector  v = up * (dUp / l);
@@ -6432,7 +6432,7 @@ public:
             const float alpha = 0.75f;
 
             IsideIGC* pside = trekClient.GetShip()->GetSide();
-            assert (pside);
+            ZAssert (pside);
             Color   colorHUD = pside->GetColor();
             colorHUD = colorHUD * g_hudBright;
             colorHUD.SetAlpha(alpha);
@@ -6720,7 +6720,7 @@ public:
                            TrekKey          tkPrevious,
                            AbilityBitMask   abm = 0)
     {
-        assert ((ttMask & c_ttFront) == 0);
+        ZAssert ((ttMask & c_ttFront) == 0);
 		if (tk == tkNearest)
             ttMask |= c_ttNearest;
 		else if (tk == tkPrevious) 
@@ -6826,7 +6826,7 @@ public:
             index++;
             ppartLink = ppartLink->next();
 
-            assert (ppartLink);
+            ZAssert (ppartLink);
         }
 
         return index;
@@ -7267,7 +7267,7 @@ public:
 
                                 if (!pcluster)
                                     pcluster = trekClient.GetShip()->GetCluster();
-                                assert (pcluster);
+                                ZAssert (pcluster);
                             }
                             trekClient.RequestRipcord(trekClient.GetShip(), pcluster);
                         }
@@ -7686,10 +7686,10 @@ public:
                     if ((trekClient.GetViewCluster() == NULL) && !trekClient.flyingF())
                     {
                         IstationIGC*    pstation = trekClient.GetShip()->GetStation();
-                        assert (pstation);
+                        ZAssert (pstation);
 
                         IclusterIGC*    pcluster = pstation->GetCluster();
-                        assert (pcluster);
+                        ZAssert (pcluster);
                         trekClient.RequestViewCluster(pcluster);
                         SetViewMode(vmCommand);
                     }
@@ -7870,17 +7870,17 @@ public:
             case TK_TargetHostile:  // target the thing that has done the most damage to me recently
             {
                 DamageTrack*    pdt = trekClient.GetShip()->GetDamageTrack();
-                assert (pdt);
+                ZAssert (pdt);
                 int n = pdt->GetDamageBuckets()->n();
                 if (n > 0)
                 {
                     DamageBucketLink* pdbl = pdt->GetDamageBuckets()->first();
-                    assert (pdbl);
+                    ZAssert (pdbl);
 
                     ImodelIGC*   pmodel = pdbl->data()->model();
                     if ((n > 1) && (trekClient.GetShip()->GetCommandTarget(c_cmdCurrent) == pmodel))
                     {
-                        assert (pdbl->next());
+                        ZAssert (pdbl->next());
                         pmodel = pdbl->next()->data()->model();
                     }
 
@@ -8326,7 +8326,7 @@ public:
                 m_suicideTime = Time::Now();
             else if (Time::Now().clock() - m_suicideTime.clock() > 3000)
             {
-                assert (m_suicideCount != 0);
+                ZAssert (m_suicideCount != 0);
                 m_suicideCount = 0;
             }
             else if (m_suicideCount == 3)
@@ -8513,9 +8513,9 @@ public:
             static const ZString c_str2(" to buy a ");
 			static const ZString c_str3("  Press the [Insert] key to approve it.");
 
-            assert (pshipSender);
+            ZAssert (pshipSender);
             IhullTypeIGC*   pht = trekClient.m_pCoreIGC->GetHullType(hid);
-            assert (pht);
+            ZAssert (pht);
 
             trekClient.PostText(true, "%s",
                                 (const char*)((pshipSender->GetName() + c_str1) +
@@ -8994,7 +8994,7 @@ public:
 
     virtual bool OnOK(int result)
     {
-        assert(result == IDOK);
+        ZAssert(result == IDOK);
         return false;
     }
 

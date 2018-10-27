@@ -743,14 +743,14 @@ public:
 
     int CustomMapIDToItemID(int mapID)
     {
-        assert(mapID >= 0 && mapID < trekClient.GetNumStaticMaps());
+        ZAssert(mapID >= 0 && mapID < trekClient.GetNumStaticMaps());
         return -1 - mapID;
     }
 
     int ItemIDToCustomMapID(int itemID)
     {
         int mapID = -(itemID + 1);
-        assert(mapID >= 0 && mapID < trekClient.GetNumStaticMaps());
+        ZAssert(mapID >= 0 && mapID < trekClient.GetNumStaticMaps());
         return mapID;
     }
 
@@ -906,7 +906,7 @@ public:
             int index = 0;
             while (index < nType) 
             {
-                assert(!gameTypesIter.End());
+                ZAssert(!gameTypesIter.End());
                 index++;
                 gameTypesIter.Next();
             }
@@ -1074,7 +1074,7 @@ public:
             else if (!ValidateNumTeams(pfmMissionParams->missionparams.nTeams, pfmMissionParams->missionparams.szCustomMapFile))
             {
                 int mapTypeIndex = FindMapType(pfmMissionParams->missionparams.szCustomMapFile);
-                assert(mapTypeIndex != NA);
+                ZAssert(mapTypeIndex != NA);
                 const StaticMapInfo& mapinfo = trekClient.GetStaticMapInfo(mapTypeIndex);
 
                 const char* szFormat = "The map type '%s' can only be played with %d teams";

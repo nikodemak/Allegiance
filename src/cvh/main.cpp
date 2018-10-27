@@ -160,7 +160,7 @@ bool    x2pl(const char*   fileIn, const char* fileOut)
                     const char* p = line;
                     while (true)
                     {
-                        assert (*p != '\0');
+                        ZAssert (*p != '\0');
 
                         if (*p == ';')
                         {
@@ -259,12 +259,12 @@ bool    reduce(double   g[3][4])
     subtract(g, g[0][2], 0, 2);
     g[0][2] = 0.0f;
 
-    assert (g[1][1] != 0.0f);
+    ZAssert (g[1][1] != 0.0f);
     g[1][3] = g[1][3] / g[1][1];
     g[1][1] = 1.0;
     subtract(g, g[0][1], 0, 1);
 
-    assert (g[0][0] != 0.0f);
+    ZAssert (g[0][0] != 0.0f);
     g[0][3] = g[0][3] / g[0][0];
     g[0][0] = 1.0;
 
@@ -294,13 +294,13 @@ void    addAdjacent(int*    nAdjacent,
 bool    qh2cvh(const char*   file, FILE*    fOut, int mode)
 {
     bool    success = false;
-    assert (fOut);
+    ZAssert (fOut);
 
     FILE*   fIn;
 
     {
         char    bfr[c_cbBfr];
-        assert (strlen(file) < c_cbBfr - 10);
+        ZAssert (strlen(file) < c_cbBfr - 10);
         strcpy(bfr, file);
         strcat(bfr, ".qh");
 
@@ -348,8 +348,8 @@ bool    qh2cvh(const char*   file, FILE*    fOut, int mode)
                 int n = atoi(line);
 
                 const int   c_maxIDs = 20;
-                assert (n >= 3);
-                assert (n < c_maxIDs);
+                ZAssert (n >= 3);
+                ZAssert (n < c_maxIDs);
 
                 int ids[c_maxIDs];
 
@@ -359,7 +359,7 @@ bool    qh2cvh(const char*   file, FILE*    fOut, int mode)
                     for (int j = 0; (j < n); j++)
                     {
                         p = strchr(p, ' ');
-                        assert (p);
+                        ZAssert (p);
 
                         ids[j] = atoi(++p);
                     }
@@ -377,7 +377,7 @@ bool    qh2cvh(const char*   file, FILE*    fOut, int mode)
                     n--;
                 }
 
-                assert ((n & 0x01) == 0);
+                ZAssert ((n & 0x01) == 0);
 
                 int p0 = 0;
                 int p1 = 1;
@@ -464,7 +464,7 @@ bool    qh2cvh(const char*   file, FILE*    fOut, int mode)
         if (mode & c_startMesh)
         {
             char    bfr[c_cbBfr];
-            assert (strlen(file) < c_cbBfr - 10);
+            ZAssert (strlen(file) < c_cbBfr - 10);
 
             strcpy(bfr, "..\\artbuild\\");
             strcat(bfr, file);

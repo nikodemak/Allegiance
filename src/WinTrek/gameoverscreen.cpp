@@ -911,7 +911,7 @@ public:
             break;
 
         default:
-            assert(false);
+            ZAssert(false);
             m_plistSortedStatsSide = m_plistStatsSide;
             break;
         }
@@ -1001,7 +1001,7 @@ public:
             break;
 
         default:
-            assert(false);
+            ZAssert(false);
             m_plistSortedStats = m_plistStats;
             break;
         }

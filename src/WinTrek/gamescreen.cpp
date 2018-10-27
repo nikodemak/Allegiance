@@ -1853,7 +1853,7 @@ public:
 
     void BeginEventDetailsDownload(const ZString& strFileList)
     {
-        assert(!strFileList.IsEmpty());
+        ZAssert(!strFileList.IsEmpty());
 
         if (m_pSession)
         {
