@@ -10,6 +10,8 @@
 #include "enginep.h"
 #include "D3DDevice9.h"
 
+#include "Lib/fmtlib/fmt/include/fmt/format.h"
+
 #include "regkey.h"
 
 bool g_bLuaDebug = false;
@@ -270,7 +272,7 @@ EngineWindow::EngineWindow(	EngineConfigurationWrapper* pConfiguration,
 	devLog.OutputString("CVertexGenerator::Get()->Initialise( );\n");
 
     debugf("Initialize enginewindow font");
-    m_pfontFPS = CreateEngineFont("Verdana", 12, 0, false, false, false);
+    m_pfontFPS = CreateEngineFont("Courier New", 16, 0, false, false, false);
 
     m_pnumberTime = new ModifiableNumber(Time::Now() - m_timeStart);
 }
@@ -317,6 +319,8 @@ void EngineWindow::SetEngine(Engine* pengine) {
         (int)m_pConfiguration->GetGraphicsResolutionX()->GetValue(),
         (int)m_pConfiguration->GetGraphicsResolutionY()->GetValue()
     );
+
+    m_tPreviousFramePresented = Time::Now();
 }
 
 void EngineWindow::StartClose()
@@ -909,12 +913,25 @@ void EngineWindow::RenderPerformanceCounters(Surface* psurface)
 
         int ysize = m_pfontFPS->GetHeight();
         Color color(1, 0, 0);
+        int row_index = 0;
 
-        psurface->DrawString(m_pfontFPS, color, WinPoint(1, 1 + 0 * ysize), m_strPerformance1);
+        psurface->DrawString(m_pfontFPS, color, WinPoint(1, 1 + row_index++ * ysize), m_strPerformance1);
+        
+        for (const auto& entries : m_timings) {
+            std::string str = fmt::format("{:<20} ", entries.first);
+            for (const auto& average : entries.second.getMap()) {
+                str += fmt::format(
+                    "  {:>8.2f} ({:>4.0f})",
+                    average.second.avg.getAverage() * 1000,
+                    average.second.max.getMaximum() * 1000
+                );
+            }
+            psurface->DrawString(m_pfontFPS, color, WinPoint(1, 1 + row_index++ * ysize), str.c_str());
+        }
 
         if (m_indexFPS == 0) {
-            psurface->DrawString(m_pfontFPS, color, WinPoint(1, 1 + 1 * ysize), m_strPerformance2);
-            psurface->DrawString(m_pfontFPS, color, WinPoint(1, 1 + 2 * ysize), "Frame " + ZString(m_frameTotal));
+            psurface->DrawString(m_pfontFPS, color, WinPoint(1, 1 + row_index++ * ysize), m_strPerformance2);
+            psurface->DrawString(m_pfontFPS, color, WinPoint(1, 1 + row_index++ * ysize), "Frame " + ZString(m_frameTotal));
         }
 		
 		// Reenable AA.
@@ -1025,11 +1042,17 @@ void EngineWindow::DoIdle()
         return;
     }
 
+    Time tStart = Time::Now();
+    m_timings["0.Start"].AddSample((double)(tStart - m_tPreviousFramePresented));
+
     //
     // Update the input values
     //
 
     UpdateInput();
+
+    Time tInput = Time::Now();
+    m_timings["1.Input"].AddSample((double)(tInput - tStart));
 
     //
     // Switch fullscreen state if requested
@@ -1055,6 +1078,9 @@ void EngineWindow::DoIdle()
 		SendInput(2,Inputs,sizeof(INPUT));
 		m_bClickBreak = true;
     }
+
+    Time tConfiguration = Time::Now();
+    m_timings["2.Configuration"].AddSample((double)(tConfiguration - tConfiguration));
   
     //
     // Is the device ready
@@ -1072,11 +1098,17 @@ void EngineWindow::DoIdle()
 			UpdateSurfacePointer();
         }
 
+        Time tDevice = Time::Now();
+        m_timings["3.Device"].AddSample((double)(tDevice - tConfiguration));
+
         //
         // Evaluation
         //
 
         UpdateFrame();
+
+        Time tUpdated = Time::Now();
+        m_timings["4.Update"].AddSample((double)(tUpdated - tDevice));
 
         //
         // Rendering
@@ -1089,7 +1121,14 @@ void EngineWindow::DoIdle()
 			// Render, and if successful, display.
 			if( RenderFrame() ) 
 			{
+                Time tRendered = Time::Now();
+                m_timings["5.Render"].AddSample((double)(tRendered - tUpdated));
+
 				CD3DDevice9::Get()->RenderFinished( );
+                Time tPresented = Time::Now();
+                m_timings["6.Present"].AddSample((double)(tPresented - tRendered));
+                m_timings["Frame"].AddSample((double)(tPresented - m_tPreviousFramePresented));
+                m_tPreviousFramePresented = tPresented;
 				return;
 			}
         }

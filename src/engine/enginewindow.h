@@ -18,6 +18,92 @@ class TransformImage;
 class TranslateTransform2;
 class WrapImage;
 
+class ExponentialMovingAverageTracker {
+private:
+    double m_avg;
+    double m_alpha;
+
+public:
+    ExponentialMovingAverageTracker(int approx_window_size) :
+        m_avg(0),
+        m_alpha( 1.0f / approx_window_size)
+    {}
+
+    void AddSample(double value) {
+        m_avg = (value * m_alpha) + (1.0 - m_alpha) * m_avg;
+    }
+
+    double getAverage() const {
+        return m_avg;
+    }
+};
+
+class MaximumTracker {
+private:
+    double m_max;
+    int m_count;
+    int m_samples_ago;
+
+public:
+    MaximumTracker(int size) :
+        m_count(size),
+        m_max(0.0),
+        m_samples_ago(size)
+    {
+    }
+
+    void AddSample(double value) {
+        m_samples_ago++;
+        if (m_samples_ago > m_count || m_max <= value) {
+            m_max = value;
+            m_samples_ago = 0;
+        }
+    }
+
+    double getMaximum() const {
+        return m_max;
+    }
+};
+
+class MultiTracker {
+public:
+    ExponentialMovingAverageTracker avg;
+    MaximumTracker max;
+
+    MultiTracker(int window_size) :
+        avg(window_size),
+        max(window_size)
+    {}
+};
+
+class RenderTimings {
+private:
+    std::map<int, MultiTracker> m_map;
+
+public:
+    RenderTimings() :
+        m_map({
+            { 10, MultiTracker(10) },
+            { 100, MultiTracker(100) },
+            { 1000, MultiTracker(1000) },
+            { 10000, MultiTracker(10000) }
+            })
+    {
+
+    }
+
+    void AddSample(double value) {
+        for (auto& kv : m_map) {
+            kv.second.avg.AddSample(value);
+            kv.second.max.AddSample(value);
+        }
+    }
+
+    const std::map<int, MultiTracker>& getMap() const {
+        return m_map;
+    }
+};
+
 //////////////////////////////////////////////////////////////////////////////
 //
 // A window with an associated engine object
@@ -74,6 +160,9 @@ protected:
 
     TRef<EngineConfigurationWrapper> m_pConfiguration;
     TRef<ValueList> m_pConfigurationUpdater;
+
+    std::map<std::string, RenderTimings> m_timings = {};
+    Time m_tPreviousFramePresented;
 
     TRef<Engine>               m_pengine;
     TRef<InputEngine>          m_pinputEngine;
