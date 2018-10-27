@@ -159,7 +159,8 @@ namespace Wopr
         internal void UpdateTeamStrategies()
         {
             // Get team leader's ship
-            var teamLeaderShip = _connectedClientsByPlayerName.Values.Where(p => p.GetShip() != null && p.GetSide() != null &&  p.SideLeaderShipID(p.GetSide().GetObjectID()) == p.GetShip()?.GetObjectID()).FirstOrDefault()?.GetShip();
+            var teamLeaderShip = _connectedClientsByPlayerName.Values.ToArray()
+                .Where(p => p.GetShip() != null && p.GetSide() != null &&  p.SideLeaderShipID(p.GetSide().GetObjectID()) == p.GetShip()?.GetObjectID()).FirstOrDefault()?.GetShip();
 
             if (teamLeaderShip == null)
                 return;
@@ -214,6 +215,20 @@ namespace Wopr
         //        null).Unwrap();
         //}
 
+        public void ChangeStrategy(AllegianceInterop.ClientConnection clientConnection, StrategyID strategyID, StrategyBase lastStrategy)
+        {
+            ChangeStrategy(clientConnection, strategyID, lastStrategy.PlayerName, lastStrategy.SideIndex, lastStrategy.IsGameController, lastStrategy.IsCommander);
+        }
+
+        internal void PostResignAndQuit()
+        {
+            var firstConnectedClient = _connectedClientsByPlayerName.Values.FirstOrDefault();
+
+            var ship = firstConnectedClient.GetShip();
+
+            if (ship != null)    
+                firstConnectedClient.SendChat(ship, AllegianceInterop.ChatTarget.CHAT_TEAM, -1, -1, "#resign", -1, -1, -1, null, false);
+        }
 
         public void ChangeStrategy(AllegianceInterop.ClientConnection clientConnection, StrategyID strategyID, string playerName, short sideIndex, bool isGameController, bool isCommander)
         {
@@ -245,14 +260,15 @@ namespace Wopr
             StrategyBase strategy = StrategyBase.GetInstance(strategyID, clientConnection, _gameInfo, _botAuthenticationGuid, playerName, sideIndex, isGameController, isCommander);
 
             strategy.OnStrategyComplete += Strategy_OnStrategyComplete;
+            strategy.OnGameComplete += Strategy_OnGameComplete;
 
 
             //StrategyBase strategy = _assemblyLoader.CreateInstance(strategyID);
 
             //strategy.Attach(clientConnection, _gameInfos[sideIndex], _botAuthenticationGuid, playerName, sideIndex, isGameController, isCommander);
 
-            
-           
+
+
 
             // Can't hook the transparent object directly to the client, the events raised by c++/cli won't trigger on the managed end
             // becuase they are attached to a copy of the object in the far application domain, so we will attach to the event on the 
@@ -268,13 +284,20 @@ namespace Wopr
             //    _currentStrategyAppMessageDelegateByPlayerName.Add(playerName, onAppMessageDelegate);
             //    _currentStrategyByPlayerName.Add(playerName, strategy);
 
-                
+
             //}
             //else
             //{
             //    throw new Exception($"Error, couldn't find the {strategyID.ToString()} strategy in the loaded strategy list.");
             //}
 
+        }
+
+        private void Strategy_OnGameComplete(StrategyBase strategy)
+        {
+            Log(strategy.PlayerName, $"OnGameComplete: Exiting WOPR to trigger a new game to start.");
+
+            _cancellationTokenSource.Cancel();
         }
 
         private class CreatePlayerThreadParams
@@ -304,7 +327,7 @@ namespace Wopr
             //});
 
 
-            AllegianceInterop.ClientConnection clientConnection = new AllegianceInterop.ClientConnection();
+            AllegianceInterop.ClientConnection clientConnection = new AllegianceInterop.ClientConnection(Configuration.ArtPath);
 
 
 
@@ -362,14 +385,14 @@ namespace Wopr
                 //{
                     while (_cancellationTokenSource.IsCancellationRequested == false)
                     {
-                        //try
-                        //{
+                        try
+                        {
                             clientConnection.SendAndReceiveUpdate();
-                        //}
-                        //catch (Exception ex)
-                        //{
-                        //    Log(createPlayerParams.playerName, ex);
-                        //}
+                        }
+                        catch (Exception ex)
+                        {
+                            Log(createPlayerParams.playerName, ex);
+                        }
 
                         StrategyBase currentStrategy;
                         if (_currentStrategyByPlayerName.TryGetValue(createPlayerParams.playerName, out currentStrategy) == true)

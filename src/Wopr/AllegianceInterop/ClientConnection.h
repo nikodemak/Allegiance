@@ -131,7 +131,7 @@ namespace AllegianceInterop
 		delegate void OnAppMessageDelegate(ClientConnection ^ clientConnection, array<Byte> ^ bytes);
 		event OnAppMessageDelegate ^ OnAppMessage;
 
-		ClientConnection();
+		ClientConnection(String ^ artpath);
 		~ClientConnection();
 		!ClientConnection();
 
@@ -244,6 +244,9 @@ namespace AllegianceInterop
 		{
 			marshal_context^ context = gcnew marshal_context();
 
+			if (pshipSender == nullptr)
+				return;
+
 			m_nativeClient->SendChat(
 				pshipSender->m_instance,
 				(::ChatTarget) ctRecipient,
@@ -253,11 +256,15 @@ namespace AllegianceInterop
 				cid,
 				otTarget,
 				oidTarget,
-				pmodelTarget->m_instance,
+				pmodelTarget ? pmodelTarget->m_instance : nullptr,
 				bObjectModel);
 		}
 
 		ShipID SideLeaderShipID(SideID sideID) { return m_nativeClient->MyMission()->SideLeaderShipID(sideID); }
+
+		void DonateMoney(PlayerInfoWrapper ^ playerInfo, Money amount) {
+			m_nativeClient->DonateMoney(playerInfo->m_instance, amount);
+		}
 
 	};
 }

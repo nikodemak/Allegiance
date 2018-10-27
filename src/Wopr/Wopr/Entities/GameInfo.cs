@@ -25,6 +25,9 @@ namespace Wopr.Entities
 
         public int GetSweepingScoutCount(IclusterIGCWrapper cluster)
         {
+            if (cluster == null)
+                return 0;
+
             int sweepingScoutCount;
             if (SweepingScoutCountByClusterObjectID.TryGetValue(cluster.GetObjectID(), out sweepingScoutCount) == true)
                 return sweepingScoutCount;
@@ -83,8 +86,8 @@ namespace Wopr.Entities
                     {
                         returnValue.Add(clusterInfo.GetObjectID(), missionCluster.GetName());
                     }
-                    // Did we find the tech rock?
-                    else if (missionCluster.GetAsteroids().Where(p => p.GetName().StartsWith("a") == false && p.GetName().StartsWith("He") == false).Count() == 0)
+                    // Did we find the tech rock or a station in the cluster?
+                    else if (missionCluster.GetAsteroids().Where(p => p.GetName().StartsWith("a") == false && p.GetName().StartsWith("He") == false).Count() == 0 && missionCluster.GetStations().Count == 0)
                     {
                         returnValue.Add(clusterInfo.GetObjectID(), missionCluster.GetName());
                     }

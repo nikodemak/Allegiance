@@ -20,6 +20,8 @@ namespace Wopr
     // To make this work in a debugger, you must disable the LoaderLock exception in Debug->Windows->Exceptions, then ManagedExceptions->LoaderLock (Disable)
     class Program
     {
+        private DateTime _applicationStartTime = DateTime.Now;
+
         static void Main(string[] args)
         {
             Program p = new Program();
@@ -76,6 +78,7 @@ namespace Wopr
 
             bool launchWithoutYellowCom = false;
             bool launchWithYellowComOnly = false;
+            bool launchWithBlueComOnly = false;
 
             if (args.Length == 2 && args[0] == "-t")
             {
@@ -96,6 +99,12 @@ namespace Wopr
                 launchWithYellowComOnly = true;
             }
 
+            if (args.Length == 1 && args[0] == "-b")
+            {
+                Console.WriteLine("Will launch with blue comm only for debugging.");
+                launchWithBlueComOnly = true;
+            }
+
             if (Directory.Exists(@"c:\1\Logs\") == false)
                 Directory.CreateDirectory(@"c:\1\Logs");
 
@@ -112,15 +121,18 @@ namespace Wopr
             
             CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
             
-            TeamDirector teamDirectorYellow = new TeamDirector(cancellationTokenSource, "127.0.0.1");
-            TeamDirector teamDirectorBlue = new TeamDirector(cancellationTokenSource, "127.0.0.1");
+            TeamDirector teamDirectorYellow = new TeamDirector(cancellationTokenSource, Configuration.LobbyAddress);
+            TeamDirector teamDirectorBlue = new TeamDirector(cancellationTokenSource, Configuration.LobbyAddress);
 
             // Yellow Team
 
-            if (launchWithoutYellowCom == false)
+            if (launchWithoutYellowCom == false && launchWithBlueComOnly == false)
                  teamDirectorYellow.CreatePlayer("yellowcom@BOT", 0, false, true);
 
-            if (launchWithYellowComOnly == false)
+            if(launchWithBlueComOnly == true)
+                teamDirectorBlue.CreatePlayer("bluecom@BOT", 0, true, true);
+
+            if (launchWithYellowComOnly == false && launchWithBlueComOnly == false)
             {
 
                 //teamDirectorYellow.CreatePlayer("yellow_XX@BOT", 0, false, false);
@@ -153,6 +165,8 @@ namespace Wopr
             //{
             //    teamDirectorBlue.CreatePlayer(playerName, 1, false, false);
             //});
+            
+            DateTime? resignPostedTime = null;
 
             do
             {
@@ -180,7 +194,10 @@ namespace Wopr
                     switch (key.Key)
                     {
                         case ConsoleKey.Q:
+                            Console.WriteLine("Exiting...");
                             cancellationTokenSource.Cancel();
+                            //teamDirectorBlue.PostResignAndQuit();
+                            //resignPostedTime = DateTime.Now;
                             break;
                         default:
                             Console.WriteLine("\nPress q to quit.");
@@ -191,7 +208,30 @@ namespace Wopr
                 teamDirectorYellow.UpdateTeamStrategies();
                 teamDirectorBlue.UpdateTeamStrategies();
 
+                if (resignPostedTime != null && (DateTime.Now - resignPostedTime.GetValueOrDefault(DateTime.MinValue)).TotalSeconds > 3)
+                    cancellationTokenSource.Cancel();
+
                 Thread.Sleep(100);
+
+                // If we are not debugging, then only allow a game to run for 2 hours max. This will help ensure that the bots don't get locked up indefinitely.
+                if (launchWithoutYellowCom == false && launchWithYellowComOnly == false)
+                {
+                    if (DateTime.Now.Subtract(_applicationStartTime).TotalHours > 2 && resignPostedTime == null)
+                    {
+                        Console.WriteLine($"Application has been running for more than 2 hours, restarting game. {_applicationStartTime}, {DateTime.Now}");
+                        //cancellationTokenSource.Cancel();
+                        teamDirectorBlue.PostResignAndQuit();
+                        resignPostedTime = DateTime.Now;
+                    }
+                    
+                    if (DateTime.Now.Subtract(_applicationStartTime).TotalMinutes > 121)
+                    {
+                        Console.WriteLine($"Application has been running for more than 2 hours, and got stuck posting a resign. Forcing direct exit.");
+                        //cancellationTokenSource.Cancel();
+                        //break;
+                        System.Environment.Exit(0);
+                    }
+                }
 
                 //var keyInfo = Console.ReadKey();
                 //if (keyInfo.KeyChar == 'q')
@@ -213,6 +253,8 @@ namespace Wopr
             teamDirectorBlue.DisconnectAllClients();
 
             Console.WriteLine("Done.");
+
+            System.Environment.Exit(0);
         }
         
     }
