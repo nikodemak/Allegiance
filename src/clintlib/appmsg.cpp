@@ -3395,6 +3395,12 @@ HRESULT BaseClient::HandleMsg(FEDMESSAGE* pfm,
         }
         break;
 
+        case FM_S_CLUSTERINFO:
+        {
+            //used by the pigs only, ignore
+        }
+        break;
+
         // ************ Lobby Messages *************
 
         case FM_L_AUTO_UPDATE_INFO: 
