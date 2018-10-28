@@ -956,7 +956,7 @@ bool CPig::HandleThreadMessage(const MSG* pMsg, HANDLE hObject)
       // Parse the message parameters
       XChatCommand* pChat = reinterpret_cast<XChatCommand*>(pMsg->wParam);
       XChatCommand& chat = *pChat;
-      std::auto_ptr<XChatCommand> apChat(pChat);
+      std::unique_ptr<XChatCommand> apChat(pChat);
 
       // Break out the first token
       ZString strMessage(chat.m_strText);
@@ -1074,7 +1074,7 @@ bool CPig::HandleThreadMessage(const MSG* pMsg, HANDLE hObject)
     {
       // Parse the message parameters
       XSectorChange* pParams = reinterpret_cast<XSectorChange*>(pMsg->wParam);
-      std::auto_ptr<XSectorChange> apParams(pParams);
+      std::unique_ptr<XSectorChange> apParams(pParams);
 
       // Notify the active behavior
       HRESULT hr = pParams->m_spBehavior->OnSectorChange(
@@ -1086,7 +1086,7 @@ bool CPig::HandleThreadMessage(const MSG* pMsg, HANDLE hObject)
     {
       // Parse the message parameters
       XShipDamaged* pParams = reinterpret_cast<XShipDamaged*>(pMsg->wParam);
-      std::auto_ptr<XShipDamaged> apParams(pParams);
+      std::unique_ptr<XShipDamaged> apParams(pParams);
 
       // Notify the active behavior
       HRESULT hr = pParams->m_spBehavior->OnShipDamaged(pParams->m_spShip,
@@ -1099,7 +1099,7 @@ bool CPig::HandleThreadMessage(const MSG* pMsg, HANDLE hObject)
     {
       // Parse the message parameters
       XShipKilled* pParams = reinterpret_cast<XShipKilled*>(pMsg->wParam);
-      std::auto_ptr<XShipKilled> apParams(pParams);
+      std::unique_ptr<XShipKilled> apParams(pParams);
       
       // Notify the active behavior
 			HRESULT hr = pParams->m_spBehavior->OnShipKilled(pParams->m_spShip, 
@@ -1111,7 +1111,7 @@ bool CPig::HandleThreadMessage(const MSG* pMsg, HANDLE hObject)
     {
       // Parse the message parameters
       XAlephHit* pParams = reinterpret_cast<XAlephHit*>(pMsg->wParam);
-      std::auto_ptr<XAlephHit> apParams(pParams);
+      std::unique_ptr<XAlephHit> apParams(pParams);
       
       // Notify the active behavior
       HRESULT hr = pParams->m_spBehavior->OnAlephHit(pParams->m_spAleph);

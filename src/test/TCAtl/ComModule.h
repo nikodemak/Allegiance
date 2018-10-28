@@ -69,7 +69,7 @@ public:
     DWORD dwClsContext = CLSCTX_LOCAL_SERVER);
   HRESULT RevokeClassObjects();
   HRESULT StartMonitor();
-  LONG Unlock();
+  LONG Unlock() throw();
   HRESULT OpenAppIDRegKey(CRegKey& key, REGSAM samDesired = KEY_ALL_ACCESS);
 
 // Overrides
@@ -699,7 +699,7 @@ HRESULT TCComModule<T>::StartMonitor()
 }
 
 template <class T>
-LONG TCComModule<T>::Unlock()
+LONG TCComModule<T>::Unlock() throw()
 {
   // Perform default processing
   LONG l = CComModule::Unlock();
