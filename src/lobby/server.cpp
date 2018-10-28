@@ -311,11 +311,11 @@ HRESULT LobbyServerSite::OnAppMessage(FedMessaging * pthis, CFMConnection & cnxn
 			// BT - 1/27/2012 - Enables lobby to return ranks when ACSS is disabled using old callsign(rank) format.
 			rankRetrieved = true;
 
-			std::tr1::regex rgx("(\\W+)?((?:\\w|@)+)(\\((\\d+)\\))?");
-			std::tr1::smatch result;
+			std::regex rgx("(\\W+)?((?:\\w|@)+)(\\((\\d+)\\))?");
+			std::smatch result;
 			std::string charName(szCharacterName);
 
-			if(std::tr1::regex_search(charName, result, rgx) == true)
+			if(std::regex_search(charName, result, rgx) == true)
 			{
 				if(result.size() > 2)
 					sprintf((char *) szCharacterName, "%s%s", result[1].str().c_str(), result[2].str().c_str());
