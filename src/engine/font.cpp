@@ -121,7 +121,11 @@ private:
 		hTex = m_pFontTex->GetTexHandle();
 
 		// Lock texture to copy font data into.
-		CVRAMManager::Get()->LockTexture( hTex, &lockRect );
+		HRESULT hr = CVRAMManager::Get()->LockTexture( hTex, &lockRect );
+
+        if (hr != D3D_OK) {
+            debugf("Font: Unable to lock texture");
+        }
 
 		// Copy in all the data.
 		WORD * pData = (WORD*) lockRect.pBits;
