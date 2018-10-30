@@ -246,10 +246,10 @@ private:
 		BYTE*	pbits;
         DWORD*	pcolorbytes;
 		//HBITMAP	hbitmap	= ::CreateDIBSection( NULL,	(BITMAPINFO*)&bmih,	DIB_RGB_COLORS,	(void**)&pbits,	NULL, 0	);
-        HBITMAP	hbitmap = ::CreateDIBSection(NULL, &bmih, DIB_RGB_COLORS, (void**)&pcolorbytes, NULL, 0);
+        HDC	hdcBitmap = ::CreateCompatibleDC(NULL);
+        HBITMAP	hbitmap = ::CreateDIBSection(hdcBitmap, &bmih, DIB_RGB_COLORS, (void**)&pcolorbytes, NULL, 0);
 		ZAssert(hbitmap	!= NULL);
 
-		HDC	hdcBitmap =	::CreateCompatibleDC(NULL);
 		ZAssert(hdcBitmap != NULL);
 		HBITMAP	hbitmapOld = (HBITMAP)::SelectObject(hdcBitmap,	hbitmap);
 		ZAssert(hbitmapOld != NULL);
