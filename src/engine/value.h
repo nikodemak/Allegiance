@@ -122,7 +122,7 @@ private:
     // vtable                             // 1 DWORD
     // m_count                            // 1 DWORD
     TVector<TRef<Value> > m_pchildren;    // 2 DWORDS
-    TList<Value*>         m_listParents;  // 3 DWORDS
+    std::vector<Value*>   m_listParents;  // 3 DWORDS
     TRef<INameSpaceInfo>  m_pnsInfo;      // 1 DWORD
     bool                  m_bChanged;     // 1 DWORD
 

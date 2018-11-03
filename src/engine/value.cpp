@@ -188,16 +188,9 @@ void Value::Changed()
     if (!m_bChanged) {
         m_bChanged = true;
 
-        TList<Value*>::Iterator iter(m_listParents);
-
-        while (!iter.End()) {
-            Value* pvalue = iter.Value();
-
-            //  , get this to work
-            //if (!pvalue->m_bChanged) {
-                pvalue->ChildChanged(this, NULL);
-            //}
-            iter.Next();
+        for (auto iter = m_listParents.begin(); iter != m_listParents.end(); ++iter) {
+            Value* pvalue = *iter;
+            pvalue->ChildChanged(this, NULL);
         }
     }
 }
@@ -207,8 +200,8 @@ void Value::ChangeTo(Value* pvalue)
     ZAssert(pvalue != this);
     TRef<Value> pvalueSave = this;
 
-    while (m_listParents.GetCount() != 0) {
-        m_listParents.GetFront()->ChildChanged(this, pvalue);
+    while (m_listParents.begin() != m_listParents.end()) {
+        (*m_listParents.begin())->ChildChanged(this, pvalue);
     };
 }
 
@@ -219,14 +212,22 @@ bool Value::IsConstant()
 
 void Value::AddParent(Value* pvalue)
 {
-    m_listParents.PushFront(pvalue);
+    m_listParents.insert(m_listParents.begin(), pvalue);
 }
 
 void Value::RemoveParent(Value* pvalue)
 {
-    ZAssert(m_listParents.Find(pvalue));
-    m_listParents.Remove(pvalue);
-    if (m_listParents.GetCount() == 0) {
+    auto iter = m_listParents.begin();
+    while (iter != m_listParents.end()) {
+        if (*iter == pvalue) {
+            iter = m_listParents.erase(iter);
+        }
+        else {
+            ++iter;
+        }
+    }
+
+    if (m_listParents.size() == 0) {
         OnNoParents();
     }
 }
