@@ -206,7 +206,11 @@ private:
 		}
 		
 		// Finished, unlock texture.
-		CVRAMManager::Get()->UnlockTexture( hTex );
+		hr = CVRAMManager::Get()->UnlockTexture( hTex );
+
+        if (hr != D3D_OK) {
+            debugf("Font: Failed to unlock texture");
+        }
 	}
 
 
