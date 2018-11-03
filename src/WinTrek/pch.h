@@ -3,8 +3,6 @@
 //      but are changed infrequently
 #pragma once
 
-#define __MODULE__ "WinTrek"
-
 //
 // C Headers
 //

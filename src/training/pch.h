@@ -7,8 +7,6 @@
 #ifndef _PCH_H_
 #define _PCH_H_
 
-#define __MODULE__ "Training"
-
 // BT - STEAM
 #include "steam_api.h"
 

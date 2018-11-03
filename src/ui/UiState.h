@@ -1,9 +1,5 @@
 #pragma once
 
-#ifndef __MODULE__
-#define __MODULE__ "Ui"
-#endif
-
 #include <functional>
 #include <list>
 #include <memory>
