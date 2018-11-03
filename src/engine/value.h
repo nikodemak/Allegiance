@@ -10,6 +10,7 @@
 #include <tref.h>
 #include <tvector.h>
 #include <zstring.h>
+#include <list>
 
 #include "mdl.h"
 
@@ -221,8 +222,8 @@ public:
 
 private:
     Site*                         m_psite;
-    TList<TRef<Value> >           m_list;
-    TList<TRef<Value> >::Iterator m_iter;
+    std::list<TRef<Value>>      m_list;
+    std::list<TRef<Value>>::iterator      m_iter;
 
     virtual void InternalUpdate();
     virtual void ChildChanged(Value* pvalue, Value* pvalueNew);
