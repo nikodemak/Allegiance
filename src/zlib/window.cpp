@@ -38,7 +38,6 @@ void Window::Construct()
 }
 
 Window::Window():
-    m_pwindowParent(nullptr),
     m_hmenu(nullptr),
     m_hwnd(nullptr),
     m_bSizeable(false),
@@ -52,7 +51,6 @@ Window::Window():
 }
 
 Window::Window(
-          Window*  pwindowParent,
     const WinRect& rect,
     const ZString& strTitle,
     const ZString& strClass,
@@ -60,7 +58,6 @@ Window::Window(
           HMENU    hmenu,
           StyleEX  styleEX
 ) :
-    m_pwindowParent(pwindowParent),
     m_style(style),
     m_styleEX(styleEX),
     m_hmenu(hmenu),
@@ -75,21 +72,17 @@ Window::Window(
 
     g_pWindow = this;
 
-    if (m_pwindowParent) {
-        m_style.Set(StyleChild());
-    } else {
-        m_style.Set(
-            StylePopup() |
-            StyleCaption() |
-            StyleMaximizeBox() |
-            StyleMinimizeBox() |
-            StyleSysMenu() |
-            StyleThickFrame()
-        );
-        
-        // set a default arrow cursor for topmost windows
-        m_hcursor = LoadCursor(nullptr, IDC_ARROW);
-    }
+    m_style.Set(
+        StylePopup() |
+        StyleCaption() |
+        StyleMaximizeBox() |
+        StyleMinimizeBox() |
+        StyleSysMenu() |
+        StyleThickFrame()
+    );
+
+    // set a default arrow cursor for topmost windows
+    m_hcursor = LoadCursor(nullptr, IDC_ARROW);
 
     m_style.Set(StyleVisible() | StyleClipChildren() | StyleClipSiblings());
 
@@ -111,7 +104,7 @@ Window::Window(
 
             //m_rect.XMin(), m_rect.YMin(), 
             m_rect.XSize(), m_rect.YSize(),
-            pwindowParent ? pwindowParent->GetHWND() : nullptr,
+            nullptr,
             m_hmenu,
             GetModuleHandle(nullptr),
             this
@@ -132,7 +125,7 @@ Window::Window(
 
             //m_rect.XMin(), m_rect.YMin(), 
             m_rect.XSize(), m_rect.YSize(),
-            pwindowParent ? pwindowParent->GetHWND() : nullptr,
+            nullptr,
             m_hmenu,
             GetModuleHandle(nullptr),
             this
@@ -146,14 +139,9 @@ Window::Window(
 
     m_styleEX.SetWord(::GetWindowLong(m_hwnd, GWL_EXSTYLE));
 
-    if (m_pwindowParent) {
-        m_pwindowParent->AddChild(this);
-    }
-
 }
 
 BOOL Window::Create(
-          Window*  pwindowParent,
     const WinRect& rect,
           LPCSTR   szTitle,
           LPCSTR   szClass,
@@ -168,14 +156,10 @@ BOOL Window::Create(
     m_styleEX.Set(styleEX);
     m_style.Set(StyleVisible() | StyleClipChildren() | StyleClipSiblings());
     m_rect = rect;
-    m_pwindowParent = pwindowParent;
     m_hmenu = hmenu;
     m_nID = nID;
 
-    if (!m_pwindowParent) {
-        // set a default arrow cursor for topmost windows
-        m_hcursor = LoadCursor(nullptr, IDC_ARROW);
-    }
+    m_hcursor = LoadCursor(nullptr, IDC_ARROW);
     
     m_hwnd = ::CreateWindowEx(
             styleEX.GetWord(),
@@ -184,7 +168,7 @@ BOOL Window::Create(
             m_style.GetWord(),
             m_rect.left, m_rect.top,
             m_rect.XSize(), m_rect.YSize(),
-            pwindowParent ? pwindowParent->GetHWND() : nullptr,
+            nullptr,
             hmenu ? hmenu : (HMENU) nID,
             GetModuleHandle(nullptr),
             this);
@@ -263,8 +247,6 @@ void Window::CalcStyle()
 
 void Window::SetTopMost(bool bTopMost)
 {
-    ZAssert(m_pwindowParent == nullptr);
-
     //if (m_bTopMost != bTopMost) {
         m_bTopMost = bTopMost;
         CalcStyle();
@@ -273,8 +255,6 @@ void Window::SetTopMost(bool bTopMost)
 
 void Window::SetSizeable(bool bSizeable)
 {
-    ZAssert(m_pwindowParent == nullptr);
-
     if (m_bSizeable != bSizeable) {
         m_bSizeable = bSizeable;
         CalcStyle();
@@ -321,15 +301,7 @@ void Window::UpdateRect()
 
     WinPoint pointOffset = ClientToScreen(WinPoint(0, 0));
 
-    if (m_pwindowParent) {
-        pointOffset = m_pwindowParent->ScreenToClient(pointOffset);
-    }
-
     m_rectClient.Offset(pointOffset);
-
-    if (m_pwindowParent) {
-        m_pwindowParent->ChildRectChanged(this);
-    }
 }
 
 void Window::ChildRectChanged(Window* pchild)
@@ -641,17 +613,7 @@ ZString Window::GetText() const
 
 HCURSOR Window::GetCursor() const
 {
-    if (m_hcursor != nullptr) {
-        return m_hcursor;
-    } else {
-        // inherit our cursor from our parent window
-
-        if (GetParent() != nullptr) {
-            return GetParent()->GetCursor();
-        } else {
-            return nullptr;
-        }
-    }
+    return m_hcursor;
 }
 
 void Window::ShowMouse(bool bShow)

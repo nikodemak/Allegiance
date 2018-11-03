@@ -124,7 +124,7 @@ EngineWindow::EngineWindow(	EngineConfigurationWrapper* pConfiguration,
 							const WinPoint&		sizeMin,
 							HMENU				hmenu
 ) :
-				Window(NULL, rect, strTitle, ZString(), 0, hmenu),
+				Window(rect, strTitle, ZString(), 0, hmenu),
 				m_pengine(nullptr),
 				m_offsetWindowed(rect.Min()),
 				m_bSizeable(true),
