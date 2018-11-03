@@ -163,6 +163,8 @@ protected:
 
     std::map<std::string, RenderTimings> m_timings = {};
     Time m_tPreviousFramePresented;
+    uint32_t m_iPreviousFrameTRefAdded;
+    uint32_t m_iPreviousFrameTRefRemoved;
 
     TRef<Engine>               m_pengine;
     TRef<InputEngine>          m_pinputEngine;

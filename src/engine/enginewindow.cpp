@@ -321,6 +321,8 @@ void EngineWindow::SetEngine(Engine* pengine) {
     );
 
     m_tPreviousFramePresented = Time::Now();
+    m_iPreviousFrameTRefAdded = IObjectSingle::totalAdded();
+    m_iPreviousFrameTRefRemoved = IObjectSingle::totalRemoved();
 }
 
 void EngineWindow::StartClose()
@@ -933,8 +935,8 @@ void EngineWindow::RenderPerformanceCounters(Surface* psurface)
             for (const auto& average : entries.second.getMap()) {
                 str += fmt::format(
                     "  {:>8.2f} ({:>4.0f})",
-                    average.second.avg.getAverage() * 1000,
-                    average.second.max.getMaximum() * 1000
+                    average.second.avg.getAverage(),
+                    average.second.max.getMaximum()
                 );
             }
             psurface->DrawString(m_pfontFPS, color, WinPoint(1, 1 + row_index++ * ysize), str.c_str());
@@ -1054,7 +1056,7 @@ void EngineWindow::DoIdle()
     }
 
     Time tStart = Time::Now();
-    m_timings["0.Start"].AddSample((double)(tStart - m_tPreviousFramePresented));
+    m_timings["0.Start"].AddSample((double)(tStart - m_tPreviousFramePresented) * 1000);
 
     //
     // Update the input values
@@ -1063,7 +1065,7 @@ void EngineWindow::DoIdle()
     UpdateInput();
 
     Time tInput = Time::Now();
-    m_timings["1.Input"].AddSample((double)(tInput - tStart));
+    m_timings["1.Input"].AddSample((double)(tInput - tStart) * 1000);
 
     //
     // Switch fullscreen state if requested
@@ -1091,7 +1093,7 @@ void EngineWindow::DoIdle()
     }
 
     Time tConfiguration = Time::Now();
-    m_timings["2.Configuration"].AddSample((double)(tConfiguration - tConfiguration));
+    m_timings["2.Configuration"].AddSample((double)(tConfiguration - tConfiguration) * 1000);
   
     //
     // Is the device ready
@@ -1110,7 +1112,7 @@ void EngineWindow::DoIdle()
         }
 
         Time tDevice = Time::Now();
-        m_timings["3.Device"].AddSample((double)(tDevice - tConfiguration));
+        m_timings["3.Device"].AddSample((double)(tDevice - tConfiguration) * 1000);
 
         //
         // Evaluation
@@ -1119,7 +1121,7 @@ void EngineWindow::DoIdle()
         UpdateFrame();
 
         Time tUpdated = Time::Now();
-        m_timings["4.Update"].AddSample((double)(tUpdated - tDevice));
+        m_timings["4.Update"].AddSample((double)(tUpdated - tDevice) * 1000);
 
         //
         // Rendering
@@ -1133,13 +1135,21 @@ void EngineWindow::DoIdle()
 			if( RenderFrame() ) 
 			{
                 Time tRendered = Time::Now();
-                m_timings["5.Render"].AddSample((double)(tRendered - tUpdated));
+                m_timings["5.Render"].AddSample((double)(tRendered - tUpdated) * 1000);
 
 				CD3DDevice9::Get()->RenderFinished( );
                 Time tPresented = Time::Now();
-                m_timings["6.Present"].AddSample((double)(tPresented - tRendered));
-                m_timings["Frame"].AddSample((double)(tPresented - m_tPreviousFramePresented));
+                m_timings["6.Present"].AddSample((double)(tPresented - tRendered) * 1000);
+                m_timings["Frame"].AddSample((double)(tPresented - m_tPreviousFramePresented) * 1000);
                 m_tPreviousFramePresented = tPresented;
+
+                m_timings["TRef(Total)"].AddSample((double)(IObjectSingle::totalAdded() - IObjectSingle::totalRemoved()));
+                m_timings["TRef(Total added)"].AddSample((double)(IObjectSingle::totalAdded()));
+                m_timings["TRef(Added)"].AddSample((double)(IObjectSingle::totalAdded() - m_iPreviousFrameTRefAdded));
+                m_timings["TRef(Removed)"].AddSample((double)(IObjectSingle::totalRemoved() - m_iPreviousFrameTRefRemoved));
+
+                m_iPreviousFrameTRefAdded = IObjectSingle::totalAdded();
+                m_iPreviousFrameTRefRemoved = IObjectSingle::totalRemoved();
 				return;
 			}
         }
