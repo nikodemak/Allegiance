@@ -339,7 +339,7 @@ TRef<PointValue> PointTransform::Scale(PointValue* a, PointValue* b) {
 
 // ### Color
 
-TRef<ColorValue> ColorTransform::Create(Number* r, Number* g, Number* b, Number* a) {
+TRef<ColorValue> ColorTransform::Create(const TRef<Number>& r, const TRef<Number>& g, const TRef<Number>& b, const TRef<Number>& a) {
     return new TransformedValue<Color, float, float, float, float>(
         [](float r, float g, float b, float a) {
             return Color(r, g, b, a);

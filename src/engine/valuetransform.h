@@ -39,7 +39,7 @@ public:
 
 class ColorTransform {
 public:
-    static TRef<ColorValue> Create(Number* r, Number* g, Number* b, Number* a);
+    static TRef<ColorValue> Create(const TRef<Number>& r, const TRef<Number>& g, const TRef<Number>& b, const TRef<Number>& a);
 };
 
 class RectTransform {
@@ -113,7 +113,7 @@ protected:
     }
 
 public:
-    TransformedValue(std::function<TransformedType(Types...)> callback, TStaticValue<Types>*... values) :
+    TransformedValue(std::function<TransformedType(Types...)> callback, const TRef<TStaticValue<Types>>&... values) :
         m_callback(callback),
         TStaticValue<TransformedType>(values...)
     {}

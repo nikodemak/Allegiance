@@ -99,7 +99,7 @@ public:
     StringImageCorrected(
         Justification justification,
         FontValue*  pfont,
-        ColorValue*   pcolor,
+        const TRef<ColorValue>&   pcolor,
         Number*       pwidth,
         StringValue*  pstring,
         Number*       pSeparation
@@ -495,7 +495,7 @@ TRef<Image> ImageTransform::Lazy(std::function<TRef<Image>()> callback)
     return new LazyImage(callback);
 }
 
-TRef<Image> ImageTransform::String(FontValue * font, ColorValue * color, Number * width, StringValue * string, Justification justification, Number* pLineSeparation)
+TRef<Image> ImageTransform::String(FontValue * font, const TRef<ColorValue>& color, Number * width, StringValue * string, Justification justification, Number* pLineSeparation)
 {
     return new StringImageCorrected(justification, font, color, width, string, pLineSeparation);
 }

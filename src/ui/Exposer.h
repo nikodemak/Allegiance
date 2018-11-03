@@ -1,6 +1,54 @@
 #pragma once
 
+#include "tref.h"
+#include "value.h"
+#include "color.h"
+
 #include "ui_sol.h"
+
+#include <variant>
+#include <stdexcept>
+
+struct UiType;
+class StringDumper {
+public:
+    static std::string dump(const UiType& value);
+};
+
+template<class... Ts> struct overload : Ts... { using Ts::operator()...; };
+template<class... Ts> overload(Ts...)->overload<Ts...>;
+
+struct UiType {
+    typedef std::variant<std::monostate, int, float, std::string, std::vector<UiType>, TRef<ColorValue>> VariantType;
+    VariantType m_data;
+
+    UiType(VariantType data) : 
+        m_data(data) 
+    {
+    }
+
+    template <typename T>
+    T get() const {
+        const T* value = std::get_if<T>(&m_data);
+        if (value == nullptr) {
+            throw std::runtime_error("Invalid argument type, was: " + StringDumper::dump(*this));
+        }
+        return *value;
+    }
+
+    template <typename R, typename ...Types>
+    R typeSwitch(Types... cases) const {
+        return std::visit(overload{
+            cases...,
+            [&](auto const& x) {
+                throw std::runtime_error("Invalid argument type, was: " + StringDumper::dump(*this));
+                return R();
+            }
+            }, m_data);
+    }
+};
+
+TRef<Number> CreateNumberFromUiType(UiType const& obj);
 
 class Exposer {
 protected:

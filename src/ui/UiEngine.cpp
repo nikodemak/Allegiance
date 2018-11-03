@@ -27,6 +27,7 @@ std::string UiEngine::m_stringLogPath = "";
 
 void WriteLog(const std::string &text)
 {
+    debugf(("Lua: " + text).c_str());
     if (UiEngine::m_stringLogPath == "") {
         return;
     }

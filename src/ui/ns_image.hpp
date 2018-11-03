@@ -2,6 +2,7 @@
 #pragma once
 
 #include "items.hpp"
+#include <variant>
 #include "D3DDevice9.h"
 
 TRef<ConstantImage> LoadImageFile(LuaScriptContext& context, std::string path) {
@@ -68,10 +69,10 @@ public:
         };
 
         table["Extent"] = sol::overload(
-            [](const TRef<RectValue>& rect, const TRef<ColorValue>& color) {
-                return CreateExtentImage(rect, color);
+            [](const TRef<RectValue>& rect, const UiType& color) {
+                return CreateExtentImage(rect, color.get<TRef<ColorValue>>());
             },
-            [](const TRef<PointValue>& pPoint, const TRef<ColorValue>& color) {
+            [](const TRef<PointValue>& pPoint, const UiType& color) {
                 Number* zero = new Number(0.0f);
 
                 return CreateExtentImage(
@@ -81,15 +82,16 @@ public:
                         PointTransform::X(pPoint),
                         PointTransform::Y(pPoint)
                     ),
-                    color
+                    color.get<TRef<ColorValue>>()
                 );
             }
         );
         table["MouseEvent"] = [](const TRef<Image>& image) {
             return (TRef<Image>)new MouseEventImage(image);
         };
-        table["File"] = [&context](std::string path) {
-            return (TRef<ConstantImage>)LoadImageFile(context, path);
+        table["File"] = [&context](const UiType& path) {
+            auto strPath = path.get<std::string>();
+            return (TRef<ConstantImage>)LoadImageFile(context, strPath);
         };
         table["Group"] = [](sol::object list) {
             if (list.is<TRef<ImageList>>()) {
@@ -233,18 +235,18 @@ public:
             throw std::runtime_error("Expected value argument of Image.Switch to be either a wrapped or unwrapped bool, int, or string");
         };
         table["String"] = sol::overload(
-            [](const TRef<FontValue>& font, const TRef<ColorValue>& color, sol::object width, sol::object string, sol::optional<Justification> justification_arg) {
-                return ImageTransform::String(font, color, wrapValue<float>(width), wrapString(string), justification_arg.value_or(JustifyLeft()), new Number(0.0f));
+            [](const TRef<FontValue>& font, const UiType& color, sol::object width, sol::object string, sol::optional<Justification> justification_arg) {
+                return ImageTransform::String(font, color.get<TRef<ColorValue>>(), wrapValue<float>(width), wrapString(string), justification_arg.value_or(JustifyLeft()), new Number(0.0f));
             },
-            [](const TRef<FontValue>& font, const TRef<ColorValue>& color, sol::object string) {
+            [](const TRef<FontValue>& font, const UiType& color, sol::object string) {
 
                 TRef<Number> width = new Number(10000); //something large as default
                 Justification justification = JustifyLeft();
                 TRef<Number> separation = new Number(0.0f);
 
-                return ImageTransform::String(font, color, width, wrapString(string), justification, separation);
+                return ImageTransform::String(font, color.get<TRef<ColorValue>>(), width, wrapString(string), justification, separation);
             },
-            [](const TRef<FontValue>& font, const TRef<ColorValue>& color, sol::object string, sol::table object) {
+            [](const TRef<FontValue>& font, const UiType& color, sol::object string, sol::table object) {
 
                 TRef<Number> width = new Number(10000); //something large as default
                 Justification justification = JustifyLeft();
@@ -268,7 +270,7 @@ public:
                     });
                 }
 
-                return ImageTransform::String(font, color, width, wrapString(string), justification, separation);
+                return ImageTransform::String(font, color.get<TRef<ColorValue>>(), width, wrapString(string), justification, separation);
             }
         );
         table["Translate"] = [](const TRef<Image>& pimage, const TRef<PointValue>& pPoint) {
@@ -301,8 +303,8 @@ public:
             return ImageTransform::Cut(pimage, rect);
         };
 
-        table["Multiply"] = [](const TRef<ConstantImage>& pimage, const TRef<ColorValue>& color) {
-            return ImageTransform::Multiply(pimage, color);
+        table["Multiply"] = [](const TRef<ConstantImage>& pimage, const UiType& color) {
+            return ImageTransform::Multiply(pimage, color.get<TRef<ColorValue>>());
         };
         context.GetLua().set("Image", table);
 

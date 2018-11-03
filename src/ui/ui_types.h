@@ -8,7 +8,48 @@
 
 namespace sol {
 
+    template <>
+    struct lua_type_of<UiType> : std::integral_constant<sol::type, sol::type::poly> {};
+
     namespace stack {
+        template <>
+        struct checker<UiType, type::userdata> {
+            template <typename Handler>
+            static bool check(lua_State* L, int index, Handler&& handler, record& tracking) {
+                if (sol::stack::check_usertype<UiType>(L, index)) {
+                    tracking.use(1);
+                    return true;
+                }
+                if (sol::stack::check<std::string>(L, index)) {
+                    tracking.use(1);
+                    return true;
+                }
+                if (sol::stack::check<float>(L, index)) {
+                    tracking.use(1);
+                    return true;
+                }
+
+                handler(L, index, type::userdata, type_of(L, index), "value at this index does not properly reflect the desired type");
+                return false;
+            }
+        };
+
+        template <>
+        struct getter<UiType> {
+            static UiType get(lua_State* L, int index, record& tracking) {
+                if (sol::stack::check_usertype<UiType>(L, index)) {
+                    return sol::stack::get_usertype<UiType>(L, index, tracking);
+                }
+                if (sol::stack::check<std::string>(L, index, sol::no_panic, record())) {
+                    return UiType{ sol::stack::get<std::string>(L, index, tracking) };
+                }
+                if (sol::stack::check<float>(L, index, sol::no_panic, record())) {
+                    return UiType{ sol::stack::get<float>(L, index, tracking) };
+                }
+                return UiType{ std::monostate() };
+            }
+        };
+
         //TStaticValue
 
         template <typename T>
