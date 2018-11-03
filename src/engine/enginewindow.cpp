@@ -241,9 +241,6 @@ EngineWindow::EngineWindow(	EngineConfigurationWrapper* pConfiguration,
     m_timeStart     = Time::Now();
     m_timeLastClick = 0;
 
-    // Start the callback
-    EnableIdleFunction();
-
 	// Create the D3D device.
 	HWND hWindow = GetHWND();
 

@@ -25,6 +25,8 @@ void FillSolidRect(HDC hdc, const WinRect& rect, COLORREF color)
 //
 //////////////////////////////////////////////////////////////////////////////
 
+Window* g_pWindow;
+
 void Window::Construct()
 {
     m_pfnWndProc    = DefWindowProc;
@@ -70,6 +72,8 @@ Window::Window(
     m_lastPointMouse(0,0)
 {
     Construct();
+
+    g_pWindow = this;
 
     if (m_pwindowParent) {
         m_style.Set(StyleChild());
@@ -204,7 +208,7 @@ Window::~Window()
 {
     DestroyWindow(m_hwnd);
     s_mapWindow.Remove(m_hwnd);
-    EnableIdleFunction(false);
+    g_pWindow = nullptr;
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -970,31 +974,14 @@ uint32_t Window::WndProc(
 //
 //////////////////////////////////////////////////////////////////////////////
 
-TRef<TList<Window*> > g_plistIdle;
-
 void Window::DoIdle()
 {
 }
 
-void Window::EnableIdleFunction(bool bEnable)
-{
-    if (g_plistIdle) {
-        if (bEnable) {
-            ZAssert(!g_plistIdle->Find(this));
-            g_plistIdle->PushFront(this);
-        } else {
-            g_plistIdle->Remove(this);
-        }
-    }
-}
-
 void CallIdleFunctions()
 {
-    TList<Window*>::Iterator iter(*g_plistIdle);
-
-    while (!iter.End()) {
-        iter.Value()->DoIdle();
-        iter.Next();
+    if (g_pWindow) {
+        g_pWindow->DoIdle();
     }
 }
 
@@ -1033,7 +1020,7 @@ uint32_t CALLBACK Window::Win32WndProc(
 
 HRESULT Window::StaticInitialize()
 {
-    g_plistIdle = new TList<Window*>;
+    g_pWindow = nullptr;
 
     WNDCLASS wc;
 
@@ -1070,7 +1057,7 @@ HRESULT Window::StaticTerminate()
 	// BT - 10/17 - Fixing crash when allegiance is exited from the new game screen.
 	RemoveAllKeyboardInputFilters();
 
-    g_plistIdle = nullptr;
+    g_pWindow = nullptr;
     return S_OK;
 }
 

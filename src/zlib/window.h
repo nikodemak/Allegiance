@@ -243,7 +243,6 @@ public:
     // Idle processing
     //
 
-    void EnableIdleFunction(bool bEnable = true);
     virtual void DoIdle();
 
     //
