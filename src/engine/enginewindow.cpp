@@ -302,20 +302,10 @@ void EngineWindow::SetEngine(Engine* pengine) {
         m_pwrapImage
     );
 
-    //continue initialization now that we have the engine
-    SetClientRect(WinRect(
-        0,
-        0,
-        (int)m_pConfiguration->GetGraphicsResolutionX()->GetValue(),
-        (int)m_pConfiguration->GetGraphicsResolutionY()->GetValue()
-    ));
-    UpdateWindowStyle();
-    CD3DDevice9 * pDev = CD3DDevice9::Get();
-    CD3DDevice9::Get()->ResetDevice(
-        true,
-        (int)m_pConfiguration->GetGraphicsResolutionX()->GetValue(),
-        (int)m_pConfiguration->GetGraphicsResolutionY()->GetValue()
-    );
+    m_pConfigurationUpdater->Update();
+    m_pConfiguration->Update();
+
+    CheckDeviceAndUpdate();
 
     m_tPreviousFramePresented = Time::Now();
     m_iPreviousFrameTRefAdded = IObjectSingle::totalAdded();
@@ -1045,6 +1035,23 @@ bool EngineWindow::ShouldDrawFrame()
     }
 }
 
+bool EngineWindow::CheckDeviceAndUpdate() {
+    bool bChanges = false;
+    if (m_pengine && m_pengine->IsDeviceReady(bChanges))
+    {
+        if (bChanges || m_bInvalid)
+        {
+            m_bInvalid = false;
+
+            UpdateWindowStyle();
+            UpdateRectValues();
+            UpdateSurfacePointer();
+        }
+        return true;
+    }
+    return false;
+}
+
 void EngineWindow::DoIdle()
 {
     if (m_bRenderingEnabled == false) {
@@ -1096,18 +1103,8 @@ void EngineWindow::DoIdle()
     // Is the device ready
     //
 
-    bool bChanges = false;
-    if (m_pengine && m_pengine->IsDeviceReady(bChanges))
+    if (CheckDeviceAndUpdate())
 	{
-        if (bChanges || m_bInvalid) 
-		{
-			m_bInvalid = false;
-
-			UpdateWindowStyle();
-			UpdateRectValues();
-			UpdateSurfacePointer();
-        }
-
         Time tDevice = Time::Now();
         m_timings["3.Device"].AddSample((double)(tDevice - tConfiguration) * 1000);
 
@@ -1166,7 +1163,7 @@ void EngineWindow::DoIdle()
     // so sleep for a while so we don't eat up too much processor time
     //
 
-	if (m_bMinimized && !bChanges && !m_bInvalid) //Imago doubled when we we know we're minimized 7/13/09
+	if (m_bMinimized) //Imago doubled when we we know we're minimized 7/13/09
     	::Sleep(60);
 	else
 		::Sleep(30);

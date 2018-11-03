@@ -267,6 +267,8 @@ protected:
     void UpdateWindowStyle();
     void UpdateSurfacePointer();
     void UpdateCursor();
+
+    bool CheckDeviceAndUpdate();
     
     void UpdateInput();
     void HandleMouseMessage(UINT message, const Point& point, UINT nFlags = 0);
