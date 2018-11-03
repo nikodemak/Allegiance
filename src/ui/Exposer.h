@@ -15,8 +15,33 @@ public:
     static std::string dump(const UiType& value);
 };
 
+//the compiler version on the build server is slightly out of date
+//https://stackoverflow.com/questions/50510122/stdvariant-with-overloaded-lambdas-alternative-with-msvc
+#if false
 template<class... Ts> struct overload : Ts... { using Ts::operator()...; };
 template<class... Ts> overload(Ts...)->overload<Ts...>;
+#else
+template<class...Ts>
+struct overloaded_t {};
+
+template<class T0>
+struct overloaded_t<T0> :T0 {
+    using T0::operator();
+    overloaded_t(T0 t0) :T0(std::move(t0)) {}
+};
+template<class T0, class T1, class...Ts>
+struct overloaded_t<T0, T1, Ts...> :T0, overloaded_t<T1, Ts...> {
+    using T0::operator();
+    using overloaded_t<T1, Ts...>::operator();
+    overloaded_t(T0 t0, T1 t1, Ts... ts) :
+        T0(std::move(t0)),
+        overloaded_t<T1, Ts...>(std::move(t1), std::move(ts)...) {
+    }
+};
+
+template<class...Ts>
+overloaded_t<Ts...> overload(Ts...ts) { return { std::move(ts)... }; }
+#endif
 
 struct UiType {
     typedef std::variant<std::monostate, int, float, std::string, std::vector<UiType>, TRef<ColorValue>> VariantType;
@@ -38,13 +63,13 @@ struct UiType {
 
     template <typename R, typename ...Types>
     R typeSwitch(Types... cases) const {
-        return std::visit(overload{
+        return std::visit(overload(
             cases...,
             [&](auto const& x) {
                 throw std::runtime_error("Invalid argument type, was: " + StringDumper::dump(*this));
                 return R();
             }
-            }, m_data);
+        ), m_data);
     }
 };
 
