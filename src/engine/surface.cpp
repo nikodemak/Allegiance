@@ -377,7 +377,7 @@ public:
 
                 D3DLOCKED_RECT lockRect;
                 HRESULT hr;
-                hr = CVRAMManager::Get()->LockTexture(m_hTexture, &lockRect);
+                hr = CVRAMManager::Get()->LockTexture(m_hTexture, &lockRect, D3DLOCK_DISCARD);
 
 				// Copy texture in, updating alpha for colour.
                 CImageTransfer::Transfer16BitTo16BitWithColourKey(pdata, pitch, (BYTE*)lockRect.pBits, lockRect.Pitch, WinPoint(0, 0), WinPoint(0, 0), size, cColorKey);
@@ -397,7 +397,7 @@ public:
                 // Lock target texture and copy over.
                 D3DLOCKED_RECT lockRect;
                 HRESULT hr;
-                hr = CVRAMManager::Get()->LockTexture(m_hTexture, &lockRect);
+                hr = CVRAMManager::Get()->LockTexture(m_hTexture, &lockRect, D3DLOCK_DISCARD);
 
 				switch( ppf->PixelBytes() )
 				{
@@ -425,7 +425,7 @@ public:
 			D3DLOCKED_RECT lockRect;
 			HRESULT hr;
 
-			hr = CVRAMManager::Get()->LockTexture( m_hTexture, &lockRect );
+			hr = CVRAMManager::Get()->LockTexture( m_hTexture, &lockRect, D3DLOCK_DISCARD);
             ZAssert( hr == D3D_OK );
 
 			// Copy over data. Only works for 16 bit texture at the moment.
@@ -1242,7 +1242,7 @@ public:
 				HRESULT hr;
 				D3DLOCKED_RECT lockRect;
 
-				hr = pVRAMMan->LockTexture( m_hTexture, &lockRect );
+				hr = pVRAMMan->LockTexture( m_hTexture, &lockRect, D3DLOCK_DISCARD);
                 ZAssert( hr == D3D_OK );
 				ZAssert( ( m_ppf->PixelBytes() == 2) || ( m_ppf->PixelBytes() == 4) );
 

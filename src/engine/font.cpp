@@ -128,7 +128,7 @@ private:
         debugf("Font: LockTexture");
 
 		// Lock texture to copy font data into.
-		HRESULT hr = CVRAMManager::Get()->LockTexture( hTex, &lockRect);
+		HRESULT hr = CVRAMManager::Get()->LockTexture( hTex, &lockRect, D3DLOCK_DISCARD);
 
         if (hr != D3D_OK) {
             debugf("Font: Unable to lock texture " + hr);
