@@ -961,6 +961,7 @@ public:
         m_pscreenLoading = nullptr;
 
         m_cleanableEvaluateFrame = std::move(pengineWindow->GetEvaluateFrameEventSource()->AddSinkManaged(new CallbackValueSink<Time>([this, threadAllWork, movies](Time time) {
+            Sleep(50);
             if (threadAllWork->PeekIsRunning() == false) {
                 this->GetEngineWindow()->SetRenderingEnabled(true);
 
