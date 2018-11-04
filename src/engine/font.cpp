@@ -116,15 +116,22 @@ private:
 		BYTE bByte, bMask;
 		float fTexWidth, fTexHeight;
 
+        debugf("Font: Creating surface");
+
 		// Create the texture - D3DFMT_A8L8.
 		m_pFontTex = CreatePrivateSurface(D3DFMT_A8L8, dwTexWidth, dwTexHeight, "Font texture" );
 		hTex = m_pFontTex->GetTexHandle();
 
+        if (hTex == INVALID_TEX_HANDLE) {
+            debugf("Font: Create surface failed");
+        }
+        debugf("Font: LockTexture");
+
 		// Lock texture to copy font data into.
-		HRESULT hr = CVRAMManager::Get()->LockTexture( hTex, &lockRect );
+		HRESULT hr = CVRAMManager::Get()->LockTexture( hTex, &lockRect);
 
         if (hr != D3D_OK) {
-            debugf("Font: Unable to lock texture");
+            debugf("Font: Unable to lock texture " + hr);
         }
 
 		// Copy in all the data.
@@ -204,9 +211,12 @@ private:
 				dwYVal += m_height;
 			}
 		}
+        debugf("Font: Unlocking texture");
 		
 		// Finished, unlock texture.
 		hr = CVRAMManager::Get()->UnlockTexture( hTex );
+
+        debugf("Font: Done");
 
         if (hr != D3D_OK) {
             debugf("Font: Failed to unlock texture");

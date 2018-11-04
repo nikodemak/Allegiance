@@ -667,6 +667,8 @@ HRESULT	CD3DDevice9::ResetDevice(	bool	bWindowed,
 	HRESULT hr				= D3D_OK;
 	bool bResetRequired		= false;
 
+    debugf("Device: Resetting device");
+
 	if( bWindowed == true )
 	{
 		m_sD3DDev9.pCurrentMode = &m_sDevSetupParams.sWindowedMode;
@@ -750,6 +752,8 @@ HRESULT	CD3DDevice9::ResetDevice(	bool	bWindowed,
 		m_sD3DDev9.d3dPresParams.MultiSampleType = (D3DMULTISAMPLE_TYPE)g_DX9Settings.m_dwAA;
 		m_sD3DDev9.d3dPresParams.AutoDepthStencilFormat = m_sD3DDev9.pCurrentMode->fmtDepthStencil;
 
+        debugf("Device: Clearing resources");
+
 		ResetReferencedResources( );
 
 		// Currently, render targets and dynamic buffers reside in the the default pool.
@@ -823,6 +827,8 @@ HRESULT	CD3DDevice9::ResetDevice(	bool	bWindowed,
         hr = m_sD3DDev9.pD3DDevice->SetMaximumFrameLatency(1);
 #endif
 
+        debugf("Device: Performing reset");
+
 		// Perform the reset.
 		hr = m_sD3DDev9.pD3DDevice->Reset( &m_sD3DDev9.d3dPresParams ); //imago changed 6/29/09 to fall thru  //Fix memory leak -Imago 8/2/09
 
@@ -842,7 +848,12 @@ HRESULT	CD3DDevice9::ResetDevice(	bool	bWindowed,
 				"%s [%s, %s]", m_sD3DDev9.d3dAdapterID.Description,
 				m_sDevSetupParams.szDevType,
 				m_sDevSetupParams.szAAType );
-		}
+
+            debugf("Device: Reset complete");
+        }
+        else {
+            debugf("Device: Reset failed");
+        }
 	}
 
 	return hr;
