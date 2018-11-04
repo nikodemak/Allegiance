@@ -450,7 +450,7 @@ TRef<Image> ImageTransform::Multiply(Image* pImage, ColorValue* pColor) {
     //ugly cast here
     ConstantImage* pConstantImage = (ConstantImage*)(pImage);
 
-    return CreateConstantImage3D(pConstantImage->GetSurface(), pColor);
+    return CreateConstantImage3D(pImage->GetSurface(), pColor);
 };
 
 class LazyImage : public WrapImage {
