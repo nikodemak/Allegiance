@@ -913,13 +913,13 @@ public:
             // To make a movie that is compatible with the movie player, use this ffmpeg command line: 
             // ffmpeg.exe -i intro_microsoft_original.avi -q:a 1 -q:v 1 -vcodec mpeg4 -acodec wmav2 intro_microsoft.avi
             // Rock: Converted to configuration setting
-            auto pShowCreditsMovie = GetConfiguration()->GetBool("Ui.ShowStartupCreditsMovie", true);
+            auto pShowCreditsMovie = GetGameConfiguration()->GetUiShowStartupCreditsMovie();
             if (pShowCreditsMovie->GetValue()) {
                 pShowCreditsMovie->SetValue(false); //only once
                 PlayMovieClip(pengineWindow, (ZString)pathStr + "/intro_microsoft.avi");
             }
 
-            auto pShowIntroMovie = GetConfiguration()->GetBool("Ui.ShowStartupIntroMovie", true);
+            auto pShowIntroMovie = GetGameConfiguration()->GetUiShowStartupIntroMovie();
             if (pShowIntroMovie->GetValue()) {
                 //only show on first run
                 pShowIntroMovie->SetValue(false);

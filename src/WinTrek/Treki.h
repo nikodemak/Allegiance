@@ -10,10 +10,22 @@
 
 class GameConfigurationWrapper : public EngineConfigurationWrapper {
 
+    const int VERSION_CURRENT_GAME_CONFIGURATION = 2;
+
 public:
     GameConfigurationWrapper(TRef<UpdatingConfiguration> pconfiguration) :
         EngineConfigurationWrapper(pconfiguration)
-    {}
+    {
+        int version = pconfiguration->GetIntValue("Config.GameConfigurationVersion", 1);
+
+        //reset startup movies so that older players get to see them too.
+        if (version < 2) {
+            pconfiguration->SetBoolValue("Ui.ShowStartupCreditsMovie", true);
+            pconfiguration->SetBoolValue("Ui.ShowStartupIntroMovie", true);
+        }
+
+        pconfiguration->SetIntValue("Config.GameConfigurationVersion", GameConfigurationWrapper::VERSION_CURRENT_GAME_CONFIGURATION);
+    }
 
     TRef<SimpleModifiableValue<ZString>> GetDataArtworkPath() {
         return m_pconfiguration->GetString("Data.ArtworkPath", m_pconfiguration->GetStringValue("ArtPath", ""));
