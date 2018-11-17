@@ -607,6 +607,10 @@ public:
             )
         );
 
+        //set fullscreen to false, until the movies are done
+        bool bShouldGoFullscreen = m_pGameConfiguration->GetGraphicsFullscreen()->GetValue();
+        m_pGameConfiguration->GetGraphicsFullscreen()->SetValue(false);
+
         if (bLogFrameData && pathLogFrameData.length() > 0)
         {
             ZString strFile = pathLogFrameData.c_str();
@@ -907,7 +911,8 @@ public:
 
         //Imago 6/29/09 7/28/09 now plays video in thread while load continues // BT - 9/17 - Refactored a bit.
         //Rock: Refactored some more
-        auto movies = ThreadedWork::Create([this, pengineWindow, pathStr]() {
+
+        auto movies = ThreadedWork::Create([this, pengineWindow, pathStr, bShouldGoFullscreen]() {
             // BT - 9/17 - If you want to re-add an intro movie, you can uncomment this code, but it was causing some people to crash,
             // and most didn't like having any intro at all. :(
             // To make a movie that is compatible with the movie player, use this ffmpeg command line: 
@@ -928,6 +933,9 @@ public:
                 // ffmpeg.exe -i intro_microsoft_original.avi -q:a 1 -q:v 1 -vcodec mpeg4 -acodec wmav2 intro_microsoft.avi
                 PlayMovieClip(pengineWindow, (ZString)pathStr + "/intro_movie.avi");
             }
+
+            //set the fullscreen value to the intended value now that the movies are done
+            GetGameConfiguration()->GetGraphicsFullscreen()->SetValue(bShouldGoFullscreen);
         });
 
         debugf("Finished graphics initialization, starting main game initialization");
