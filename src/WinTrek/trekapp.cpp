@@ -673,7 +673,6 @@ public:
         bool bStartOffline    = false;
         bool bMovies          = true;
         bool bSingleInstance  = true;
-		bool bStartFullscreen = true;
 
 
         ZString strMap;
@@ -737,9 +736,9 @@ public:
                 //    trekClient.SaveCharacterName(str.RightOf(9)) ; // Use CdKey for ASGS callsign storage
                 //    g_bAskForCallSign = false ; // wlp callsign was entered on commandline
                 } else if (str == "windowed") {  //imago sucked these in here to accommidate the way we now create the D3DDevice
-	                bStartFullscreen = false;
+	                bShouldGoFullscreen = false;
 	            } else if (str == "fullscreen") {
-	                bStartFullscreen = true;
+	                bShouldGoFullscreen = true;
 				} else if (str == "adapter") { //imago added for the needy
                     if (token.IsString(strAdapter))
                     {
@@ -843,9 +842,7 @@ public:
 
         TRef<EngineWindow> pengineWindow = new EngineWindow(
             m_pGameConfiguration,
-            strCommandLine,
             TrekWindow::GetWindowTitle(),
-            false,
             WinRect(0 + CD3DDevice9::Get()->GetDeviceSetupParams()->iWindowOffsetX,
                 0 + CD3DDevice9::Get()->GetDeviceSetupParams()->iWindowOffsetY,
                 CD3DDevice9::Get()->GetCurrentMode()->mode.Width +

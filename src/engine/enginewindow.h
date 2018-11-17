@@ -273,7 +273,6 @@ protected:
     void UpdateInput();
     void HandleMouseMessage(UINT message, const Point& point, UINT nFlags = 0);
 
-    void ParseCommandLine(const ZString& strCommandLine, bool& bStartFullscreen);
     void DoIdle();
     bool ShouldDrawFrame();
     bool RenderFrame();
@@ -293,9 +292,7 @@ protected:
 public:
     EngineWindow(
         EngineConfigurationWrapper* pConfiguration,
-        const ZString&     strCommandLine,
         const ZString&     strTitle         = ZString(),
-              bool         bStartFullscreen = false,
         const WinRect&     rect             = WinRect(0, 0, -1, -1),
         const WinPoint&    sizeMin          = WinPoint(1, 1),
               HMENU        hmenu            = NULL

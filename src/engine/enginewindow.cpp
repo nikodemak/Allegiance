@@ -117,9 +117,7 @@ public:
 //////////////////////////////////////////////////////////////////////////////
 
 EngineWindow::EngineWindow(	EngineConfigurationWrapper* pConfiguration,
-							const ZString&		strCommandLine,
 							const ZString&		strTitle,
-							bool				bStartFullscreen,
 							const WinRect&		rect,
 							const WinPoint&		sizeMin,
 							HMENU				hmenu
@@ -156,9 +154,11 @@ EngineWindow::EngineWindow(	EngineConfigurationWrapper* pConfiguration,
     g_bWindowLog = m_pConfiguration->GetDebugWindow()->GetValue();
     g_bLuaDebug = m_pConfiguration->GetDebugLua()->GetValue();
 
+    m_pPreferredFullscreen = m_pConfiguration->GetGraphicsFullscreen();
+
     m_pConfigurationUpdater->PushEnd(new CallbackWhenChanged<bool>([this](bool bFullscreen) {
         SetFullscreen(bFullscreen);
-    }, m_pConfiguration->GetGraphicsFullscreen()));
+    }, m_pPreferredFullscreen));
 
     m_pConfigurationUpdater->PushEnd(new CallbackWhenChanged<float, float>([this](float x, float y) {
         m_pengine->SetFullscreenSize(WinPoint((int)x, (int)y));
@@ -198,24 +198,13 @@ EngineWindow::EngineWindow(	EngineConfigurationWrapper* pConfiguration,
     m_pinputEngine = CreateInputEngine(GetHWND(), m_pConfiguration->GetMouseUseRawInput());
     m_pinputEngine->SetFocus(true);
 
-    //
-    // Should we start fullscreen?
-	CD3DDevice9 * pDev = CD3DDevice9::Get();
-
-    m_pPreferredFullscreen = m_pConfiguration->GetGraphicsFullscreen();
-
-    bool bStartFullScreen = m_pPreferredFullscreen->GetValue();
-    ParseCommandLine(strCommandLine, bStartFullScreen);
-
-    if (bStartFullScreen != m_pPreferredFullscreen->GetValue()) {
-        m_pPreferredFullscreen->SetValue(bStartFullScreen);
-    }
+    CD3DDevice9 * pDev = CD3DDevice9::Get();
 
     // Get the mouse
     //
 
     TRef<MouseInputStream> pmouse = m_pinputEngine->GetMouse();
-    pmouse->SetEnabled(bStartFullscreen);
+    pmouse->SetEnabled(m_pConfiguration->GetGraphicsFullscreen()->GetValue());
 
     pmouse->GetEventSource()->AddSink(m_peventSink = new ButtonEvent::Delegate(this));
 
@@ -341,26 +330,6 @@ void EngineWindow::OnClose()
 // 
 bool g_bMDLLog    = false;
 bool g_bWindowLog = false;
-
-void EngineWindow::ParseCommandLine(const ZString& strCommandLine, bool& bStartFullscreen)
-{
-    PCC pcc = strCommandLine;
-    CommandLineToken token(pcc, strCommandLine.GetLength());
-
-    while (token.MoreTokens()) {
-        ZString str;
-
-        if (token.IsMinus(str)) {
-            if (str == "windowed") {
-                bStartFullscreen = false;
-            } else if (str == "fullscreen") {
-                bStartFullscreen = true;
-			}
-        } else {
-            token.IsString(str);
-        }
-    }
-}
 
 //////////////////////////////////////////////////////////////////////////////
 //

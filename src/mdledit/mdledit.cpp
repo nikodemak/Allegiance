@@ -530,9 +530,7 @@ public:
     ) :
         EngineWindow(
             pConfiguration,
-            strCommandLine,
             "MDLEdit",
-            false,
             WinRect(0 + CD3DDevice9::Get()->GetDeviceSetupParams()->iWindowOffsetX, 
 					0 + CD3DDevice9::Get()->GetDeviceSetupParams()->iWindowOffsetY,
 					CD3DDevice9::Get()->GetCurrentMode()->mode.Width + 
