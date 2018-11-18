@@ -283,18 +283,18 @@ HRESULT CD3DDevice9::LastChanceCreateDevice(HWND hParentWindow, class CLogFile *
 	}
 	else
 	{
-        this->CreateDevice(hParentWindow, D3DDEVTYPE_HAL, D3DCREATE_SOFTWARE_VERTEXPROCESSING | D3DCREATE_MULTITHREADED);
-	}
+        hr = this->CreateDevice(hParentWindow, D3DDEVTYPE_HAL, D3DCREATE_SOFTWARE_VERTEXPROCESSING | D3DCREATE_MULTITHREADED);
 
-	if (SUCCEEDED(hr))
-	{
-		m_sD3DDev9.bHardwareVP = false;
-		m_sD3DDev9.bPureDevice = false;
-		pLogFile->OutputString("LastChanceCreateDevice: SWVP device created.\n");
-	}
-	else
-	{
-		pLogFile->OutputString("LastChanceCreateDevice: Failed!\n");
+        if (SUCCEEDED(hr))
+        {
+            m_sD3DDev9.bHardwareVP = false;
+            m_sD3DDev9.bPureDevice = false;
+            pLogFile->OutputString("LastChanceCreateDevice: SWVP device created.\n");
+        }
+        else
+        {
+            pLogFile->OutputString("LastChanceCreateDevice: Failed!\n");
+        }
 	}
 
 	return hr;
