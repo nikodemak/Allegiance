@@ -42,17 +42,15 @@ void CVBIBManager::Initialise( )
 		// Flag that its now valid and ready to use.
 		m_sVBIB.bInitialised = true;
 
+        m_iMaxNumBuffers = 256;
+        m_iDefaultBufferSize = 65536;
+        m_iDynamicBufferPool = D3DPOOL_DEFAULT;
+
 		//Imago 6/26/09
 		if ((CD3DDevice9::Get()->IsHardwareVP())) {
-			m_iMaxNumBuffers = 256;
-			m_iDefaultBufferSize = 65536;
 			m_iDefaultBufferPool = ALLEG_D9EX_IF(D3DPOOL_DEFAULT, D3DPOOL_MANAGED);
-			m_iDynamicBufferPool = D3DPOOL_DEFAULT;
 		} else {
-			m_iMaxNumBuffers = 128;
-			m_iDefaultBufferSize = 32768;
 			m_iDefaultBufferPool = D3DPOOL_SYSTEMMEM;
-			m_iDynamicBufferPool = D3DPOOL_DEFAULT;
 		}
 
 	}
