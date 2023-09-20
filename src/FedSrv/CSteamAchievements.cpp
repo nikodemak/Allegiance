@@ -475,6 +475,26 @@ static DWORD WINAPI UpdateLeaderboardThread(LPVOID pThreadParameter)
 	return 0;
 }
 
+
+
+static DWORD WINAPI UpdateGameStatsThread(LPVOID pThreadParameter)
+{
+	SPostRequest* pRequest = (SPostRequest*)pThreadParameter;
+
+	MaClient client;
+
+	int result = client.postRequest(pRequest->url, pRequest->postData, pRequest->postLen);
+	int response = client.getResponseCode();
+
+	debugf("Game Stats Update(%ld): %s\n", response, pRequest->url);
+	SteamGameServer_ReleaseCurrentThreadMemory();
+	delete pRequest->postData;
+	delete pRequest->url;
+	delete pRequest;
+
+	return 0;
+}
+
 void CSteamAchievements::UpdateLeaderboard(PlayerScoreObject*  ppso)
 {
 
@@ -502,6 +522,26 @@ void CSteamAchievements::UpdateLeaderboard(PlayerScoreObject*  ppso)
 
 	DWORD dwId;
 	CreateThread(NULL, 0, UpdateLeaderboardThread, szUrl, 0, &dwId);
+
+	SPostRequest Request;
+	Request.url = "";
+	ZString data = "steamID=" + ZString(steamID);
+	data += "&assists=" + ZString(ppso->GetAssists());
+	data += "&baseCaptures=" + ZString(ppso->GetBaseCaptures());
+	data += "&baseKills=" + ZString(ppso->GetBaseKills());
+	data += "&ejects=" + ZString(ppso->GetEjections());
+	data += "&kills=" + ZString(ppso->GetKills());
+	data += "&score=" + ZString(ppso->GetScore());
+	data += "&playtime=" + ZString(ppso->GetTimePlayed());
+	data += "&constructorKills=" + ZString(ppso->GetBuilderKills());
+	data += "&minerKills=" + ZString(ppso->GetMinerKills());
+	data += "&commandTime=" + ZString(ppso->GetTimeCommanded());
+	Request.postLen = data.GetLength();
+	char* postData = new char[Request.postLen];
+	strcpy(postData, (char*)(PCC)data);
+	Request.postData;
+
+	CreateThread(NULL, 0, UpdateGameStatsThread, &Request, 0, &dwId);
 }
 
 bool CSteamAchievements::CheckRank(int currentScore)

@@ -162,4 +162,8 @@ public:
 	
 };
 
-
+typedef struct SPostRequest {
+	char* url;
+	char* postData;
+	int postLen;
+};
