@@ -489,7 +489,6 @@ static DWORD WINAPI UpdateGameStatsThread(LPVOID pThreadParameter)
 	debugf("Game Stats Update(%ld): %s\n", response, pRequest->url);
 	SteamGameServer_ReleaseCurrentThreadMemory();
 	delete pRequest->postData;
-	delete pRequest->url;
 	delete pRequest;
 
 	return 0;
@@ -524,7 +523,7 @@ void CSteamAchievements::UpdateLeaderboard(PlayerScoreObject*  ppso)
 	CreateThread(NULL, 0, UpdateLeaderboardThread, szUrl, 0, &dwId);
 
 	SPostRequest Request;
-	Request.url = "";
+	Request.url = g.szGameStatsUpdateUrl;
 	ZString data = "steamID=" + ZString(steamID);
 	data += "&artifacts=" + ZString(ppso->GetArtifacts());
 	data += "&assists=" + ZString(ppso->GetAssists());
