@@ -544,6 +544,7 @@ void CSteamAchievements::UpdateLeaderboard(PlayerScoreObject*  ppso)
 	data += "&loser=" + ZString(ppso->GetLoser());
 	data += "&minerKills=" + ZString(ppso->GetMinerKills());
 	//ppso->GetPersist();
+	data += "&civID=" + ZString(ppso->GetPersist().GetCivID());
 	data += "&pilotBaseCaptures=" + ZString(ppso->GetPilotBaseCaptures());
 	data += "&pilotBaseKills=" + ZString(ppso->GetPilotBaseKills());
 	data += "&playerKills=" + ZString(ppso->GetPlayerKills());
