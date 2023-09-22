@@ -522,8 +522,8 @@ void CSteamAchievements::UpdateLeaderboard(PlayerScoreObject*  ppso)
 	DWORD dwId;
 	CreateThread(NULL, 0, UpdateLeaderboardThread, szUrl, 0, &dwId);
 
-	SPostRequest Request;
-	Request.url = g.szGameStatsUpdateUrl;
+	SPostRequest* Request = new SPostRequest;
+	Request->url = g.szGameStatsUpdateUrl;
 	ZString data = "steamID=" + ZString(steamID);
 	data += "&artifacts=" + ZString(ppso->GetArtifacts());
 	data += "&assists=" + ZString(ppso->GetAssists());
@@ -557,12 +557,12 @@ void CSteamAchievements::UpdateLeaderboard(PlayerScoreObject*  ppso)
 	data += "&playtime=" + ZString(ppso->GetTimePlayed());
 	data += "&warpsSpotted=" + ZString(ppso->GetWarpsSpotted());
 	data += "&winner=" + ZString(ppso->GetWinner());
-	Request.postLen = data.GetLength();
-	char* postData = new char[Request.postLen];
+	Request->postLen = data.GetLength();
+	char* postData = new char[Request->postLen];
 	strcpy(postData, (char*)(PCC)data);
-	Request.postData = postData;
+	Request->postData = postData;
 
-	CreateThread(NULL, 0, UpdateGameStatsThread, &Request, 0, &dwId);
+	CreateThread(NULL, 0, UpdateGameStatsThread, Request, 0, &dwId);
 }
 
 bool CSteamAchievements::CheckRank(int currentScore)
