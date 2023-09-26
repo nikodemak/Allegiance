@@ -11,6 +11,10 @@
 #ifndef _FSMISSION_H_
 #define _FSMISSION_H_
 #include "pch.h"
+#include "json.hpp"
+#include "../Lib/cpp-httplib/httplib.h"
+
+using json = nlohmann::json;
 
 inline unsigned char   SideMask(SideID sid)
 {
@@ -283,8 +287,8 @@ public:
     return m_misdef.misparms.nTeams;
   }
   void                  RecordGameResults();
-  void                  RecordTeamResults(IsideIGC* pside);
-  void                  RecordPlayerResults(IshipIGC* pship, CFSPlayer *player, SideID sid); // BT - STEAM - Enable the CSteamAchievements object that is attached to the player to be sent to the stats recording functions.
+  void                  RecordTeamResults(IsideIGC* pside, json* jGame = nullptr);
+  void                  RecordPlayerResults(IshipIGC* pship, CFSPlayer *player, SideID sid, json* jGame = nullptr); // BT - STEAM - Enable the CSteamAchievements object that is attached to the player to be sent to the stats recording functions.
   void                  QueueGameoverMessage();
 
   IsideIGC*             CheckForVictoryByStationBuild(IsideIGC* pside);
@@ -496,6 +500,11 @@ private:
   ZString               m_strStoryText;
 
   bool                  m_bDraw;
+};
+
+typedef struct SPostRequest {
+    std::string url;
+    std::string postData;
 };
 
 #endif 
