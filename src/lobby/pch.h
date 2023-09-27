@@ -11,7 +11,7 @@
 #ifndef _LOBBY_PCH_
 #define _LOBBY_PCH_
 
-#include "appweb/appweb.h" //Imago 7/5/08 uses version 2.4.2-2 xp
+#include "cpp-httplib/httplib.h"
 
 #include <windows.h>
 #include <stdlib.h>

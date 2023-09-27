@@ -15,7 +15,7 @@
 #define _WIN32_WINNT 0x0A00
 #endif
 
-#include "appWeb\appWeb.h" //Imago - updated to 2.4.2-2 XP
+#include "cpp-httplib/httplib.h"
 
 #define _ATL_STATIC_REGISTRY
 
