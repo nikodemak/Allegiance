@@ -161,9 +161,3 @@ public:
 	void OnUserStatsReceived(GSStatsReceived_t *pCallback, bool bIOFailure);
 	
 };
-
-typedef struct SPostRequest {
-	char* url;
-	char* postData;
-	int postLen;
-};

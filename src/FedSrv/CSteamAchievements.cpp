@@ -475,25 +475,6 @@ static DWORD WINAPI UpdateLeaderboardThread(LPVOID pThreadParameter)
 	return 0;
 }
 
-
-
-static DWORD WINAPI UpdateGameStatsThread(LPVOID pThreadParameter)
-{
-	SPostRequest* pRequest = (SPostRequest*)pThreadParameter;
-
-	MaClient client;
-
-	int result = client.postRequest(pRequest->url, pRequest->postData, pRequest->postLen);
-	int response = client.getResponseCode();
-
-	debugf("Game Stats Update(%ld): %s\n", response, pRequest->url);
-	SteamGameServer_ReleaseCurrentThreadMemory();
-	delete pRequest->postData;
-	delete pRequest;
-
-	return 0;
-}
-
 void CSteamAchievements::UpdateLeaderboard(PlayerScoreObject*  ppso)
 {
 
@@ -521,48 +502,6 @@ void CSteamAchievements::UpdateLeaderboard(PlayerScoreObject*  ppso)
 
 	DWORD dwId;
 	CreateThread(NULL, 0, UpdateLeaderboardThread, szUrl, 0, &dwId);
-
-	SPostRequest* Request = new SPostRequest;
-	Request->url = g.szGameStatsUpdateUrl;
-	ZString data = "steamID=" + ZString(steamID);
-	data += "&artifacts=" + ZString(ppso->GetArtifacts());
-	data += "&assists=" + ZString(ppso->GetAssists());
-	data += "&asteroidsSpotted=" + ZString(ppso->GetAsteroidsSpotted());
-	data += "&baseCaptures=" + ZString(ppso->GetBaseCaptures());
-	data += "&baseKills=" + ZString(ppso->GetBaseKills());
-	data += "&constructorKills=" + ZString(ppso->GetBuilderKills());
-	data += "&carriersSpotted=" + ZString(ppso->GetCarrierKills());
-	data += "&combatRating=" + ZString(ppso->GetCombatRating());
-	data += "&commandCredit=" + ZString(ppso->GetCommandCredit());
-	data += "&commandLoser=" + ZString(ppso->GetCommandLoser());
-	data += "&commandWinner=" + ZString(ppso->GetCommandWinner());
-	data += "&deaths=" + ZString(ppso->GetDeaths());
-	data += "&ejects=" + ZString(ppso->GetEjections());
-	data += "&flags=" + ZString(ppso->GetFlags());
-	data += "&kills=" + ZString(ppso->GetKills());
-	data += "&layerKills=" + ZString(ppso->GetLayerKills());
-	data += "&loser=" + ZString(ppso->GetLoser());
-	data += "&minerKills=" + ZString(ppso->GetMinerKills());
-	//ppso->GetPersist();
-	data += "&civID=" + ZString(ppso->GetPersist().GetCivID());
-	data += "&pilotBaseCaptures=" + ZString(ppso->GetPilotBaseCaptures());
-	data += "&pilotBaseKills=" + ZString(ppso->GetPilotBaseKills());
-	data += "&playerKills=" + ZString(ppso->GetPlayerKills());
-	data += "&Repair=" + ZString(ppso->GetRepair());
-	data += "&rescues=" + ZString(ppso->GetRescues());
-	data += "&score=" + ZString(ppso->GetScore());
-	data += "&targetsSpotted=" + ZString(ppso->GetTargetsSpotted());
-	data += "&techsRecovered=" + ZString(ppso->GetTechsRecovered());
-	data += "&commandTime=" + ZString(ppso->GetTimeCommanded());
-	data += "&playtime=" + ZString(ppso->GetTimePlayed());
-	data += "&warpsSpotted=" + ZString(ppso->GetWarpsSpotted());
-	data += "&winner=" + ZString(ppso->GetWinner());
-	Request->postLen = data.GetLength();
-	char* postData = new char[Request->postLen];
-	strcpy(postData, (char*)(PCC)data);
-	Request->postData = postData;
-
-	CreateThread(NULL, 0, UpdateGameStatsThread, Request, 0, &dwId);
 }
 
 bool CSteamAchievements::CheckRank(int currentScore)

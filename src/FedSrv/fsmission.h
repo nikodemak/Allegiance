@@ -502,9 +502,4 @@ private:
   bool                  m_bDraw;
 };
 
-typedef struct SPostRequest {
-    std::string url;
-    std::string postData;
-};
-
 #endif 
