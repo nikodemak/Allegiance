@@ -2733,21 +2733,16 @@ void CFSMission::MakeOverrideTechBits()
 }
 
 // Loran - make a POST request with JSON data to export game data
-static DWORD WINAPI UpdateGameStatsThread(LPVOID pThreadParameter)
+void POSTGameStats(std::string& url, std::string& postData)
 {
-    SPostRequest* pRequest = (SPostRequest*)pThreadParameter;
-    std::string host = pRequest->url.substr(0, pRequest->url.find_first_of("/", 8));
-    std::string path = pRequest->url.substr(pRequest->url.find_first_of("/", 8));
+    std::string host = url.substr(0, url.find_first_of("/", 8));
+    std::string path = url.substr(url.find_first_of("/", 8));
     httplib::Client client(host);
 
-    httplib::Result result = client.Post(path, pRequest->postData, "application/json");
+    httplib::Result result = client.Post(path, postData, "application/json");
     int response = result->status;
 
-    debugf("Game Stats Update(%ld): %s\n", response, pRequest->url);
-    SteamGameServer_ReleaseCurrentThreadMemory();
-    delete pRequest;
-
-    return 0;
+    debugf("Game Stats Update(%ld): %s\n", response, url);
 }
 
 /*-------------------------------------------------------------------------
@@ -2816,12 +2811,8 @@ void CFSMission::RecordGameResults()
       RecordTeamResults(pside, &jGame);
     }
 
-    SPostRequest* Request = new SPostRequest;
-    Request->url = std::string(g.szGameStatsUpdateUrl);
-    Request->postData = jGame.dump();
-
-    DWORD dwId;
-    CreateThread(NULL, 0, UpdateGameStatsThread, Request, 0, &dwId);
+    std::thread UpdateGameStatsThread(POSTGameStats, std::string(g.szGameStatsUpdateUrl), jGame.dump());
+    UpdateGameStatsThread.detach();
 
 	// BT - STEAM - players who are not currently connected to the mission do not have initialized CSteamAchievement objects
 	// available, so skipping this one for now. Players who disconnect before the end of the game will not get any stats recorded.
