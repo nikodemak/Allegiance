@@ -735,65 +735,37 @@ bool CLobbyApp::GetRankForCallsign(const char* szPlayerName, int *rank, double *
 {
 	char resultMessage[1024];
 	int contentLen = 0; 
-    char *content;
-    char szResponse[MAX_PATH];    
-	char szURL[MPR_HTTP_MAX_URL]; 
+	std::string content;
+    char szResponse[MAX_PATH];
 	char szName[c_cbName];
 
-	// the player callsign has to be urlencoded, because it may contain '+', '?', etc.
-	char callsign[128];
-	char playername[128];
-	Strcpy(playername, szPlayerName);
-	strcpy(callsign, "");
-	encodeURL(callsign, playername);
+	std::string url = g_pLobbyApp->RetrieveAuthAddress();
+	url += "?Action=GetRank&Callsign=" + std::string(szPlayerName);
+	std::string host = url.substr(0, url.find_first_of("/", 8));
+	std::string path = url.substr(url.find_first_of("/", 8));
 
-	char* baseUrl = g_pLobbyApp->RetrieveAuthAddress();
-	sprintf(szURL, "%s?Action=GetRank&Callsign=%s", baseUrl, callsign);
-
-	MaUrl maUrl;
-	maUrl.parse(szURL);
-
-	// First make sure we can write to a socket
-    MprSocket* socket = new MprSocket();
-	socket->openClient(maUrl.host, maUrl.port, 0);
-    int iwrite = socket->_write("GET /\r\n");
-    delete socket;
-
-    MaClient* client = new MaClient();
-    client->setTimeout(3000);
-    client->setRetries(1);
-    client->setKeepAlive(0);
+	httplib::Client client(host);
+	client.set_connection_timeout(3);
+	client.set_keep_alive(false);
 
 	strcpy(resultMessage, "Rank Retrieve Failed.\n\nPlease contact system admin.");
 
-	// make sure we wrote 7 bytes
-    if (iwrite == 7) 
-	{ 
-		debugf("retrieving rank: %s\r\n", szURL);
+	
+	debugf("retrieving rank: %s\r\n", url.c_str());
 
-        client->getRequest(szURL);
-        if (client->getResponseCode() == 200) // check for HTTP OK 8/3/08
-	        content = client->getResponseContent(&contentLen);
-		else
-		{
-			char msg[1024];
-			sprintf(resultMessage, "Lobby GetRank Service Failed (%i)", client->getResponseCode());
-		}
-    }
+    httplib::Result result = client.Get(path);
+    if (result->status == 200) // check for HTTP OK 8/3/08
+		content = result->body;
 
-	debugf("GetRankForCallsign(): contentLen = %ld, content = %s\r\n", contentLen, content);
+	debugf("GetRankForCallsign(): contentLen = %ld, content = %s\r\n", content.length(), content.c_str());
 	
 	int resultCode = -1;
 
 	char localRankName[50];
-	if(sscanf(content, "%ld|%ld|%s|%f|%f|%ld|%f|%f", &resultCode, rank, localRankName, sigma, mu, commandRank, commandSigma, commandMu) == EOF)
+	if(sscanf(content.c_str(), "%ld|%ld|%s|%f|%f|%ld|%f|%f", &resultCode, rank, localRankName, sigma, mu, commandRank, commandSigma, commandMu) == EOF)
 		resultCode = -1;
 
 	strncpy(rankName, localRankName, rankNameLen);
-
-	// Delete this only after you are done with the content that came back from client->getResponseContent, or that 
-	// pointer will get fried.
-	delete client;
 
 	if(resultCode == 0)
 		strcpy(resultMessage, "Rank retrieved.");
@@ -975,29 +947,23 @@ void CLobbyApp::SetPlayerMission(const char* szPlayerName, const char* szCDKey, 
   BootPlayersByName(strPlayerName);
 #endif
 
-  // BT - STEAM - Check with the AWeb service for any bans on this user's SteamID. 
-  MaClient client;
+  // BT - STEAM - Check for any bans on this user's SteamID. 
+  std::string url = std::string(g_pLobbyApp->GetBanCheckUrl()) + "?apiKey=" + g_pLobbyApp->GetApiKey() + "&steamID=" + szCDKey;
+  std::string host = url.substr(0, url.find_first_of("/", 8));
+  std::string path = url.substr(url.find_first_of("/", 8));
+  httplib::Client client(host);
 
-  ZString url = ZString(g_pLobbyApp->GetBanCheckUrl()) + "?apiKey=" + ZString(g_pLobbyApp->GetApiKey()) + "&steamID=" + ZString(szCDKey);
-
-  int result = client.getRequest((char*) (PCC) url);
-  int responseCode = client.getResponseCode();
+  httplib::Result result = client.Get(path);
+  int responseCode = result.value().status;
+  std::string response = result.value().body;
 
   if (responseCode == 200)
   {
-	  char buffer[2064];
-	  int bufferLen = sizeof(buffer);
-	  strncpy(buffer, client.getResponseContent(&bufferLen), sizeof(buffer));
-	  if (bufferLen > sizeof(buffer) - 1)
-		  buffer[sizeof(buffer) - 1] = '\0';
-	  else
-		  buffer[bufferLen] = '\0';
-
-	  if (strlen(buffer) > 0)
+	  if (response.length() > 0)
 	  {
 		  BEGIN_PFM_CREATE(m_fmServers, pfmRemovePlayer, L, REMOVE_PLAYER)
 			  FM_VAR_PARM(szPlayerName, CB_ZTS)
-			  FM_VAR_PARM(buffer, CB_ZTS)
+			  FM_VAR_PARM(response.c_str(), CB_ZTS)
 			  END_PFM_CREATE
 			  pfmRemovePlayer->dwMissionCookie = pMission->GetCookie();
 		  pfmRemovePlayer->reason = RPR_bannedBySteam;

@@ -12,7 +12,6 @@
 #include <string.h> // mmf added for strncmp used below
 #include "client.h" // BT - 9/11/2010 - Included to use URL functions.
 #include <regex> // BT - 1/27/2012 - using regex to parse rank from callsign when auth is turned off.
-#include "appWeb.h" // BT - STEAM
 #include <inttypes.h> // BT - STEAM
 
 const DWORD        CFLServer::c_dwID        = 19680815;
@@ -366,40 +365,35 @@ HRESULT LobbyServerSite::OnAppMessage(FedMessaging * pthis, CFMConnection & cnxn
 	{
 		CASTPFM(pfmLogChatMessage, S, LOG_CHAT_MESSAGE, pfm);
 
-		ZString missionName = FM_VAR_REF(pfmLogChatMessage, MissionName);
-		ZString sourceName = FM_VAR_REF(pfmLogChatMessage, SourceName);
-		ZString targetName = FM_VAR_REF(pfmLogChatMessage, TargetName);
-		ZString message = FM_VAR_REF(pfmLogChatMessage, Message);
-		ZString sourceIP = FM_VAR_REF(pfmLogChatMessage, SourceIP);
+		std::string missionName = FM_VAR_REF(pfmLogChatMessage, MissionName);
+		std::string sourceName = FM_VAR_REF(pfmLogChatMessage, SourceName);
+		std::string targetName = FM_VAR_REF(pfmLogChatMessage, TargetName);
+		std::string message = FM_VAR_REF(pfmLogChatMessage, Message);
+		std::string sourceIP = FM_VAR_REF(pfmLogChatMessage, SourceIP);
 
-		debugf("%s %s->%s: %s\n", (PCC) missionName, (PCC)sourceName, (PCC)targetName, (PCC)message);
+		debugf("%s %s->%s: %s\n", missionName.c_str(), sourceName.c_str(), targetName.c_str(), message.c_str());
 
-		MaClient client;
+		std::string url = g_pLobbyApp->GetChatLogUploadUrl();
+		std::string host = url.substr(0, url.find_first_of("/", 8));
+		std::string path = url.substr(url.find_first_of("/", 8));
+		httplib::Client client(host);
 		
-		char steamID[100];
-		char buffer[2064];
-		ZString postData = "apiKey=" + ZString(g_pLobbyApp->GetApiKey());
+		std::string postData = "apiKey=" + std::string(g_pLobbyApp->GetApiKey());
 		
-		maUrlEncode(buffer, sizeof(buffer), (char *)(PCC) missionName, true);
-		postData += "&missionName=" + ZString(buffer);
-		maUrlEncode(buffer, sizeof(buffer), (char *)(PCC)sourceName, true);
-		postData += "&sourceName=" + ZString(buffer);
-		maUrlEncode(buffer, sizeof(buffer), (char *)(PCC)targetName, true);
-		postData += "&targetName=" + ZString(buffer);
+		postData += "&missionName=" + missionName;
+		postData += "&sourceName=" + sourceName;
+		postData += "&targetName=" + sourceName;
 
 		postData += "&sourceIP=" + sourceIP;
 
-		sprintf(steamID, "%" PRIu64, pfmLogChatMessage->sourceSteamID);
-		postData += "&sourceSteamID=" + ZString(steamID);
+		postData += "&sourceSteamID=" + pfmLogChatMessage->sourceSteamID;
 		
-		sprintf(steamID, "%" PRIu64, pfmLogChatMessage->targetSteamID);
-		postData += "&targetSteamID=" + ZString(steamID);
+		postData += "&targetSteamID=" + pfmLogChatMessage->targetSteamID;
 
-		maUrlEncode(buffer, sizeof(buffer), (char *)(PCC)message, true);
-		postData += "&message=" + ZString(buffer);
+		postData += "&message=" + message;
 
-		int result = client.postRequest(g_pLobbyApp->GetChatLogUploadUrl(), (char *) (PCC)postData, postData.GetLength());
-		int response = client.getResponseCode();
+		httplib::Result result = client.Post(path, postData, "application/x-www-form-urlencoded");
+		int response = result->status;
 
 
 		break;
