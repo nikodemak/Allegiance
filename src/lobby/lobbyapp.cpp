@@ -753,9 +753,19 @@ bool CLobbyApp::GetRankForCallsign(const char* szPlayerName, int *rank, double *
 	
 	debugf("retrieving rank: %s\r\n", url.c_str());
 
-    httplib::Result result = client.Get(path);
-    if (result->status == 200) // check for HTTP OK 8/3/08
-		content = result->body;
+#ifndef _DEBUG // catch exceptions in FZRetail, in debug builds use the debugger
+	try {
+#endif
+		httplib::Result result = client.Get(path);
+		if (result->status == 200) // check for HTTP OK 8/3/08
+			content = result->body;
+#ifndef _DEBUG
+	}
+	catch (...) {
+		debugf("CLobbyApp::GetRankForCallsign failed to send request");
+	}
+#endif
+
 
 	debugf("GetRankForCallsign(): contentLen = %ld, content = %s\r\n", content.length(), content.c_str());
 	

@@ -467,10 +467,19 @@ static DWORD WINAPI UpdateLeaderboardThread(LPVOID pThreadParameter)
 	std::string path = url.substr(url.find_first_of("/", 8));
 	httplib::Client client(host);
 
+#ifndef _DEBUG // catch exceptions in FZRetail, in debug builds use the debugger
+	try {
+#endif
 	httplib::Result result = client.Get(path);
 	int response = result->status;
 
 	debugf("Leaderboard Update(%ld): %s\n", response, url);
+#ifndef _DEBUG
+	}
+	catch (...) {
+		debugf("UpdateLeaderboardThread failed to send request");
+	}
+#endif
 	SteamGameServer_ReleaseCurrentThreadMemory();
 
 	return 0;
