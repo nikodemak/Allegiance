@@ -290,43 +290,25 @@ HRESULT LobbyServerSite::OnAppMessage(FedMessaging * pthis, CFMConnection & cnxn
 		int commandRank = 0;
 		double commandSigma = 0;
 		double commandMu = 0;
-		bool rankRetrieved = false;
 
-		if(g_pLobbyApp->EnforceAuthentication() == true)
+		// BT - 1/27/2012 - Enables lobby to return ranks when ACSS is disabled using old callsign(rank) format.
+		std::tr1::regex rgx("(\\W+)?((?:\\w|@)+)(\\((\\d+)\\))?");
+		std::tr1::smatch result;
+		std::string charName(szCharacterName);
+
+		if(std::tr1::regex_search(charName, result, rgx) == true)
 		{
-			rankRetrieved = g_pLobbyApp->GetRankForCallsign(
-				szCharacterName, 
-				&rank,
-				&sigma,
-				&mu,
-				&commandRank, 
-				&commandSigma,
-				&commandMu,
-				szRankName,
-				rankNameLen);
-		}
-		else
-		{
-			// BT - 1/27/2012 - Enables lobby to return ranks when ACSS is disabled using old callsign(rank) format.
-			rankRetrieved = true;
-
-			std::tr1::regex rgx("(\\W+)?((?:\\w|@)+)(\\((\\d+)\\))?");
-			std::tr1::smatch result;
-			std::string charName(szCharacterName);
-
-			if(std::tr1::regex_search(charName, result, rgx) == true)
+			if(result.size() > 2)
+				sprintf((char *) szCharacterName, "%s%s", result[1].str().c_str(), result[2].str().c_str());
+			
+			if(result.size() > 4)
 			{
-				if(result.size() > 2)
-					sprintf((char *) szCharacterName, "%s%s", result[1].str().c_str(), result[2].str().c_str());
-				
-				if(result.size() > 4)
-				{
-					char rankString[50];
-					sprintf(rankString, "%s", result[4].str().c_str());
-					rank = atoi(rankString);
-				}
+				char rankString[50];
+				sprintf(rankString, "%s", result[4].str().c_str());
+				rank = atoi(rankString);
 			}
 		}
+		
 
 		BEGIN_PFM_CREATE(*pthis, pfmPlayerRankResponse, LS, PLAYER_RANK)
 			FM_VAR_PARM(PCC(szCharacterName), CB_ZTS) 
@@ -348,10 +330,6 @@ HRESULT LobbyServerSite::OnAppMessage(FedMessaging * pthis, CFMConnection & cnxn
 		pfmPlayerRankResponse->commandRank = commandRank;
 		pfmPlayerRankResponse->commandSigma = commandSigma;
 		pfmPlayerRankResponse->commandMu = commandMu;
-
-		// Set the rank to be invalid to play on any server if there was any error retrieving the rank.
-		if(rankRetrieved == false)
-			pfmPlayerRankResponse->rank = -2;
 		
 		debugf("Client: %s from <%s> at time %u. Rank: %ld\n", g_rgszMsgNames[pfm->fmid], cnxnFrom.GetName(), Time::Now(), pfmPlayerRankResponse->rank);
 

@@ -361,18 +361,6 @@ HRESULT CLobbyApp::Init()
     }
     RegCloseKey(hk);
 
-    //Orion ACSS : 2009 - Retrieve url of auth server from registry
-	if (m_dwAuthentication)
-	{
-		HKEY  hk;
-		if (RegCreateKeyEx(HKEY_LOCAL_MACHINE, HKLM_AllLobby, 0, "", 
-		  REG_OPTION_NON_VOLATILE, KEY_READ, NULL, &hk, NULL) == ERROR_SUCCESS)
-		{
-			_Module.ReadFromRegistry(hk, true, "AUTH_ADDRESS", m_szAuthenticationLocation, NULL);
-		}
-		RegCloseKey(hk);
-	}
-
 	//Load Pig KEY
 	if (m_dwAuthentication)
 	{
@@ -728,61 +716,6 @@ bool CLobbyApp::BootPlayersByCDKey(const ZString& strCDKey, const ZString& strNa
   }
 
   return bBootedSomeone;
-}
-
-// BT - 12/21/2010 - CSS - Get all rank details from the lobby web service
-bool CLobbyApp::GetRankForCallsign(const char* szPlayerName, int *rank, double *sigma, double *mu, int *commandRank, double *commandSigma, double *commandMu, char *rankName, int rankNameLen)
-{
-	char resultMessage[1024];
-	int contentLen = 0; 
-	std::string content;
-    char szResponse[MAX_PATH];
-	char szName[c_cbName];
-
-	std::string url = g_pLobbyApp->RetrieveAuthAddress();
-	url += "?Action=GetRank&Callsign=" + std::string(szPlayerName);
-	std::string host = url.substr(0, url.find_first_of("/", 8));
-	std::string path = url.substr(url.find_first_of("/", 8));
-
-	httplib::Client client(host);
-	client.set_connection_timeout(3);
-	client.set_keep_alive(false);
-
-	strcpy(resultMessage, "Rank Retrieve Failed.\n\nPlease contact system admin.");
-
-	
-	debugf("retrieving rank: %s\r\n", url.c_str());
-
-#ifndef _DEBUG // catch exceptions in FZRetail, in debug builds use the debugger
-	try {
-#endif
-		httplib::Result result = client.Get(path);
-		if (result->status == 200) // check for HTTP OK 8/3/08
-			content = result->body;
-#ifndef _DEBUG
-	}
-	catch (...) {
-		debugf("CLobbyApp::GetRankForCallsign failed to send request");
-	}
-#endif
-
-
-	debugf("GetRankForCallsign(): contentLen = %ld, content = %s\r\n", content.length(), content.c_str());
-	
-	int resultCode = -1;
-
-	char localRankName[50];
-	if(sscanf(content.c_str(), "%ld|%ld|%s|%f|%f|%ld|%f|%f", &resultCode, rank, localRankName, sigma, mu, commandRank, commandSigma, commandMu) == EOF)
-		resultCode = -1;
-
-	strncpy(rankName, localRankName, rankNameLen);
-
-	if(resultCode == 0)
-		strcpy(resultMessage, "Rank retrieved.");
-
-	debugf(resultMessage);
-
-	return resultCode == 0;
 }
 
 // BT - 9/11/2010 - CD Key check will call back to the lobby service to ensure the authentication token is valid.
