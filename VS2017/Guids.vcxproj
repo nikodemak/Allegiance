@@ -88,35 +88,6 @@
       <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Midl>
-<<<<<<< HEAD
-      <AdditionalIncludeDirectories>$(Outdir)..\Guids;..\src\Inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <DllDataFileName>%(Filename)_dlldata.c</DllDataFileName>
-      <TypeLibraryName>$(IntDir)$(ProjectName)_%(Filename).tlb</TypeLibraryName>
-    </Midl>
-    <PreLinkEvent>
-      <Command>lib /out:$(OutDir)AGCGuid.lib $(OutDir)AGCGuid.obj</Command>
-    </PreLinkEvent>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='FZDebug-NoYellowComm|Win32'">
-    <ClCompile>
-      <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\src\Inc;.\;.\$(OutDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NOMINMAX;NOMINMAX;_AFXDLL;WIN32;_WINDOWS;STRICT;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ExceptionHandling>
-      </ExceptionHandling>
-      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
-      <RuntimeTypeInfo>true</RuntimeTypeInfo>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <LanguageStandard>stdcpp14</LanguageStandard>
-    </ClCompile>
-    <Midl>
-      <AdditionalIncludeDirectories>$(Outdir)..\Guids;..\src\Inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <DllDataFileName>%(Filename)_dlldata.c</DllDataFileName>
-      <TypeLibraryName>$(IntDir)$(ProjectName)_%(Filename).tlb</TypeLibraryName>
-=======
       <AdditionalIncludeDirectories>
       </AdditionalIncludeDirectories>
       <OutputDirectory>$(TargetDir)\</OutputDirectory>
@@ -125,7 +96,6 @@
       <TypeLibraryName>
       </TypeLibraryName>
       <GenerateTypeLibrary>false</GenerateTypeLibrary>
->>>>>>> kgwork
     </Midl>
     <PreLinkEvent>
       <Command>
@@ -134,15 +104,6 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">
     <Midl>
-<<<<<<< HEAD
-      <AdditionalIncludeDirectories>$(Outdir)..\Guids;..\src\Inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <GenerateTypeLibrary>true</GenerateTypeLibrary>
-      <TypeLibraryName>$(IntDir)$(ProjectName)_%(Filename).tlb</TypeLibraryName>
-      <OutputDirectory>
-      </OutputDirectory>
-      <HeaderFileName>%(Filename)_h.h</HeaderFileName>
-      <DllDataFileName>%(Filename)_dlldata.c</DllDataFileName>
-=======
       <AdditionalIncludeDirectories>
       </AdditionalIncludeDirectories>
       <TypeLibraryName>
@@ -151,7 +112,6 @@
       <HeaderFileName>
       </HeaderFileName>
       <GenerateTypeLibrary>false</GenerateTypeLibrary>
->>>>>>> kgwork
     </Midl>
     <ClCompile>
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
@@ -198,29 +158,6 @@
       <HeaderFileName Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">$(TargetDir)%(FileName).h</HeaderFileName>
       <HeaderFileName Condition="'$(Configuration)|$(Platform)'=='FZDebug-NoYellowComm|Win32'">$(TargetDir)%(FileName).h</HeaderFileName>
       <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">$(TargetDir)AGC.tlb</TypeLibraryName>
-<<<<<<< HEAD
-      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='FZDebug-NoYellowComm|Win32'">$(TargetDir)AGC.tlb</TypeLibraryName>
-      <OutputDirectory Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">$(TargetDir)</OutputDirectory>
-      <HeaderFileName Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">$(TargetDir)%(FileName).h</HeaderFileName>
-      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">$(TargetDir)AGC.tlb</TypeLibraryName>
-      <DllDataFileName Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">$(TargetDir)%(Filename)_dlldata.c</DllDataFileName>
-      <DllDataFileName Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">$(TargetDir)%(Filename)_dlldata.c</DllDataFileName>
-      <DllDataFileName Condition="'$(Configuration)|$(Platform)'=='FZDebug-NoYellowComm|Win32'">$(TargetDir)%(Filename)_dlldata.c</DllDataFileName>
-    </Midl>
-    <Midl Include="..\src\Inc\AGCIDL.idl">
-      <OutputDirectory Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">$(TargetDir)</OutputDirectory>
-      <OutputDirectory Condition="'$(Configuration)|$(Platform)'=='FZDebug-NoYellowComm|Win32'">$(TargetDir)</OutputDirectory>
-      <HeaderFileName Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">$(TargetDir)%(FileName).h</HeaderFileName>
-      <HeaderFileName Condition="'$(Configuration)|$(Platform)'=='FZDebug-NoYellowComm|Win32'">$(TargetDir)%(FileName).h</HeaderFileName>
-      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">$(TargetDir)AGCIDL.tlb</TypeLibraryName>
-      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='FZDebug-NoYellowComm|Win32'">$(TargetDir)AGCIDL.tlb</TypeLibraryName>
-      <OutputDirectory Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">$(TargetDir)</OutputDirectory>
-      <HeaderFileName Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">$(TargetDir)%(FileName).h</HeaderFileName>
-      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">$(TargetDir)AGCIDL.tlb</TypeLibraryName>
-      <DllDataFileName Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">$(TargetDir)%(Filename)_dlldata.c</DllDataFileName>
-      <DllDataFileName Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">$(TargetDir)%(Filename)_dlldata.c</DllDataFileName>
-      <DllDataFileName Condition="'$(Configuration)|$(Platform)'=='FZDebug-NoYellowComm|Win32'">$(TargetDir)%(Filename)_dlldata.c</DllDataFileName>
-=======
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">true</ExcludedFromBuild>
     </Midl>
@@ -230,7 +167,6 @@
       <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">$(TargetDir)AGC.tlb</TypeLibraryName>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">true</ExcludedFromBuild>
->>>>>>> kgwork
     </Midl>
   </ItemGroup>
   <ItemGroup>
@@ -244,15 +180,9 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">Transforming AGCEvents.xml through AGCEventsIDL.xsl</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='FZDebug-NoYellowComm|Win32'">Transforming AGCEvents.xml through AGCEventsIDL.xsl</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">$(OutDir)AGCEventsIDL.idl;%(Outputs)</Outputs>
-<<<<<<< HEAD
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='FZDebug-NoYellowComm|Win32'">$(OutDir)AGCEventsIDL.idl;%(Outputs)</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">..\src\AGC\XMLXForm.js;..\src\AGC\AGCEvents.xml;%(AdditionalInputs)</AdditionalInputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='FZDebug-NoYellowComm|Win32'">..\src\AGC\XMLXForm.js;..\src\AGC\AGCEvents.xml;%(AdditionalInputs)</AdditionalInputs>
-=======
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">..\src\AGC\XMLXForm.js ..\src\AGC\AGCEvents.xml;%(AdditionalInputs)</AdditionalInputs>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">true</ExcludedFromBuild>
->>>>>>> kgwork
     </CustomBuild>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

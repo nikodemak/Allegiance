@@ -77,13 +77,8 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-<<<<<<< HEAD
-      <AdditionalIncludeDirectories>..\src\lib\AllegianceSecurity;..\src\lib\Steam;.\;..\src\guids;..\src\zlib;..\src\_Utility;..\src\Igc;..\src\Inc;..\src\AGC;..\src\test\Inc;..\src\lobby;..\src\Zone;.\$(IntDir)..\Igc;.\$(IntDir)..\FedSrv;.\$(IntDir)..\AGC;.\$(IntDir)..\Guids;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NOMINMAX;_TEST;ALLSRV_STANDALONE;FEDSRV;AGC_HOST;DEBUG;_DEBUG;_WIN32;_WINDOWS;_AFXDLL;_CONSOLE;WIN;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-=======
-      <AdditionalIncludeDirectories>.\;..\src\guids;..\src\zlib;..\src\_Utility;..\src\Igc;..\src\Inc;..\src\lobby;..\src\Zone;.\$(IntDir)..\Igc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\;..\src\guids;..\src\zlib;..\src\lib\Steam;..\src\_Utility;..\src\Igc;..\src\Inc;..\src\lobby;..\src\Zone;.\$(IntDir)..\Igc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>ALLSRV_STANDALONE;FEDSRV;AGC_HOST;DEBUG;_DEBUG;_WIN32;_WINDOWS;_AFXDLL;_CONSOLE;WIN;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
->>>>>>> kgwork
       <ExceptionHandling>Sync</ExceptionHandling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -101,11 +96,7 @@
       <PreprocessorDefinitions>FLAVOR=\"$(ConfigurationName)\";FEDMSG=\"FedMsg.rc\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
-<<<<<<< HEAD
-      <AdditionalDependencies>..\src\Lib\AllegianceSecurity\AllegianceSecurityd.lib;..\src\Lib\Steam\steam_api.lib;Rpcrt4.lib;dbghelp.lib;$(OutDir)..\_utility\Utility.lib;$(OutDir)..\zlib\zlib.lib;$(OutDir)..\igc\igc.lib;$(OutDir)..\sharemem\sharemem.lib;$(OutDir)..\test\TCLib\TCLib.lib;$(OutDir)..\Guids\AGCGuid.lib;$(OutDir)..\Guids\guids.lib;winmm.lib;version.lib;urlmon.lib;..\src\Lib\DirectPlay\dxguid.lib;comctl32.lib;ws2_32.lib;delayimp.lib;wininet.lib;lz32.lib;netapi32.lib;comsupp.lib;oledb.lib;%(AdditionalDependencies)</AdditionalDependencies>
-=======
       <AdditionalDependencies>$(OutDir)..\_utility\Utility.lib;$(OutDir)..\zlib\zlib.lib;$(OutDir)..\igc\igc.lib;$(OutDir)..\sharemem\sharemem.lib;$(OutDir)..\Guids\guids.lib;winmm.lib;version.lib;urlmon.lib;..\src\Lib\DirectPlay\dxguid.lib;..\src\Lib\appweb\appweb.lib;comctl32.lib;ws2_32.lib;delayimp.lib;wininet.lib;lz32.lib;netapi32.lib;comsupp.lib;oledb.lib;%(AdditionalDependencies)</AdditionalDependencies>
->>>>>>> kgwork
       <SuppressStartupBanner>false</SuppressStartupBanner>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <DelayLoadDLLs>netapi32.dll;advapi32.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
@@ -135,13 +126,8 @@ xcopy $(ProjectDir)..\src\Inc\steam_appid.txt $(OutDir) /s /d /y</Command>
     </Midl>
     <ClCompile>
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
-<<<<<<< HEAD
-      <AdditionalIncludeDirectories>..\src\lib\AllegianceSecurity;..\src\lib\Steam;.\$(IntDir)..\Guids;.\;..\src\guids;..\src\zlib;..\src\_Utility;..\src\Igc;..\src\Inc;..\src\AGC;..\src\test\Inc;..\src\lobby;..\src\Zone;.\$(IntDir)..\Igc;.\$(IntDir)..\FedSrv;.\$(IntDir)..\AGC;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NOMINMAX;DEBUG;ALLSRV_STANDALONE;FEDSRV;AGC_HOST;SRVLOG;_WIN32;_WINDOWS;_AFXDLL;_CONSOLE;WIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-=======
-      <AdditionalIncludeDirectories>.\$(IntDir)..\Guids;.\;..\src\guids;..\src\zlib;..\src\_Utility;..\src\Igc;..\src\Inc;..\src\test\Inc;..\src\lobby;..\src\Zone;.\$(IntDir)..\Igc;.\$(IntDir)..\FedSrv;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\$(IntDir)..\Guids;.\;..\src\lib\Steam;..\src\guids;..\src\zlib;..\src\_Utility;..\src\Igc;..\src\Inc;..\src\test\Inc;..\src\lobby;..\src\Zone;.\$(IntDir)..\Igc;.\$(IntDir)..\FedSrv;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>DEBUG;ALLSRV_STANDALONE;FEDSRV;AGC_HOST;SRVLOG;_WIN32;_WINDOWS;_AFXDLL;_CONSOLE;WIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
->>>>>>> kgwork
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
@@ -163,13 +149,8 @@ xcopy $(ProjectDir)..\src\Inc\steam_appid.txt $(OutDir) /s /d /y</Command>
       <PreprocessorDefinitions>FLAVOR=\"$(ConfigurationName)\";FEDMSG=\"FedMsg.rc\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
-<<<<<<< HEAD
-      <AdditionalDependencies>..\src\Lib\AllegianceSecurity\AllegianceSecurity.lib;..\src\Lib\Steam\steam_api.lib;Rpcrt4.lib;dbghelp.lib;$(OutDir)..\_utility\Utility.lib;$(OutDir)..\zlib\zlib.lib;$(OutDir)..\igc\igc.lib;$(OutDir)..\sharemem\sharemem.lib;$(OutDir)..\test\TCLib\TCLib.lib;$(OutDir)..\Guids\AGCGuid.lib;$(OutDir)..\Guids\guids.lib;winmm.lib;version.lib;urlmon.lib;..\src\Lib\DirectPlay\dxguid.lib;comctl32.lib;ws2_32.lib;delayimp.lib;wininet.lib;lz32.lib;netapi32.lib;comsupp.lib;oledb.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-=======
-      <AdditionalDependencies>$(OutDir)..\_utility\Utility.lib;$(OutDir)..\zlib\zlib.lib;$(OutDir)..\igc\igc.lib;$(OutDir)..\sharemem\sharemem.lib;$(OutDir)..\Guids\guids.lib;winmm.lib;version.lib;urlmon.lib;..\src\Lib\DirectPlay\dxguid.lib;..\src\Lib\appweb\appweb.lib;comctl32.lib;ws2_32.lib;delayimp.lib;wininet.lib;lz32.lib;netapi32.lib;comsupp.lib;oledb.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(OutDir)..\_utility\Utility.lib;$(OutDir)..\zlib\zlib.lib;..\src\Lib\Steam\steam_api.lib;$(OutDir)..\igc\igc.lib;$(OutDir)..\sharemem\sharemem.lib;$(OutDir)..\Guids\guids.lib;winmm.lib;version.lib;urlmon.lib;..\src\Lib\DirectPlay\dxguid.lib;..\src\Lib\appweb\appweb.lib;comctl32.lib;ws2_32.lib;delayimp.lib;wininet.lib;lz32.lib;netapi32.lib;comsupp.lib;oledb.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\src\Inc\appWeb;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
->>>>>>> kgwork
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>msvcrtd;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <DelayLoadDLLs>netapi32.dll;advapi32.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
@@ -196,7 +177,6 @@ xcopy $(ProjectDir)..\src\Inc\steam_appid.txt $(OutDir) /s /d /y</Command>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\src\FedSrv\AdminServer.cpp" />
-<<<<<<< HEAD
     <ClCompile Include="..\src\FedSrv\AdminSession.cpp" />
     <ClCompile Include="..\src\FedSrv\AdminSessionClass.cpp" />
     <ClCompile Include="..\src\FedSrv\AdminSessionEventSink.cpp" />
@@ -208,24 +188,6 @@ xcopy $(ProjectDir)..\src\Inc\steam_appid.txt $(OutDir) /s /d /y</Command>
     <ClCompile Include="..\src\FedSrv\CSteamAchievements.cpp" />
     <ClCompile Include="..\src\FedSrv\CSteamUserGroupStatus.cpp" />
     <ClCompile Include="..\src\FedSrv\CSteamValidation.cpp" />
-=======
-    <ClCompile Include="..\src\FedSrv\AdminSession.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\src\FedSrv\AdminShip.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\src\FedSrv\AdminUser.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\src\FedSrv\AdminUsers.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
->>>>>>> kgwork
     <ClCompile Include="..\src\FedSrv\FedSrv.CPP" />
     <ClCompile Include="..\src\FedSrv\fscluster.cpp" />
     <ClCompile Include="..\src\FedSrv\fslobby.cpp" />
@@ -272,13 +234,10 @@ xcopy $(ProjectDir)..\src\Inc\steam_appid.txt $(OutDir) /s /d /y</Command>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\src\FedSrv\counters.h" />
-<<<<<<< HEAD
     <ClInclude Include="..\src\FedSrv\CSteamAchievements.h" />
     <ClInclude Include="..\src\FedSrv\CSteamUserGroupStatus.h" />
     <ClInclude Include="..\src\FedSrv\CSteamValidation.h" />
     <ClInclude Include="..\src\FedSrv\dbgutil.h" />
-=======
->>>>>>> kgwork
     <ClInclude Include="..\src\FedSrv\FedSrv.H" />
     <ClInclude Include="..\src\FedSrv\FedSrvApp.h" />
     <ClInclude Include="..\src\FedSrv\fedsrvsql.h" />
