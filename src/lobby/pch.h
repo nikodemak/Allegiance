@@ -40,12 +40,12 @@
 #include <utility.h>
 
 #include "cpp-httplib/httplib.h"
-
-#include <TCLib.h>
-#include <TCAtl.h>
-#include <..\TCAtl\ObjectMap.h>
-#include <..\TCAtl\UserAcct.h>
-#include <..\TCLib\TCThread.h>
+// noagc
+//#include <TCLib.h>
+//#include <TCAtl.h>
+//#include <..\TCAtl\ObjectMap.h>
+//#include <..\TCAtl\UserAcct.h>
+//#include <..\TCLib\TCThread.h>
 
 #include "steam_gameserver.h"
 

@@ -10,9 +10,10 @@
 
 
 #include "pch.h"
-#include <..\TCLib\CoInit.h>
-#include <..\TCLib\AutoHandle.h>
-#include <agc.h>
+//noagc
+//#include <..\TCLib\CoInit.h>
+#include <AutoHandle.h>
+//#include <agc.h>
 #include <zreg.h>
 
  // BT - STEAM
@@ -62,7 +63,6 @@ Global g;
 // KG- obsolete
 //#include "queries.h"
 
-#if defined(ALLSRV_STANDALONE)
 TMap<ZString, int> m_CharMap;
   int GetNextCharacterID()
   {
@@ -80,7 +80,6 @@ TMap<ZString, int> m_CharMap;
 	  m_CharMap.Set(CharName,id);
 	  return id;
   }
-#endif // defined(ALLSRV_STANDALONE)
 
 
 //removed mothballed MSRG code - Imago
@@ -88,22 +87,21 @@ TMap<ZString, int> m_CharMap;
 
 void LoadTechBits()
 {
-  #if !defined(ALLSRV_STANDALONE)
-    SQL_GO(TechBitsAll);
-    while (SQL_SUCCEEDED(SQL_GETROW(TechBitsAll)))
-    {
-      // database ensures all bit ids are unique
-      assert(TechBitsAll_BitID < cTechs);
-      SqlStrCpy(g.rgTechs[TechBitsAll_BitID], TechBitsAll_Name, sizeof(TechBitsAll_Name));
-    }
-  #endif // !defined(ALLSRV_STANDALONE)
+#pragma message("invesitage")
+    //SQL_GO(TechBitsAll);
+    //while (SQL_SUCCEEDED(SQL_GETROW(TechBitsAll)))
+    //{
+    //  // database ensures all bit ids are unique
+    //  assert(TechBitsAll_BitID < cTechs);
+    //  SqlStrCpy(g.rgTechs[TechBitsAll_BitID], TechBitsAll_Name, sizeof(TechBitsAll_Name));
+    //}
 }
 
 
 void LoadRankInfo()
 {
-
-#if !defined(ALLSRV_STANDALONE)
+#pragma message("get ranks from db")
+ /* SQL version 
   SQL_GO(GetRankCount);
   SQL_GETROW(GetRankCount);
   g.cRankInfo = GetRankCount_Count;
@@ -121,8 +119,9 @@ void LoadRankInfo()
       g.vRankInfo[i].requiredRanking = GetRanks_Requirement;
       strcpy(g.vRankInfo[i].RankName, (char*)GetRanks_Name);
     }
-  }
-#else //Imago: Changed to load rank_info from <artwork>/ranks.txt
+   }
+  */
+    //Imago: Changed to load rank_info from <artwork>/ranks.txt
     char        mapfilename[MAX_PATH + 1];
     HRESULT     hr = UTL::getFile("ranks", ".txt", mapfilename, true, true);
     FILE*       file = fopen(mapfilename, "rt"); // open in text mode
@@ -144,7 +143,6 @@ void LoadRankInfo()
    }
    else
       g.cRankInfo = 0;
-#endif // !defined(ALLSRV_STANDALONE)
 }
 
 void UnloadRankInfo()
@@ -188,26 +186,25 @@ void UnloadStaticCoreInfo()
 
 void LoadStaticMapInfo()
 {
-#if !defined(ALLSRV_STANDALONE)
-  SQL_GO(GetStaticMapCount);
-  SQL_GETROW(GetStaticMapCount);
-  g.cStaticMapInfo = GetStaticMapCount_Count;
+  //SQL version
+  //SQL_GO(GetStaticMapCount);
+  //SQL_GETROW(GetStaticMapCount);
+  //g.cStaticMapInfo = GetStaticMapCount_Count;
 
-  if (g.cStaticMapInfo > 0)
-  {
-    g.vStaticMapInfo = new StaticMapInfo[g.cStaticMapInfo];
+  //if (g.cStaticMapInfo > 0)
+  //{
+  //  g.vStaticMapInfo = new StaticMapInfo[g.cStaticMapInfo];
 
-    SQL_GO(GetStaticMaps);
-    for (int i = 0; i < g.cStaticMapInfo; i++)
-    {
-      ZVerify(SQL_SUCCEEDED(SQL_GETROW(GetStaticMaps)));
-      SQLSTRCPY(g.vStaticMapInfo[i].cbIGCFile, GetStaticMaps_FileName);
-      SQLSTRCPY(g.vStaticMapInfo[i].cbFriendlyName, GetStaticMaps_MapName);
-      g.vStaticMapInfo[i].nNumTeams = GetStaticMaps_NumTeams;
-      assert(GetStaticMaps_NumTeams > 1 && GetStaticMaps_NumTeams <= c_cSidesMax);
-    }
-  }
-#else
+  //  SQL_GO(GetStaticMaps);
+  //  for (int i = 0; i < g.cStaticMapInfo; i++)
+  //  {
+  //    ZVerify(SQL_SUCCEEDED(SQL_GETROW(GetStaticMaps)));
+  //    SQLSTRCPY(g.vStaticMapInfo[i].cbIGCFile, GetStaticMaps_FileName);
+  //    SQLSTRCPY(g.vStaticMapInfo[i].cbFriendlyName, GetStaticMaps_MapName);
+  //    g.vStaticMapInfo[i].nNumTeams = GetStaticMaps_NumTeams;
+  //    assert(GetStaticMaps_NumTeams > 1 && GetStaticMaps_NumTeams <= c_cSidesMax);
+  //  }
+  //}
 // --KGJV; FZ/FAZ version: load maps list from a file (<artwork>\maps.txt)
     char        mapfilename[MAX_PATH + 1];
     HRESULT     hr = UTL::getFile("maps", ".txt", mapfilename, true, true);
@@ -228,7 +225,6 @@ void LoadStaticMapInfo()
 	}
 	else
 		g.cStaticMapInfo = 0;
-#endif
 }
 
 bool VerifyUserMap(const char* szMapFile, int nTeams)
@@ -310,14 +306,14 @@ void SetSessionDetails()
  */
 void UnloadDbCache()
 {
-  #if !defined(ALLSRV_STANDALONE)
+	//noagc
+#pragma message("investigate (this was if not ALLSRV_STANDALONE)")
     if (g.trekCore)
     {
       g.trekCore->Terminate();
       delete g.trekCore;
       g.trekCore = NULL;
     }
-  #endif // !defined(ALLSRV_STANDALONE)
 }
 
 
@@ -360,9 +356,8 @@ HRESULT pascal FedSrv_Terminate(void)
   g.fm.Shutdown();
   DisconnectFromLobby();
 
-  #if !defined(ALLSRV_STANDALONE)
-    ShutDownSQL();
-  #endif // !defined(ALLSRV_STANDALONE)
+#pragma message("noagc")
+  // ShutDownSQL();
   timeEndPeriod(1);
 
   if (NULL != g.pServerCounters)
@@ -372,19 +367,11 @@ HRESULT pascal FedSrv_Terminate(void)
   }
   g.perfshare.Terminate();  // this puts to rest the server and client instance perf counters
 
-  _AGCModule.TriggerEvent(NULL, AllsrvEventID_Terminate, "", -1, -1, -1, 0);
+  // noagc _AGCModule.TriggerEvent(NULL, AllsrvEventID_Terminate, "", -1, -1, -1, 0);
 
 #ifdef USEAUTH
   g.pzas = NULL;
 #endif
-
-  //clean up the pid file we dropped for parent -Imago 6/25/08
-#if defined(SRV_CHILD)
-	char strFilename[10] = "\0";
-	sprintf(strFilename,"%d.pid",GetCurrentProcessId());
-	DeleteFile(strFilename);
-#endif
-
 
   return(S_OK);
 }
@@ -810,7 +797,7 @@ void GotInvitationList(CQGetInvitationList * pquery)
       Tell the players what squads they're in.
  */
 // KG: eventually remove this
-#ifndef ALLSRV_STANDALONE
+//noagc #ifndef ALLSRV_STANDALONE
 void GotCharSquads(CQCharSquads * pquery)
 {
   CQCharSquadsData * pqd = pquery->GetData();
@@ -859,7 +846,6 @@ void GotCharSquads(CQCharSquads * pquery)
 }
 
 
-#endif
 /*-------------------------------------------------------------------------
  * GotLogonDetails
  *-------------------------------------------------------------------------
@@ -1030,6 +1016,7 @@ void GotLogonDetails(CQLogonStats * pquery)
   if (fValid && fJoinNow)
     JoinMission(pfsPlayer, pqd->dwCookie, pqd->szPassword);
 }
+// no agc#endif
 
 
 
@@ -2746,56 +2733,63 @@ void CheatJPD(CFSShip * pfsShip)
 }
 
 
-void LogTrapHack(AGCEventID idEvent, CFSPlayer* pfsPlayer,
-  CFMConnection* pcnxnFrom, const char* pExpr, UINT nLine)
+// noagc
+void LogTrapHack(const char* idEvent, CFSPlayer* pfsPlayer,
+	CFMConnection* pcnxnFrom, const char* pExpr, UINT nLine)
 {
-  // Determine the event parameters
-  LPCSTR      pszContext = NULL;
-  const char* pszSubject = NULL;
-  AGCUniqueID idSource   = -1;
-  if (pfsPlayer)
-  {
-    pszContext = pfsPlayer->GetIGCShip() ?
-      pfsPlayer->GetIGCShip()->GetMission()->GetContextName() : NULL;
-    pszSubject = pfsPlayer->GetName();
-    idSource =
-      static_cast<USHORT>(CAdminUser::DetermineID(pfsPlayer))
-        | static_cast<DWORD>(AGC_AdminUser << 16);
-  }
-
-  // Perform special processing for each event type
-  switch (idEvent)
-  {
-    case EventID_HackLog:
-      assert(pfsPlayer);
-      assert(pszSubject);
-      assert(pcnxnFrom);
-      retailf("HackLog %s: %s %d\n", pszSubject, pExpr, nLine);
-      break;
-    case EventID_HackBoot:
-      assert(pfsPlayer);
-      assert(pszSubject);
-      assert(pcnxnFrom);
-      retailf("HackBoot %s: %s %d\n", pszSubject, pExpr, nLine);
-      g.fm.DeleteConnection(*pfsPlayer->GetConnection());
-      break;
-    case EventID_HackBootNoPlayer:
-      assert(!pfsPlayer);
-      assert(!pszSubject);
-      assert(pcnxnFrom);
-      retailf("HackBootNoPlayer %s %d\n", pExpr, nLine);
-      g.fm.DeleteConnection(*pcnxnFrom);
-      break;
-    default:
-      ZError("Unexpected AGCEventID passed to LogTrapHack.");
-  }
-
-  // Trigger the event
-  _AGCModule.TriggerContextEvent(NULL, idEvent, pszContext,
-    pszSubject, idSource, -1, -1, 2,
-    "Expr", VT_LPSTR, pExpr,
-    "Line", VT_I4   , nLine);
+	//todo
+	retailf("FIXME LogTrapHack: %s %d\n", pExpr, nLine);
 }
+//void LogTrapHack(AGCEventID idEvent, CFSPlayer* pfsPlayer,
+//  CFMConnection* pcnxnFrom, const char* pExpr, UINT nLine)
+//{
+//  // Determine the event parameters
+//  LPCSTR      pszContext = NULL;
+//  const char* pszSubject = NULL;
+//  AGCUniqueID idSource   = -1;
+//  if (pfsPlayer)
+//  {
+//    pszContext = pfsPlayer->GetIGCShip() ?
+//      pfsPlayer->GetIGCShip()->GetMission()->GetContextName() : NULL;
+//    pszSubject = pfsPlayer->GetName();
+//    idSource =
+//      static_cast<USHORT>(CAdminUser::DetermineID(pfsPlayer))
+//        | static_cast<DWORD>(AGC_AdminUser << 16);
+//  }
+//
+//  // Perform special processing for each event type
+//  switch (idEvent)
+//  {
+//    case EventID_HackLog:
+//      assert(pfsPlayer);
+//      assert(pszSubject);
+//      assert(pcnxnFrom);
+//      retailf("HackLog %s: %s %d\n", pszSubject, pExpr, nLine);
+//      break;
+//    case EventID_HackBoot:
+//      assert(pfsPlayer);
+//      assert(pszSubject);
+//      assert(pcnxnFrom);
+//      retailf("HackBoot %s: %s %d\n", pszSubject, pExpr, nLine);
+//      g.fm.DeleteConnection(*pfsPlayer->GetConnection());
+//      break;
+//    case EventID_HackBootNoPlayer:
+//      assert(!pfsPlayer);
+//      assert(!pszSubject);
+//      assert(pcnxnFrom);
+//      retailf("HackBootNoPlayer %s %d\n", pExpr, nLine);
+//      g.fm.DeleteConnection(*pcnxnFrom);
+//      break;
+//    default:
+//      ZError("Unexpected AGCEventID passed to LogTrapHack.");
+//  }
+//
+//  // Trigger the event
+//  _AGCModule.TriggerContextEvent(NULL, idEvent, pszContext,
+//    pszSubject, idSource, -1, -1, 2,
+//    "Expr", VT_LPSTR, pExpr,
+//    "Line", VT_I4   , nLine);
+//}
 
 
 /*-------------------------------------------------------------------------
@@ -2822,7 +2816,7 @@ bool DoCheatCode(CFSShip * pfsShip, const char * szMessage)
   if (!lstrcmpi(strToken, "bootme"))
   {
     Sleep(1000); // give the client a chance to get some messages into the receive queue--if they're flying that is
-    LogTrapHack(EventID_HackBoot, pfsShip->GetPlayer(), pfsShip->GetPlayer()->GetConnection(), "bootme cheat code", __LINE__);
+    LogTrapHack("EventID_HackBoot", pfsShip->GetPlayer(), pfsShip->GetPlayer()->GetConnection(), "bootme cheat code", __LINE__);
   }
   else if (!lstrcmpi(strToken, "spew"))
   {
@@ -3090,86 +3084,87 @@ bool DoCheatCode(CFSShip * pfsShip, const char * szMessage)
  *    This was broken off from ForwardChatMessage()
  *
  */
-void HandleCOMChatEvents(const char *szMessage, const char *szDest, ShipID shipidFrom,
-                         CFSMission * pfsMission, int iType, SoundID voiceOver, CommandID commandID)
-{
-  const char * szSource = "Admin";   // source of the chat message
-  AGCUniqueID idSource = -1;
-  AGCUniqueID idTeam   = -1;
-
-  //
-  // Get the GameID
-  //
-  AGCUniqueID idGame = pfsMission->GetIGCMission()->GetMissionID();
-
-
-  //
-  // Figure out source of the message
-  //
-  if (shipidFrom != NA)
-  {
-    CFSShip * pfsShipFrom = CFSShip::GetShipFromID(shipidFrom);
-    if (pfsShipFrom)
-    {
-      IshipIGC *pShipIGC = pfsShipFrom->GetIGCShip();
-      assert(pShipIGC);
-      szSource = pShipIGC->GetName();
-      idSource = -1;
-      if (pfsShipFrom->IsPlayer())
-        idSource = static_cast<USHORT>(CAdminUser::DetermineID(pfsShipFrom->GetPlayer())) | static_cast<DWORD>(AGC_AdminUser << 16);
-
-      idTeam = pShipIGC->GetSide()->GetUniqueID();
-    }
-  }
-
-
-  //
-  // Determine the Event ID to be triggered
-  //
-  AGCEventID idEvent = (CHAT_ADMIN == iType) ?
-    EventID_AdminPage : EventID_ChatMessage;
-
-  //
-  // Define the table of Chat Type strings
-  //
-  static char* s_szChatTypes[CHAT_MAX] =
-  {
-    "EVERYONE",              // CHAT_EVERYONE            in igc.h
-    "LEADERS",               // CHAT_LEADERS             in igc.h
-    "ADMIN",                 // CHAT_ADMIN               in igc.h
-    "SHIP",                  // CHAT_SHIP                in igc.h
-	"ALLIES",                // CHAT_ALLIES              in igc.h Imago 7/4/09 ALLY
-    "TEAM",                  // CHAT_TEAM                in igc.h
-    "INDIVIDUAL",            // CHAT_INDIVIDUAL          in igc.h
-    "INDIVIDUAL_NOFILTER"    // CHAT_INDIVIDUAL_NOFILTER in igc.h
-    "WING",                  // CHAT_WING                in igc.h
-    "INDIVIDUAL_ECHO",       // CHAT_INDIVIDUAL_ECHO     in igc.h
-    "ALL_SECTOR",            // CHAT_ALL_SECTOR          in igc.h
-    "FRIENDLY_SECTOR",       // CHAT_FRIENDLY_SECTOR     in igc.h
-    "GROUP",                 // CHAT_GROUP               in igc.h
-    "GROUP_NOECHO",          // CHAT_GROUP_NOECHO        in igc.h
-    "NOSELECTION",           // CHAT_NOSELECTION         in igc.h
-  };
-
-  // Ensure that addition/deletions to igc's enum ChatTarget are reflected here
-  assert(sizeofArray(s_szChatTypes) == CHAT_MAX);
-  assert(iType >= 0 && iType < sizeofArray(s_szChatTypes));
-  LPCSTR pszType = s_szChatTypes[iType];
-
-  LPCSTR pszContext = pfsMission->GetIGCMission() ?
-    pfsMission->GetIGCMission()->GetContextName() : NULL;
-
-  // Trigger the event if anyone is listening
-  _AGCModule.TriggerContextEvent(NULL, idEvent, pszContext,
-    szSource, idSource, idGame, idTeam, 7,
-    "Message"      , VT_LPSTR, szMessage,
-    "Type"         , VT_LPSTR, pszType,
-    "Target"       , VT_LPSTR, szDest,
-    "GameID"       , VT_I4   , idGame,
-    "TeamID"       , VT_I4   , idTeam,
-    "VoiceID"      , VT_I4   , voiceOver,
-    "CommandID"    , VT_I4   , commandID);
-}
+//noagc
+//void HandleCOMChatEvents(const char *szMessage, const char *szDest, ShipID shipidFrom,
+//                         CFSMission * pfsMission, int iType, SoundID voiceOver, CommandID commandID)
+//{
+//  const char * szSource = "Admin";   // source of the chat message
+//  AGCUniqueID idSource = -1;
+//  AGCUniqueID idTeam   = -1;
+//
+//  //
+//  // Get the GameID
+//  //
+//  AGCUniqueID idGame = pfsMission->GetIGCMission()->GetMissionID();
+//
+//
+//  //
+//  // Figure out source of the message
+//  //
+//  if (shipidFrom != NA)
+//  {
+//    CFSShip * pfsShipFrom = CFSShip::GetShipFromID(shipidFrom);
+//    if (pfsShipFrom)
+//    {
+//      IshipIGC *pShipIGC = pfsShipFrom->GetIGCShip();
+//      assert(pShipIGC);
+//      szSource = pShipIGC->GetName();
+//      idSource = -1;
+//      if (pfsShipFrom->IsPlayer())
+//        idSource = static_cast<USHORT>(CAdminUser::DetermineID(pfsShipFrom->GetPlayer())) | static_cast<DWORD>(AGC_AdminUser << 16);
+//
+//      idTeam = pShipIGC->GetSide()->GetUniqueID();
+//    }
+//  }
+//
+//
+//  //
+//  // Determine the Event ID to be triggered
+//  //
+//  AGCEventID idEvent = (CHAT_ADMIN == iType) ?
+//    EventID_AdminPage : EventID_ChatMessage;
+//
+//  //
+//  // Define the table of Chat Type strings
+//  //
+//  static char* s_szChatTypes[CHAT_MAX] =
+//  {
+//    "EVERYONE",              // CHAT_EVERYONE            in igc.h
+//    "LEADERS",               // CHAT_LEADERS             in igc.h
+//    "ADMIN",                 // CHAT_ADMIN               in igc.h
+//    "SHIP",                  // CHAT_SHIP                in igc.h
+//	"ALLIES",                // CHAT_ALLIES              in igc.h Imago 7/4/09 ALLY
+//    "TEAM",                  // CHAT_TEAM                in igc.h
+//    "INDIVIDUAL",            // CHAT_INDIVIDUAL          in igc.h
+//    "INDIVIDUAL_NOFILTER"    // CHAT_INDIVIDUAL_NOFILTER in igc.h
+//    "WING",                  // CHAT_WING                in igc.h
+//    "INDIVIDUAL_ECHO",       // CHAT_INDIVIDUAL_ECHO     in igc.h
+//    "ALL_SECTOR",            // CHAT_ALL_SECTOR          in igc.h
+//    "FRIENDLY_SECTOR",       // CHAT_FRIENDLY_SECTOR     in igc.h
+//    "GROUP",                 // CHAT_GROUP               in igc.h
+//    "GROUP_NOECHO",          // CHAT_GROUP_NOECHO        in igc.h
+//    "NOSELECTION",           // CHAT_NOSELECTION         in igc.h
+//  };
+//
+//  // Ensure that addition/deletions to igc's enum ChatTarget are reflected here
+//  assert(sizeofArray(s_szChatTypes) == CHAT_MAX);
+//  assert(iType >= 0 && iType < sizeofArray(s_szChatTypes));
+//  LPCSTR pszType = s_szChatTypes[iType];
+//
+//  LPCSTR pszContext = pfsMission->GetIGCMission() ?
+//    pfsMission->GetIGCMission()->GetContextName() : NULL;
+//
+//  // Trigger the event if anyone is listening
+//  _AGCModule.TriggerContextEvent(NULL, idEvent, pszContext,
+//    szSource, idSource, idGame, idTeam, 7,
+//    "Message"      , VT_LPSTR, szMessage,
+//    "Type"         , VT_LPSTR, pszType,
+//    "Target"       , VT_LPSTR, szDest,
+//    "GameID"       , VT_I4   , idGame,
+//    "TeamID"       , VT_I4   , idTeam,
+//    "VoiceID"      , VT_I4   , voiceOver,
+//    "CommandID"    , VT_I4   , commandID);
+//}
 
 
 bool CommandToDrone(CFSMission*         pfsMission,
@@ -3596,7 +3591,7 @@ void ForwardChatMessage(CFSMission*         pfsMission,
         break;
     }
 
-    HandleCOMChatEvents(pszMsg, pszDest, pcd->sidSender, pfsMission, pcd->chatTarget, pcd->voiceOver, pcd->commandID);
+    // noagc HandleCOMChatEvents(pszMsg, pszDest, pcd->sidSender, pfsMission, pcd->chatTarget, pcd->voiceOver, pcd->commandID);
 }
 
 
@@ -4484,9 +4479,9 @@ int FedSrvSiteBase::OnMessageBox(FedMessaging * pthis, const char * strText, con
 int FedSrvSiteBase::OnMessageBox(const char * strText, const char * strCaption, UINT nType)
 {
   printf("%s:\n%s\n\n", strCaption, strText);
-  _AGCModule.TriggerEvent(NULL, AllsrvEventID_MessageBox, "", -1, -1, -1, 2,
-      "Caption", VT_LPSTR, strCaption,
-      "Message", VT_LPSTR, strText);
+  //_AGCModule.TriggerEvent(NULL, AllsrvEventID_MessageBox, "", -1, -1, -1, 2,
+  //    "Caption", VT_LPSTR, strCaption,
+  //    "Message", VT_LPSTR, strText);
   return 0; // which is intentionally not actually a valid MessageBox return code, since we're not actually throwing up a message box
 }
 
@@ -4502,7 +4497,7 @@ HRESULT FedSrvSiteBase::OnSysMessage(FedMessaging * pthis)
 }
 
 // KG: eventually remove this - or notk, Imago 6/10
-//#ifndef ALLSRV_STANDALONE
+#ifndef ALLSRV_STANDALONE
 void FedSrvSiteBase::OnSQLErrorRecord(SSERRORINFO * perror, OLECHAR * postrError)
 {
   // don't make the event an error event, because this may or may not be fatal.
@@ -4531,7 +4526,7 @@ void FedSrvSiteBase::OnOLEDBErrorRecord(BSTR bstrDescription, GUID guid, DWORD d
     "HelpFile", VT_BSTR,  bstrHelpFile,
     "Source",   VT_BSTR,  bstrSource);
 }
-//#endif //ALLSRV_STANDALONE
+#endif //ALLSRV_STANDALONE
 
 HRESULT FedSrvSiteBase::OnNewConnection(FedMessaging * pthis, CFMConnection & cnxn)
 {
@@ -4552,9 +4547,9 @@ HRESULT FedSrvSiteBase::OnDestroyConnection(FedMessaging * pthis, CFMConnection 
   if (pfsPlayer) // need to clean up after them if they didn't log off
   {
     PlaySound("AppGPFault", NULL, SND_ALIAS | SND_PURGE | SND_ASYNC);
-    _AGCModule.TriggerEvent(NULL, AllsrvEventID_PlayerDropped, "", -1, -1, -1, 2,
-        "PlayerName", VT_LPSTR, pfsPlayer->GetName(),
-        "ConxID", VT_I4, cnxn.GetID()); // pkk - IP address
+    //_AGCModule.TriggerEvent(NULL, AllsrvEventID_PlayerDropped, "", -1, -1, -1, 2,
+    //    "PlayerName", VT_LPSTR, pfsPlayer->GetName(),
+    //    "ConxID", VT_I4, cnxn.GetID()); // pkk - IP address
     if (NULL != g.pServerCounters)
     {
         g.pServerCounters->cTimeouts++;
@@ -4568,8 +4563,8 @@ HRESULT FedSrvSiteBase::OnDestroyConnection(FedMessaging * pthis, CFMConnection 
 
 HRESULT FedSrvSiteBase::OnSessionLost(FedMessaging * pthis)
 {
-  _AGCModule.TriggerEvent(NULL, AllsrvEventID_SessionLost, "", -1, -1, -1, 1,
-      "Time", VT_I4, Time::Now().clock());
+  //_AGCModule.TriggerEvent(NULL, AllsrvEventID_SessionLost, "", -1, -1, -1, 1,
+  //    "Time", VT_I4, Time::Now().clock());
   // todo: gracefully shut down
   return S_OK;
 }
@@ -4658,11 +4653,14 @@ void FedSrvSiteBase::OnMessageNAK(FedMessaging * pthis, DWORD dwTime, CFMRecipie
 }
 */
 
-
-#define TrapHackLog(x)          {if (!(x)) { LogTrapHack(EventID_HackLog    , pfsPlayer, &cnxnFrom, #x, __LINE__); break; }}
-#define TrapHackBoot(x)         {if (!(x)) { LogTrapHack(EventID_HackBoot   , pfsPlayer, &cnxnFrom, #x, __LINE__); break; }}
+//noagc
+#define TrapHackLog(x)          {if (!(x)) { LogTrapHack("EventID_HackLog"    , pfsPlayer, &cnxnFrom, #x, __LINE__); break; }}
+#define TrapHackBoot(x)         {if (!(x)) { LogTrapHack("EventID_HackBoot"   , pfsPlayer, &cnxnFrom, #x, __LINE__); break; }}
+//#define TrapHackLog(x)          {if (!(x)) { LogTrapHack(EventID_HackLog    , pfsPlayer, &cnxnFrom, #x, __LINE__); break; }}
+//#define TrapHackBoot(x)         {if (!(x)) { LogTrapHack(EventID_HackBoot   , pfsPlayer, &cnxnFrom, #x, __LINE__); break; }}
 // REVIEW: can we get any info from the connection, like IP address?
-#define TrapHackBootNoPlayer(x) {if (!(x)) { LogTrapHack(EventID_HackBootNoPlayer, NULL, &cnxnFrom, #x, __LINE__); break; }}
+#define TrapHackBootNoPlayer(x) {if (!(x)) { LogTrapHack("EventID_HackBootNoPlayer", NULL, &cnxnFrom, #x, __LINE__); break; }}
+//#define TrapHackBootNoPlayer(x) {if (!(x)) { LogTrapHack(EventID_HackBootNoPlayer, NULL, &cnxnFrom, #x, __LINE__); break; }}
 
 
 static bool DisplaceProbe(ImodelIGC* pmodel, Vector* position, float r)
@@ -4841,9 +4839,9 @@ HRESULT FedSrvSiteBase::OnAppMessage(FedMessaging * pthis, CFMConnection & cnxnF
 
   if (!pfsPlayer && (pfm->fmid != FM_C_LOGONREQ))
   {
-    _AGCModule.TriggerEvent(NULL, AllsrvEventID_MsgFromUnknownPlayer, "", -1, -1, -1, 2,
-        "DPNID", VT_I4, cnxnFrom.GetID(), // pkk - Returns DPNID (DirectPlay network identifier)
-        "MsgName", VT_LPSTR, g_rgszMsgNames[pfm->fmid]); // pkk - This should return FedSrvMsgID text, but somehow it doesn't
+    //_AGCModule.TriggerEvent(NULL, AllsrvEventID_MsgFromUnknownPlayer, "", -1, -1, -1, 2,
+    //    "DPNID", VT_I4, cnxnFrom.GetID(), // pkk - Returns DPNID (DirectPlay network identifier)
+    //    "MsgName", VT_LPSTR, g_rgszMsgNames[pfm->fmid]); // pkk - This should return FedSrvMsgID text, but somehow it doesn't
   }
   else
   switch(pfm->fmid)
@@ -5142,11 +5140,12 @@ HRESULT FedSrvSiteBase::OnAppMessage(FedMessaging * pthis, CFMConnection & cnxnF
                     // send them to the game lobby
                     debugf("#ban: %s banned by %s\n", pfsShip->GetName(), pfsPlayer->GetName());
 					// TE: Fire AGCEvent informing of the ban
-					LPCSTR pszContext = pfsMission->GetIGCMission()->GetContextName();
-					_AGCModule.TriggerContextEvent(NULL, EventID_LogoutGame, pszContext, pfsShip->GetName(),
-						pfsShip->GetShipID(), -1, -1, 3, "GameID",   VT_I4,    pfsMission->GetMissionID(),
-						"GameName", VT_LPSTR, pfsMission->GetIGCMission()->GetMissionParams()->strGameName,
-						"zBooter", VT_LPSTR, pfsPlayer->GetName());
+					// noagc
+					//LPCSTR pszContext = pfsMission->GetIGCMission()->GetContextName();
+					//_AGCModule.TriggerContextEvent(NULL, EventID_LogoutGame, pszContext, pfsShip->GetName(),
+					//	pfsShip->GetShipID(), -1, -1, 3, "GameID",   VT_I4,    pfsMission->GetMissionID(),
+					//	"GameName", VT_LPSTR, pfsMission->GetIGCMission()->GetMissionParams()->strGameName,
+					//	"zBooter", VT_LPSTR, pfsPlayer->GetName());
 					// This is named zBooter so the parameter appears last in the alphabetical list
 					// TE
                     pfsMission->RemovePlayerFromMission(pfsShip->GetPlayer(), QSR_OwnerBooted);
@@ -5320,7 +5319,7 @@ HRESULT FedSrvSiteBase::OnAppMessage(FedMessaging * pthis, CFMConnection & cnxnF
 
       CASTPFM(pfmSW, CS, SET_WINGID, pfm);
 
-      //TrapHackBoot(pfmSW->wingID >= 0);  //Imago commented 7/10 #91
+      TrapHackBoot(pfmSW->wingID >= 0);  //Imago commented 7/10 #91
       TrapHackBoot(pfmSW->wingID < c_widMax);
 
       CFSShip*  pfsShip = CFSShip::GetShipFromID(pfmSW->shipID);
@@ -5365,7 +5364,7 @@ HRESULT FedSrvSiteBase::OnAppMessage(FedMessaging * pthis, CFMConnection & cnxnF
 
       CASTPFM(pfmRequest, CS, REQUEST_MONEY, pfm);
 
-      TrapHackBoot(pfmRequest->amount > 0);
+	  TrapHackBoot(pfmRequest->amount > 0);
 
       if (!pfsPlayer->DecrementChatBudget(true))
       {
@@ -5415,12 +5414,12 @@ HRESULT FedSrvSiteBase::OnAppMessage(FedMessaging * pthis, CFMConnection & cnxnF
       DataMissileIGC  dm;
       dm.pLauncher = pfsPlayer->GetIGCShip();
 
-      TrapHackBoot(dm.pLauncher->GetParentShip() == NULL);
+	  TrapHackBoot(dm.pLauncher->GetParentShip() == NULL);
 
       ImagazineIGC*   pmagazine = (ImagazineIGC*)(dm.pLauncher->GetMountedPart(ET_Magazine, 0));
       if (pmagazine)
       {
-          TrapHackBoot(pmagazine->GetAmount() > 0);
+		  TrapHackBoot(pmagazine->GetAmount() > 0);
 
           //Speed hack ... use the player's cluster if appropriate and the cluster from the missile
           //message if not.
@@ -5428,7 +5427,7 @@ HRESULT FedSrvSiteBase::OnAppMessage(FedMessaging * pthis, CFMConnection & cnxnF
           if ((!pcluster) || (pcluster->GetObjectID() != pfmFireMissile->clusterID))
             pcluster = pMission->GetCluster(pfmFireMissile->clusterID);
 
-          TrapHackBoot (pcluster);
+		  TrapHackBoot (pcluster);
 
           Time  timeFudge = pfmFireMissile->timeFired + 0.5f;
           pfmFireMissile->bDud = (timeFudge < pmagazine->GetTimeLoaded());
@@ -5887,7 +5886,7 @@ HRESULT FedSrvSiteBase::OnAppMessage(FedMessaging * pthis, CFMConnection & cnxnF
           }
           else
           {
-            _AGCModule.TriggerEvent(NULL, AllsrvEventID_NoTicket, "", -1, -1, -1, 0);
+            //noagc _AGCModule.TriggerEvent(NULL, AllsrvEventID_NoTicket, "", -1, -1, -1, 0);
             szReason = "No player name found.";
             lstrcpy(pqd->szCharacterName, "<invalid>");
           }
@@ -6070,9 +6069,9 @@ HRESULT FedSrvSiteBase::OnAppMessage(FedMessaging * pthis, CFMConnection & cnxnF
 #endif
         }
         assert(lstrlen(szVerError) < sizeof(szVerError));
-        _AGCModule.TriggerEvent(NULL, AllsrvEventID_BadClientVersion, "", -1, -1, -1, 2,
-            "ServerVer", VT_I4, MSGVER,
-            "ClientVer", VT_I4, pfmLogon->fedsrvVer);
+        //noagc _AGCModule.TriggerEvent(NULL, AllsrvEventID_BadClientVersion, "", -1, -1, -1, 2,
+        //    "ServerVer", VT_I4, MSGVER,
+        //    "ClientVer", VT_I4, pfmLogon->fedsrvVer);
         BEGIN_PFM_CREATE(g.fm, pfmLogonAck, S, LOGONACK)
           FM_VAR_PARM(szVerError, CB_ZTS)
           FM_VAR_PARM(NULL, CB_ZTS)
@@ -6805,12 +6804,12 @@ HRESULT FedSrvSiteBase::OnAppMessage(FedMessaging * pthis, CFMConnection & cnxnF
 			 if (bIsBoot)
 			 {
 				LPCSTR pszContext = pfsMission->GetIGCMission() ? pfsMission->GetIGCMission()->GetContextName() : NULL;
-				_AGCModule.TriggerContextEvent(NULL, EventID_LeaveTeam, pszContext,
-					pfssAck->GetName(), pfssAck->GetShipID(), pside->GetObjectID(), pfsPlayer->GetCharacterID(), 4,
-					"MissionID", VT_I4, pfsMission->GetMissionID(),
-					"Team"    , VT_I4   , pside->GetObjectID(),
-					"TeamName", VT_LPSTR, pside->GetName(),
-					"zBooter", VT_LPSTR, pfsPlayer->GetName());
+				//noagc _AGCModule.TriggerContextEvent(NULL, EventID_LeaveTeam, pszContext,
+					//pfssAck->GetName(), pfssAck->GetShipID(), pside->GetObjectID(), pfsPlayer->GetCharacterID(), 4,
+					//"MissionID", VT_I4, pfsMission->GetMissionID(),
+					//"Team"    , VT_I4   , pside->GetObjectID(),
+					//"TeamName", VT_LPSTR, pside->GetName(),
+					//"zBooter", VT_LPSTR, pfsPlayer->GetName());
 			 }
 			// TE
 			pfsMission->RemovePlayerFromMission(pfspAck, pfmQuitMission->reason);
@@ -7172,11 +7171,11 @@ HRESULT FedSrvSiteBase::OnAppMessage(FedMessaging * pthis, CFMConnection & cnxnF
             LPCSTR pszContext = pfsPlayer->GetIGCShip() ?
               pfsPlayer->GetIGCShip()->GetMission()->GetContextName() : NULL;
 
-            _AGCModule.TriggerContextEvent(NULL, AllsrvEventID_MoneyError,
-              pszContext, pfsPlayer->GetName(), -1, -1, -1, 3,
-                "PlayerName", VT_LPSTR, pfsPlayer->GetName(),
-                "MoneyGiven", VT_I4, pfmBucketDonate->moneyGiven,
-                "MoneyLeft", VT_I4, pfsPlayer->GetMoney());
+            //noagc _AGCModule.TriggerContextEvent(NULL, AllsrvEventID_MoneyError,
+            //  pszContext, pfsPlayer->GetName(), -1, -1, -1, 3,
+            //    "PlayerName", VT_LPSTR, pfsPlayer->GetName(),
+            //    "MoneyGiven", VT_I4, pfmBucketDonate->moneyGiven,
+            //    "MoneyLeft", VT_I4, pfsPlayer->GetMoney());
           }
 
           SideID sid = pside->GetObjectID();
@@ -7582,9 +7581,9 @@ HRESULT FedSrvSiteBase::OnAppMessage(FedMessaging * pthis, CFMConnection & cnxnF
         LPCSTR pszContext = pfsMission->GetIGCMission()->GetContextName();
 
         // Send an AGC event
-        _AGCModule.TriggerContextEvent(NULL, EventID_GameStateChange, pszContext,
-          pfsMission->GetMissionDef()->misparms.strGameName,
-          pfsMission->GetMissionID(), -1, -1, 0);
+        //noagc _AGCModule.TriggerContextEvent(NULL, EventID_GameStateChange, pszContext,
+        //  pfsMission->GetMissionDef()->misparms.strGameName,
+        //  pfsMission->GetMissionID(), -1, -1, 0);
       }
       else
       {
@@ -7827,33 +7826,34 @@ HRESULT FedSrvSiteBase::OnAppMessage(FedMessaging * pthis, CFMConnection & cnxnF
 }
 
 
-/*-------------------------------------------------------------------------
- * CreateUniqueMutex
- *-------------------------------------------------------------------------
- * Purpose:
- *    Creates a mutex object, with a unique name, to indicate when the
- *    server is running.
- *
- */
-HANDLE CreateUniqueMutex()
-{
-  // Create a NULL dacl to give "everyone" access
-  SECURITY_ATTRIBUTES* psa = NULL;
-  SECURITY_DESCRIPTOR   sd;
-  SECURITY_ATTRIBUTES   sa = {sizeof(sa), &sd, false};
-  if (IsWinNT())
-  {
-    InitializeSecurityDescriptor(&sd, SECURITY_DESCRIPTOR_REVISION);
-    SetSecurityDescriptorDacl(&sd, true, NULL, FALSE);
-    psa = &sa;
-  }
-
-  // Create the mutex using the global name first
-  HANDLE hMutex = ::CreateMutex(psa, false, szAllSrvRunningGlobal);
-  if (!hMutex)
-    hMutex = ::CreateMutex(psa, false, szAllSrvRunning);
-  return hMutex;
-}
+//noagc
+///*-------------------------------------------------------------------------
+// * CreateUniqueMutex
+// *-------------------------------------------------------------------------
+// * Purpose:
+// *    Creates a mutex object, with a unique name, to indicate when the
+// *    server is running.
+// *
+// */
+//HANDLE CreateUniqueMutex()
+//{
+//  // Create a NULL dacl to give "everyone" access
+//  SECURITY_ATTRIBUTES* psa = NULL;
+//  SECURITY_DESCRIPTOR   sd;
+//  SECURITY_ATTRIBUTES   sa = {sizeof(sa), &sd, false};
+//  if (true) //noagc IsWinNT())
+//  {
+//    InitializeSecurityDescriptor(&sd, SECURITY_DESCRIPTOR_REVISION);
+//    SetSecurityDescriptorDacl(&sd, true, NULL, FALSE);
+//    psa = &sa;
+//  }
+//
+//  // Create the mutex using the global name first
+//  HANDLE hMutex = ::CreateMutex(psa, false, szAllSrvRunningGlobal);
+//  if (!hMutex)
+//    hMutex = ::CreateMutex(psa, false, szAllSrvRunning);
+//  return hMutex;
+//}
 
 
 /*-------------------------------------------------------------------------
@@ -7877,15 +7877,11 @@ void CheckForNoShows()
   for (LinkFSMission * plinkMission = plistMission->first(); plinkMission; plinkMission = plinkMission->next())
   {
     CFSMission * pfsMission = plinkMission->data();
-#if !defined(SRV_CHILD)
 	if (!pfsMission->GetMissionDef()->misparms.bObjectModelCreated &&  // Let admin games break the rules
 		!strcmp(pfsMission->GetMissionDef()->misparms.szIGCStaticFile,IGC_ENCRYPT_CORE_FILENAME) && // KGJV: let custom core games break the rules too
         pfsMission->GetCountOfPlayers(NULL, true) == 0)
 	{
-#else
-    if (pfsMission->GetCountOfPlayers(NULL, true) == 0 && g.dwArgCookie > 99)
-	{
-#endif
+
       // nuke it if it's been around more than 15 seconds
       SYSTEMTIME stNow;
       FILETIME ftNow;
@@ -7916,15 +7912,15 @@ void DisconnectFromLobby()
   // Disconnect from the lobby server
   if (g.fmLobby.IsConnected())
   {
-    _AGCModule.TriggerEvent(NULL, AllsrvEventID_DisconnectingLobby,
-      "", -1, -1, -1, 1,
-      "LobbyServer", VT_LPSTR, (LPCTSTR)g.strLobbyServer);
+    //noagc _AGCModule.TriggerEvent(NULL, AllsrvEventID_DisconnectingLobby,
+    //  "", -1, -1, -1, 1,
+    //  "LobbyServer", VT_LPSTR, (LPCTSTR)g.strLobbyServer);
 
     g.fmLobby.Shutdown();
 
-    _AGCModule.TriggerEvent(NULL, AllsrvEventID_DisconnectedLobby,
-      "", -1, -1, -1, 1,
-      "LobbyServer", VT_LPSTR, (LPCTSTR)g.strLobbyServer);
+    //noagc _AGCModule.TriggerEvent(NULL, AllsrvEventID_DisconnectedLobby,
+    //  "", -1, -1, -1, 1,
+    //  "LobbyServer", VT_LPSTR, (LPCTSTR)g.strLobbyServer);
   }
 }
 
@@ -8041,9 +8037,10 @@ void ProcessNetworkMessages()
 
 
   bool bSupposedToConnectToLobby;
-  bool bServerStartedByUI = false;
+  bool bServerStartedByUI = false; // todo: from cmd line args
 
-#if defined(ALLSRV_STANDALONE)
+  //noagc
+#if false //defined(ALLSRV_STANDALONE)
     // If standalone, we download the cfg file right before connecting to the lobby
     // if started by command-line, then always try to connect to lobby
     // if not started by command-line (started by UI) then connect to lobby only for public games
@@ -8058,21 +8055,6 @@ void ProcessNetworkMessages()
 
 	if (bSupposedToConnectToLobby) // are we supposed to be connected to a lobby?
   {
-	// children always connect to the lobby, but if we get disconnected and we're empty, suicide! -Imago 6/25/08
-#if defined(SRV_CHILD)
-	  if(!g.fmLobby.IsConnected()){
-		const ListFSMission * plistMission = CFSMission::GetMissions();
-		for (LinkFSMission * plinkMission = plistMission->first(); plinkMission; plinkMission = plinkMission->next())
-		{
-			CFSMission * pfsMission = plinkMission->data();
-			//NYI wind up another check?
-			if (pfsMission->GetCountOfPlayers(NULL, false) == 0 && iTrys > 4) //added try again
-				PostQuitMessage(0);
-		}
-	  }
-
-#endif
-
     // roll call for lobby
     if (g.fmLobby.IsConnected())
     {
@@ -8084,57 +8066,16 @@ void ProcessNetworkMessages()
 			g.fmLobby.SendMessages(g.fmLobby.GetServerConnection(), FM_GUARANTEED, FM_FLUSH);
 			timeRollCallLobby = g.timeNow;
 
-#if !defined(SRV_PARENT) //Imago - no need to check missiond for the parent
 			CheckForNoShows(); // kinda of a weird place to be calling it, but since we're already in a perdiodic timer...
-#endif
 		}
-#if defined(SRV_PARENT) //Imago - resend lobby our login info, maybe keep CurGames as the heartbeat?
-		static bool bNotFirstPump = false;
-		static Time timeLastRelog = Time::Now();
-		if ((g.timeNow.clock() - timeLastRelog.clock() > 30000) && (bNotFirstPump == true)) // 1m interval
-		{
-			_Module.InitPIDs();
-			ZVersionInfo vi; ZString zInfo = (LPCSTR)vi.GetFileVersionString(); //Imago 7/10 #62
-			// do this to update our current games count/availability
-			BEGIN_PFM_CREATE(g.fmLobby, pfmLogon, S, LOGON_LOBBY)
-			  FM_VAR_PARM(g.cStaticCoreInfo ? g.vStaticCoreInfo : NULL, g.cStaticCoreInfo * c_cbFileName) // KGJV #114
-			  FM_VAR_PARM(PCC(g.strLocation), CB_ZTS) // KGJV #114
-			  FM_VAR_PARM(PCC(UTL::GetPrivilegedUsers(-1)), CB_ZTS) // Imago #2 6/10
-			  FM_VAR_PARM(PCC(zInfo), CB_ZTS) // Imago 62 7/10
-			END_PFM_CREATE
-			pfmLogon->cStaticCoreInfo = g.cStaticCoreInfo; // KGJV #114
-			//Imago NYI: adjust max games based if we're under load
-			pfmLogon->MaxGames = g.cMaxGames; // KGJV #114
-			pfmLogon->verLobby = LOBBYVER_LS;
-			pfmLogon->dwPort = _Module.GetOutgoingPort();
-			pfmLogon->CurGames = _Module.GetChildCount();
-			g.fmLobby.SendMessages(g.fmLobby.GetServerConnection(), FM_GUARANTEED, FM_FLUSH);
-			timeLastRelog = g.timeNow;
-		}
-		bNotFirstPump = true;
-#endif
-
     } else { //lobby is not connected..
       static Time timeLastTry = Time::Now();
 
       // retry once a minute. This will block for a few seconds, so we don't want to do it too often
       if (g.timeNow.clock() - timeLastTry.clock() > 60000)
       {
-#if defined(SRV_CHILD) //imago warn people in game about cnxn issues 6/26/06
-		  CFSMission * pfsMission = CFSMission::GetMissions()->first()->data();
-		  if (iTrys <= 3) {
-			char szMessage[100];
-			sprintf(szMessage,"Warning: Game lost connection with lobby, retrying (%i of 3)",iTrys);
-			pfsMission->GetSite()->SendChat(NULL, CHAT_EVERYONE, NA, NA, szMessage, c_cidNone, NA, NA, NULL, true);
-            ConnectToLobby(g.strLobbyServer);
-		  } else {
-			  bSupposedToConnectToLobby = false;
-			  //give up
-		  }
-		  iTrys++;
-#else
 		  const ListFSMission * plistMission = CFSMission::GetMissions();
-			bool fAnyRunning = false;
+          bool fAnyRunning = false;
 			for (LinkFSMission * plinkMission = plistMission->first(); !fAnyRunning && plinkMission; plinkMission = plinkMission->next())
 			{
 			  CFSMission * pfsMission = plinkMission->data();
@@ -8144,9 +8085,6 @@ void ProcessNetworkMessages()
 
 			if (!fAnyRunning)
 			  ConnectToLobby(NULL);
-#endif
-
-
         timeLastTry = g.timeNow;
       } //retry connect
     } //connected
@@ -8356,31 +8294,16 @@ IHTTPSession * BeginConfigDownload()
   ZString strBuild(vi.GetFileBuildNumber());
 
   char szConfig[MAX_PATH];
-#ifdef _ALLEGIANCE_PROD_
-  lstrcpy(szConfig, "http://allegiance.zaphop.com/allegiance-server.txt"); //Imago 6/10 // BT - STEAM
-#else
-  lstrcpy(szConfig, "http://allegiance.zaphop.com/allegiance-server.txt"); //Imago 6/10 // BT - STEAM
-#endif
+  //noagc
+  lstrcpy(szConfig, "alephs-server.cfg");
 
-  CRegKey key;
-  if (ERROR_SUCCESS == key.Open(HKEY_LOCAL_MACHINE, HKLM_FedSrv, KEY_READ))
-  {
-      ZString strConfig;
-      if (SUCCEEDED(LoadRegString(key, "cfgfile", strConfig)))
-      {
-          // if reg value exists copy over default
-          strcpy(szConfig, PCC(strConfig));
-      }
-  }
+  //noagc
 
   // WLP 2006 - added next line of code to force server to report invalid config
   // if the new config is not found. It used to just use the old one without an error
   //
-#if defined(SRV_PARENT) || defined(SRV_CHILD)  // parent/child setup allows for httpd failure from cfg file host...
-  MoveFile(".\\temp.cfg",".\\last.cfg"); //still allow using the last known cfg, but always get a new one if we can -Imago 6/26/08
-#else
+#pragma message ("investigate this")
   DeleteFile(".\\temp.cfg") ;  // WLP 2006 - yell invalid if not found
-#endif
 
   if (ZString(szConfig).Find("http://") == -1)
   {
@@ -8398,130 +8321,6 @@ IHTTPSession * BeginConfigDownload()
     return pHTTPSession;
   }
 }
-
-
-
-// returns true only if up-to-date
-bool OnAutoUpdateEXEDownloadDone(const char * szFilelistCRC, int nFilelistCRC, int nFilelistSize, const char * szSite, const char * szDirectory, int nAutoUpdateCRC, const char * szEXEPath)
-{
-    char szPath[MAX_PATH + 16];
-    strcpy(szPath, szEXEPath);
-    strcat(szPath, "AutoUpdate.exe");
-
-    if (nAutoUpdateCRC != FileCRC(szPath, NULL))
-    {
-        // report CRC mismatch error for AutoUpdate.EXE
-        // todo fire event
-        char * szMsg = "ERROR: AutoUpdate was aborted.  CRC for AutoUpdate.exe downloaded did not match CRC found in cfg file.  You will not be able to host a public game.\n";
-        printf(szMsg);
-        MessageBox(NULL, szMsg, "Allegiance Server", MB_SERVICE_NOTIFICATION);
-        debugf("AutoUpdate.exe CRC mismatch\n");
-        return false;
-    }
-
-    //
-    // Decide what will be launched after the update (AllSrv or UI), and how it will be launched (as service or EXE)
-    //
-    char * szLaunchPostUpdate;
-
-    if (_Module.WasCOMStarted())
-    {
-      szLaunchPostUpdate = "AllSrvUI.exe";
-    }
-    else
-    {
-      szLaunchPostUpdate = _Module.IsInstalledAsService() ? "S:AllSrv" : "AllSrv.exe";  // S: is short for "Start as Service"
-    }
-
-    char szCommandLine[MAX_PATH * 10];
-    _snprintf (szCommandLine, sizeof(szCommandLine)-1, "%s %s %d \"%s\" \"%s\" \"%s\"", szLaunchPostUpdate, szFilelistCRC, nFilelistSize, szSite, szDirectory, PCC(g.strArtPath));
-
-    printf("Launching AutoUpdate.exe ... ");
-    // Start the AutoUpdate utility
-    int nErr;
-    if((nErr = (int)ShellExecute(0,
-                         "Open",
-                         szPath,
-                         szCommandLine,
-                         NULL,
-                         SW_SHOWNORMAL)
-                         ) <= 32)
-    {
-        // report launch error
-        // todo fire event
-        printf("failed.\nError launching AutoUpdate.exe (Code = %d).  You will not be able to host a public game.\n", nErr);
-        MessageBox(NULL, "Error launching AutoUpdate.exe.  You will not be able to host a public game.", "Allegiance Server", MB_SERVICE_NOTIFICATION);
-        debugf("Couldn't launch AutoUpdate.exe (Code = %d)\n", nErr);
-        return false;
-    }
-    printf("succeeded.\n");
-
-    // Exit the application
-    PostQuitMessage(0);    // allow proper shutdown to occur so Shutdown event gets fired to AllSRvUI32
-    //SetEvent(g.hKillReceiveEvent);
-    return false;
-}
-
-
-
-bool DownloadAutoUpdateEXE(const char * szFilelistCRC, int nFilelistCRC, int nFilelistSize, const char * szSite, const char * szDirectory, int nAutoUpdateCRC, const char * szAutoUpdateURL)
-{
-    char szEXEPath[MAX_PATH];
-    GetExePath(szEXEPath);
-
-    char szPath[MAX_PATH];
-    strcpy(szPath, szEXEPath);
-    strcat(szPath, "AutoUpdate.exe");
-
-    printf("Server is out-of-date.\n");
-
-    if (nAutoUpdateCRC != FileCRC(szPath, NULL))
-    {
-      // Start the download of AutoUpdate.exe file
-      IHTTPSession * pHTTPSession = CreateHTTPSession(NULL);
-
-      const char * szFileList[] = { szAutoUpdateURL, "AutoUpdate.exe", NULL };
-      pHTTPSession->InitiateDownload(szFileList, szEXEPath);
-
-      debugf("Downloading AutoUpdate.exe file...");
-      printf("Downloading AutoUpdate.exe file ... ");
-
-      // we block as we download the AutoUpdate.exe file; should be okay since we are not connected to the zone.
-      while(pHTTPSession->ContinueDownload())
-      {
-        Sleep(100);
-      }
-
-      debugf("Done\n");
-
-      //
-      // At this point we are done downloading AutoUpdate.exe file
-      //
-
-      bool bErrorOccurred = pHTTPSession->GetLastErrorMessage() ? true : false;
-
-      char szErrorMsg[512];
-      if (bErrorOccurred)
-        _snprintf(szErrorMsg, sizeof(szErrorMsg), "\nError Connecting to Zone.  You will not be able to host a public game. AutoUpdate.exe download failed. \r\n%s", pHTTPSession->GetLastErrorMessage());
-
-      delete pHTTPSession;
-
-      if (bErrorOccurred)
-      {
-          // report AutoUpdate.exe download error
-          // TODO: fire event
-          printf("failed: %s\n", szErrorMsg);
-          MessageBox(NULL, szErrorMsg, "Allegiance Server", MB_SERVICE_NOTIFICATION);
-          debugf("%s\n", szErrorMsg);
-          return false;
-      }
-      else
-      printf("succeeded.\n");
-    }
-
-    return OnAutoUpdateEXEDownloadDone(szFilelistCRC, nFilelistCRC, nFilelistSize, szSite, szDirectory, nAutoUpdateCRC, szEXEPath);
-}
-
 
 bool OnCFGDownloadDone(const char * szConfig) // returns true iff up-to-date
 {
@@ -8631,7 +8430,7 @@ bool OnCFGDownloadDone(const char * szConfig) // returns true iff up-to-date
       if (szAutoUpdateCRC[0] == '\0' || nAutoUpdateCRC == 0)
         return true;
 
-      return DownloadAutoUpdateEXE(szFilelistCRC, nFilelistCRC, nFilelistSize, szSite, szDirectory, nAutoUpdateCRC, szAutoUpdateURL);
+	  return false; //noagc DownloadAutoUpdateEXE(szFilelistCRC, nFilelistCRC, nFilelistSize, szSite, szDirectory, nAutoUpdateCRC, szAutoUpdateURL);
     }
     else
     {
@@ -8680,12 +8479,9 @@ bool RetrieveCFGFile() // returns true if cfg was successfully retrieved
 
         printf("%s\n", szErrorMsg);
         debugf("%s\n", szErrorMsg);
-		//Imago 6/26/08 remove this later when parent/child setup is default for service mode installations
-#if !defined(SRV_PARENT) && !defined(SRV_CHILD)
-		if (!_Module.IsInstalledAsService())
-          MessageBox(NULL, szErrorMsg, "Allegiance Server", MB_SERVICE_NOTIFICATION);
+		//if (!_Module.IsInstalledAsService())
+		//   MessageBox(NULL, szErrorMsg, "Allegiance Server", MB_SERVICE_NOTIFICATION);
         return false;
-#endif
     }
   }
 
@@ -8724,8 +8520,8 @@ bool RetrieveCFGFile() // returns true if cfg was successfully retrieved
     debugf("\nInvalid CFG File.\n");
     char * szErrorMsg = "\nError Connecting to Zone.  You will not be able to host a public game. (CFG File is invalid.)\n";
     printf(szErrorMsg);
-    if (!_Module.IsInstalledAsService())
-      MessageBox(NULL, szErrorMsg, "Allegiance Server", MB_SERVICE_NOTIFICATION);
+    //noagc if (!_Module.IsInstalledAsService())
+    //  MessageBox(NULL, szErrorMsg, "Allegiance Server", MB_SERVICE_NOTIFICATION);
     return false;
   }
 }
@@ -8745,8 +8541,8 @@ void AnnouncePause()
   END_PFM_CREATE
   pfmPause->fPause = g.fPaused;
 
-  AGCEventID idEvent = g.fPaused ? AllsrvEventID_Pause : AllsrvEventID_Continue;
-  _AGCModule.TriggerEvent(NULL, idEvent, "", -1, -1, -1, 0);
+  //noagc AGCEventID idEvent = g.fPaused ? AllsrvEventID_Pause : AllsrvEventID_Continue;
+  //noagc _AGCModule.TriggerEvent(NULL, idEvent, "", -1, -1, -1, 0);
   char * szMode = g.fPaused ? "paused." : "continued.";
   printf("Server %s.\n", szMode);
   g.fmLobby.SendMessages(g.fmLobby.GetServerConnection(), FM_GUARANTEED, FM_FLUSH);
@@ -8787,8 +8583,7 @@ HRESULT ConnectToLobby(const char * pszLobby_OverrideCFG /* NULL == do not overr
 	  g.strLobbyServer = pszLobby_OverrideCFG;
   }
   printf("Connecting to lobby: %s ... ", PCC(g.strLobbyServer));
-  _AGCModule.TriggerEvent(NULL, AllsrvEventID_Connecting, "", -1, -1, -1, 1,
-    "LobbyServer", VT_LPSTR, PCC(g.strLobbyServer));
+  //noagc _AGCModule.TriggerEvent(NULL, AllsrvEventID_Connecting, "", -1, -1, -1, 1, "LobbyServer", VT_LPSTR, PCC(g.strLobbyServer));
   HRESULT hr = g.fmLobby.JoinSession(
 #if defined(ALLSRV_STANDALONE)
         FEDFREELOBBYSERVERS_GUID,
@@ -8807,9 +8602,9 @@ HRESULT ConnectToLobby(const char * pszLobby_OverrideCFG /* NULL == do not overr
   // Save the new LobbyServer value
   g.strLobbyServer = PCC(g.strLobbyServer);
 
-  _AGCModule.TriggerEvent(NULL, AllsrvEventID_ConnectedLobby,
-    "", -1, -1, -1, 1,
-    "LobbyServer", VT_LPSTR, PCC(g.strLobbyServer));
+  //noagc _AGCModule.TriggerEvent(NULL, AllsrvEventID_ConnectedLobby,
+  //  "", -1, -1, -1, 1,
+  //  "LobbyServer", VT_LPSTR, PCC(g.strLobbyServer));
 
     // mdvalley: Discover listening port
   DWORD dwPort = 0;						// Passing a port of 0 informs the lobby of the error.
@@ -8894,7 +8689,7 @@ HRESULT ConnectToLobby(const char * pszLobby_OverrideCFG /* NULL == do not overr
 		StartDefaultGames();
 #else
 #if defined(ALLSRV_STANDALONE)
-  if (!_Module.WasCOMStarted())
+  // noagc if (!_Module.WasCOMStarted())
 #endif
       StartDefaultGames();
 #endif
@@ -8921,7 +8716,7 @@ HRESULT ConnectToLobby(const char * pszLobby_OverrideCFG /* NULL == do not overr
  */
 DWORD ProcessMsgPump(int dwSleep, DWORD nCount, LPHANDLE pHandles)
 {
-  static bool s_fWinNT = ::IsWinNT();
+  static bool s_fWinNT = true; // no agc ::IsWinNT();
   Time timeBegin = Time::Now();
   DWORD dwSleep1 = dwSleep;
   DWORD dwEnd = timeBegin.clock() + dwSleep; // don't wanna use Time, because it forces use of floats
@@ -8953,12 +8748,13 @@ DWORD ProcessMsgPump(int dwSleep, DWORD nCount, LPHANDLE pHandles)
         TranslateMessage(&msg);
         switch (msg.message)
         {
-          case wm_sql_querydone:
-          {
-            CSQLQuery * pQuery = (CSQLQuery *) msg.lParam;
-            pQuery->DataReady();
-            break;
-          }
+		  // noagc
+          //case wm_sql_querydone:
+          //{
+          //  CSQLQuery * pQuery = (CSQLQuery *) msg.lParam;
+          //  pQuery->DataReady();
+          //  break;
+          //}
 
           case wm_fs_pause:
             AnnouncePause();
@@ -8967,7 +8763,9 @@ DWORD ProcessMsgPump(int dwSleep, DWORD nCount, LPHANDLE pHandles)
             break;
 
           case WM_QUIT:
-            _Module.StopAllsrv();
+            //noagc _Module.StopAllsrv();
+#pragma message ("shutdown")
+			 //toto shutdown properly
             break;
 
           default:
@@ -9257,6 +9055,15 @@ DWORD WINAPI ReceiveThread(LPVOID pThreadParameter)
     g.pServerCounters->timeCycleTarget = dwUpdateInterval;
 
   printf("Preparing server...\n");
+
+  // Create the single instance of the CAdminServer object
+  gCAdminServer = new CAdminServer();
+  
+  // this is required for DirectPlay
+  HRESULT hr = CoInitialize(NULL);
+  ZSucceeded(hr);
+
+#ifdef false //noagc
   // Enter this thread into the COM STA
   HRESULT hr = CoInitialize(NULL);
   ZSucceeded(hr);
@@ -9277,7 +9084,7 @@ DWORD WINAPI ReceiveThread(LPVOID pThreadParameter)
 
   // Register class objects
   _Module.RegisterCOMObjects();
-
+#endif //noagc
 
   // Setup the database stuff and connect
   // BT - 9/17 - No longer used.
@@ -9317,27 +9124,18 @@ DWORD WINAPI ReceiveThread(LPVOID pThreadParameter)
   // This is the first place where we can might connect to a lobby
   //
 
-  //Imago - parents & children always host sessions /w public lobby guid
-#if defined(SRV_PARENT) || defined(SRV_CHILD)
-   pServer->put_PublicLobby(true);
-#endif
-#if !defined(SRV_PARENT) && !defined(SRV_CHILD)
-#if defined(ALLSRV_STANDALONE)
   // standalone servers don't connect to lobby by default
-  if (_Module.WasCOMStarted())
+#pragma message("fixme - get config option for lobby")
+  if (false) //noagc _Module.WasCOMStarted())
   {
-    pServer->put_PublicLobby(false); // false == private games mode
+    gCAdminServer->put_PublicLobby(false); // false == private games mode
   }
   else
   {
     g.strLobbyServer="?"; // this will be overrided by cfg file download; needs to be non-blank so ConnectToLobby() is called
-    pServer->put_PublicLobby(true); // true means use public dplay session, and connect to lobby is g.strLobbyServer is not empty
+	gCAdminServer->put_PublicLobby(true); // true means use public dplay session, and connect to lobby is g.strLobbyServer is not empty
   }
-#else
-  //non-standalone servers always should connect to a lobby
-  pServer->put_PublicLobby(true); // true means use public dplay session, and connect to lobby is g.strLobbyServer is not empty
-#endif // !defined(ALLSRV_STANDALONE)
-#endif
+
   rgeventHandles[0] = g.hKillReceiveEvent;
   // rgeventHandles[1] = g.hPlayerEvent;
 
@@ -9398,18 +9196,18 @@ DWORD WINAPI ReceiveThread(LPVOID pThreadParameter)
     dwWait = ProcessMsgPump(dwSleep, 1, rgeventHandles);
   }
 
-  HAGCLISTENERS hListeners = GetAGCGlobal()->EventListeners(
-    EventID_ServerShutdown, -1, -1, -1);
-  if (hListeners)
-  {
-    // Get the computer name
-    char szName[MAX_COMPUTERNAME_LENGTH + 1];
-    DWORD cchName = sizeofArray(szName);
-    GetComputerNameA(szName, &cchName);
+  //noagc
+  //HAGCLISTENERS hListeners = GetAGCGlobal()->EventListeners(
+  //  EventID_ServerShutdown, -1, -1, -1);
+  //if (hListeners)
+  //{
+  //  // Get the computer name
+  //  char szName[MAX_COMPUTERNAME_LENGTH + 1];
+  //  DWORD cchName = sizeofArray(szName);
+  //  GetComputerNameA(szName, &cchName);
 
-    _AGCModule.TriggerEvent(hListeners, EventID_ServerShutdown, "", -1, -1, -1, 1,
-      "Server", VT_LPSTR, szName);
-  }
+  //  //noagc _AGCModule.TriggerEvent(hListeners, EventID_ServerShutdown, "", -1, -1, -1, 1, "Server", VT_LPSTR, szName);
+  //}
 
   printf("Shutting down server...\n");
 
@@ -9438,6 +9236,7 @@ DWORD WINAPI ReceiveThread(LPVOID pThreadParameter)
 
   // Release the CAdminServer instance
   spunkServer = NULL;
+#endif
 
   UnloadRankInfo(); //Imago: LoadRankInfo in all modes
 
@@ -9451,9 +9250,10 @@ DWORD WINAPI ReceiveThread(LPVOID pThreadParameter)
   UnloadDbCache();
 
   // Terminate the ATL module
-  _Module.Term();
+  //noagc _Module.Term();
 
   // Remove this thread from the COM STA
+  // this is required by DirectPlay
   CoUninitialize();
 
   ExitThread(0);
@@ -9466,7 +9266,7 @@ DWORD WINAPI ReceiveThread(LPVOID pThreadParameter)
  * Purpose:
  *    Load static server settings
  */
-void LoadSettings()
+void LoadSettings(const char *strFile)
 {
     // Explicitly initialize the global data structure
     g.Init();
@@ -9480,8 +9280,20 @@ void LoadSettings()
     TCHAR szModule[_MAX_PATH];
     TCHAR szDrive[_MAX_DRIVE], szDir[_MAX_DIR];
     GetModuleFileName(NULL, szModule, sizeofArray(szModule));
-    _tsplitpath(szModule, szDrive, szDir, NULL, NULL);
-    _makepath(szModule, szDrive, szDir, TEXT("Artwork\\"), NULL);
+
+	if (strFile)
+		g.strConfigFile = ZString(strFile);
+	else
+	{
+		// default config file is <executable>.cfg
+		g.strConfigFile = ZString(szModule) + ".cfg"; //todo put '.cfg' as global somewhere
+	}
+
+	printf("config file = %s\n", PCC(g.strConfigFile));
+
+	// default artwork is <exe path>/artwork
+	_tsplitpath(szModule, szDrive, szDir, NULL, NULL);
+    _makepath(szModule, szDrive, szDir, TEXT("Artwork\\"), NULL); // portability check
     g.strArtPath = szModule;
 
 
@@ -9495,27 +9307,30 @@ void LoadSettings()
     DWORD dwType;
     DWORD dwValue;
     DWORD cbValue;
-    if (ERROR_SUCCESS == ::RegOpenKeyEx(HKEY_LOCAL_MACHINE, HKLM_FedSrv, 0, KEY_READ, &hKey))
+	//todo: check if file exist or get ride of this if
+    if (true) //(ERROR_SUCCESS == ::RegOpenKeyEx(HKEY_LOCAL_MACHINE, HKLM_FedSrv, 0, KEY_READ, &hKey))
     {
-        if (FAILED(LoadRegString(hKey, "AuthServer", g.strAuthServer)))
-          g.strAuthServer = "Pointweb01"; // default for all developers
+		char szRes[_MAX_PATH * 2];
 		
+		//if (FAILED(LoadRegString(hKey, "AuthServer", g.strAuthServer)))
+        //  g.strAuthServer = "Pointweb01"; // default for all developers
+		GetPrivateProfileString("AllSrv", "AuthServer", "Pointweb01", szRes, sizeofArray(szRes), PCC(g.strConfigFile));
+
 		ZString zUsers;
-		if (!FAILED(LoadRegString(hKey, "PrivilegedUsers", zUsers))) {
+		//if (!FAILED(LoadRegString(hKey, "PrivilegedUsers", zUsers))) {
+		if (GetPrivateProfileString("AllSrv", "PrivilegedUsers", "", szRes, sizeofArray(szRes), PCC(g.strConfigFile))) 
+		{
+			zUsers = szRes;
 			ZVersionInfo vi; ZString zInfo = (LPCSTR)vi.GetCompanyName(); zInfo += (LPCSTR)vi.GetLegalCopyright();
 			UTL::SetPrivilegedUsers((PCC)zUsers.Scramble(zInfo),-1); //Imago 6/10
 		}
 
-        dwValue=0;
-        cbValue = sizeof(dwValue);
 		// w0dk4 Bandwidth Patch - removed registry-check and set tickrate to 20 so client bandwidth settings are not fooled
 		// g.nUpdatesPerSecond = 20;
 		// mmf leave this in, server admins should have control of this even if clients are not getting the bandwidth
 		//     they expect from the 'rough' data rate w0dk4 added
-		if (ERROR_SUCCESS == ::RegQueryValueEx(hKey, "nUpdatesPerSecond", NULL, &dwType, (unsigned char*)&dwValue, &cbValue))
-            g.nUpdatesPerSecond = dwValue;
-        else
-            g.nUpdatesPerSecond = 20;
+		//if (ERROR_SUCCESS == ::RegQueryValueEx(hKey, "nUpdatesPerSecond", NULL, &dwType, (unsigned char*)&dwValue, &cbValue))
+		g.nUpdatesPerSecond = GetPrivateProfileInt("AllSrv", "nUpdatesPerSecond", 10, PCC(g.strConfigFile));
 
 
 // mmf log to file on SRVLOG define as well as _DEBUG
@@ -9524,23 +9339,25 @@ void LoadSettings()
 #endif
 
 #ifdef SRVLOG // mmf changed this from _DEBUG
-        dwValue=0;
-        cbValue = sizeof(dwValue);
-        if (ERROR_SUCCESS != ::RegQueryValueEx(hKey, "nDebugMask", NULL, &dwType, (unsigned char*)&dwValue, &cbValue))
-            dwValue=FED_DEBUG_FILE;
+        //if (ERROR_SUCCESS != ::RegQueryValueEx(hKey, "nDebugMask", NULL, &dwType, (unsigned char*)&dwValue, &cbValue))
+        //    dwValue=FED_DEBUG_FILE;
+		DWORD dwValue = GetPrivateProfileInt("AllSrv", "nDebugMask", FED_DEBUG_FILE, PCC(g.strConfigFile));
         g_app.SetDebug(dwValue);
 #endif
 
         // Standalone servers do not need a LobbyServer registry value because
         // they always get it from the CFG file.
         //#if !defined(ALLSRV_STANDALONE)  Imago 6/10
-          LoadRegString(hKey, "LobbyServer", g.strLobbyServer);
+//noagc: todo get this from args or confiug file?  LoadRegString(hKey, "LobbyServer", g.strLobbyServer);
         //#endif // !defined(ALLSRV_STANDALONE)
 
         // Use winsock-provided address for clients, unless overridden (e.g. dual nic)
 		// KGJV #114 localaddress isnt used anymore by DP8 so we use it as public userfriendly server name
 	    // KGJV #114 TODO: eventually rename 'LocalAdresss' to something more appropriate now, PublicName for instance.
-        if (FAILED(LoadRegString(hKey, "LocalAddress", g.strLocalAddress)))
+		if (GetPrivateProfileString("AllSrv", "FriendlyName", "", szRes, sizeofArray(szRes), PCC(g.strConfigFile)))
+			g.strLocalAddress = szRes;
+		//if (FAILED(LoadRegString(hKey, "LocalAddress", g.strLocalAddress)))
+		else
         {
           WSADATA WSAData;
           char szHostName[20]; // length of machine name--also long enough for ip address if that's what we get
@@ -9551,15 +9368,18 @@ void LoadSettings()
         }
 
 		// KGJV #114
-        if (FAILED(LoadRegString(hKey, "Location", g.strLocation)))
-        {
-			g.strLocation = "unknown";
-		}
+		GetPrivateProfileString("AllSrv", "Location", "unknown", szRes, sizeofArray(szRes), PCC(g.strConfigFile));
+		g.strLocation = szRes;
+  //      if (FAILED(LoadRegString(hKey, "Location", g.strLocation)))
+  //      {
+		//	g.strLocation = "unknown";
+		//}
 
 		// KGJV #114
-		g.cMaxGames = 99; // default max game
-        cbValue = sizeof(dwValue);
-		RegQueryValueEx(hKey, "MaxGames", NULL, &dwType, (unsigned char*)&g.cMaxGames, &cbValue);
+		//g.cMaxGames = 99; // default max game
+        //cbValue = sizeof(dwValue);
+		//RegQueryValueEx(hKey, "MaxGames", NULL, &dwType, (unsigned char*)&g.cMaxGames, &cbValue);
+		g.cMaxGames = GetPrivateProfileInt("AllSrv", "MaxGames", 99, PCC(g.strConfigFile));
 
 		// BT - STEAM - Enable a server to decide wheather or not it should allow only offical game clients to connect.
 		g.bEnforceSteamDRM = false;
@@ -9616,44 +9436,42 @@ void LoadSettings()
 
 
 		ZString strArtPath;
-        if (SUCCEEDED(LoadRegString(hKey, "ArtPath", strArtPath)))
-        {
-          if (strArtPath.Right(1) != "\\")
-            strArtPath += "\\";
-          g.strArtPath = strArtPath;
+        //if (SUCCEEDED(LoadRegString(hKey, "ArtPath", strArtPath)))
+		if (GetPrivateProfileString("AllSrv", "ArtPath", "", szRes, sizeofArray(szRes), PCC(g.strConfigFile)))
+		{
+			strArtPath = szRes;
+			if (strArtPath.Right(1) != "\\")
+				strArtPath += "\\";
+			g.strArtPath = strArtPath;
         }
 
-        dwValue=0;
-        cbValue = sizeof(dwValue);
-        if (ERROR_SUCCESS == ::RegQueryValueEx(hKey, "fWantInt3", NULL, &dwType, (unsigned char*)&dwValue, &cbValue))
-            g.fWantInt3 = !!dwValue;
-        else g.fWantInt3 = true;
+//TODO
+
+        //dwValue=0;
+        //cbValue = sizeof(dwValue);
+        //if (ERROR_SUCCESS == ::RegQueryValueEx(hKey, "fWantInt3", NULL, &dwType, (unsigned char*)&dwValue, &cbValue))
+        //    g.fWantInt3 = !!dwValue;
+        //else g.fWantInt3 = true;
 		
-        //Imago 7/10 DIE ASGS DIE
-        dwValue=0;
-        cbValue = sizeof(dwValue);
-        if (ERROR_SUCCESS == ::RegQueryValueEx(hKey, "MaxNewbRank", NULL, &dwType, (unsigned char*)&dwValue, &cbValue))
-            g.MaxNewbRank = dwValue;
-        else g.MaxNewbRank = 4;
-        //
+        ////Imago 7/10 DIE ASGS DIE
+        //dwValue=0;
+        //cbValue = sizeof(dwValue);
+        //if (ERROR_SUCCESS == ::RegQueryValueEx(hKey, "MaxNewbRank", NULL, &dwType, (unsigned char*)&dwValue, &cbValue))
+        //    g.MaxNewbRank = dwValue;
+        //else g.MaxNewbRank = 4;
+        ////
 
-        dwValue=0;
-        cbValue = sizeof(dwValue);
-        if (ERROR_SUCCESS == ::RegQueryValueEx(hKey, "fProtocol", NULL, &dwType, (unsigned char*)&dwValue, &cbValue))
-            g.fProtocol = !!dwValue;
-        else g.fProtocol = true;
+        //dwValue=0;
+        //cbValue = sizeof(dwValue);
+        //if (ERROR_SUCCESS == ::RegQueryValueEx(hKey, "fProtocol", NULL, &dwType, (unsigned char*)&dwValue, &cbValue))
+        //    g.fProtocol = !!dwValue;
+        //else g.fProtocol = true;
 
-        dwValue=0;
-        cbValue = sizeof(dwValue);
-        if (ERROR_SUCCESS == ::RegQueryValueEx(hKey, "fDoublePrecision", NULL, &dwType, (unsigned char*)&dwValue, &cbValue))
-            g.fDoublePrecision = !!dwValue;
-        else g.fDoublePrecision = true;
-
-        dwValue=0;
-        cbValue = sizeof(dwValue);
-        if (ERROR_SUCCESS == ::RegQueryValueEx(hKey, "fTimeout", NULL, &dwType, (unsigned char*)&dwValue, &cbValue))
-            g.fTimeOut = !!dwValue;
-        else g.fTimeOut = true;
+        //dwValue=0;
+        //cbValue = sizeof(dwValue);
+        //if (ERROR_SUCCESS == ::RegQueryValueEx(hKey, "fDoublePrecision", NULL, &dwType, (unsigned char*)&dwValue, &cbValue))
+        //    g.fDoublePrecision = !!dwValue;
+        //else g.fDoublePrecision = true;
 
       //#if !defined(ALLSRV_STANDALONE) Imago revived 6/10 // BT - 9/17 - No longer used.
         //dwValue=0;
@@ -10150,64 +9968,21 @@ void    BuildIGCFiles (char* szArtworkPath, bool bEncrypt = false, bool bMaps = 
 }
 
 
-/*-------------------------------------------------------------------------
- * RegisterAllSrv()
- *-------------------------------------------------------------------------
- * Purpose:
- *    Register AllSrv as an EXE or NT Service, and report any errors
- *
- *  Paramters:
- *    fReRegister:  are we registering after an autoupdate?
- *    fInstallAsService: TRUE if NT service, FALSE for EXE
- */
-void RegisterAllSrv(BOOL fReRegister, BOOL fInstallAsService, int argc, char *argv[])
+// for when running as EXE
+BOOL WINAPI HandlerRoutine(
+	DWORD dwCtrlType   //  control signal type
+)
 {
-  if (fInstallAsService && IsWin9x())
-  {
-    printf("Cannot register as a service on this operating system.\n");
-    return;
-  }
+	if (dwCtrlType == CTRL_CLOSE_EVENT || dwCtrlType == CTRL_BREAK_EVENT || dwCtrlType == CTRL_SHUTDOWN_EVENT || dwCtrlType == CTRL_C_EVENT)
+		//imago added 7/3/08
+	{
+		debugf("shutting down, got control code:%d\n", dwCtrlType);
+		SetEvent(g.hKillReceiveEvent);
+		return TRUE;
+	}
 
-  DWORD dwErrorCode(_Module.RegisterServer(fReRegister, TRUE, fInstallAsService, argc, argv));
-
-  if (FAILED(dwErrorCode))
-  {
-    char szBuf[MAX_PATH];
-    sprintf(szBuf, "Unable to register server [0x%08x].  %s is not properly installed.\n", dwErrorCode, argv[0]);
-    PrintSystemErrorMessage(szBuf, dwErrorCode);
-  }
-  else
-  {
-    // signal success in terms of adding COM related registry stuff
-    printf("Registry Update Successful.\n");
-  }
+	return FALSE;
 }
-
-
-/*-------------------------------------------------------------------------
- * UnregisterSvr()
- *-------------------------------------------------------------------------
- * Purpose:
- *    Unregister AllSrv as an EXE or NT Service, and report any errors
- *
- */
-void UnregisterAllSrv(char *szServerName)
-{
-  DWORD dwErrorCode(_Module.UnregisterServer());
-
-  if (FAILED(dwErrorCode))
-  {
-    char szBuf[MAX_PATH];
-    sprintf(szBuf, "Unable to remove server [0x%08x].  %s is not properly uninstalled.\n", dwErrorCode, szServerName);
-    PrintSystemErrorMessage(szBuf, dwErrorCode);
-  }
-  else
-  {
-    // signal success in terms of removing COM related registry stuff
-    printf("Registry Update Successful.\n");
-  }
-}
-
 
 ////////////////////////////////////////////////////////////////////////
 // main
@@ -10226,9 +10001,6 @@ void UnregisterAllSrv(char *szServerName)
 //
 int __cdecl main(int argc, char *argv[])
 {
-    // Load the global settings from the registry
-    LoadSettings();
-
     // set the FPU to double precision, instead of long double
     // (this makes FP compares a little safer)
     if (g.fDoublePrecision)
@@ -10264,121 +10036,22 @@ int __cdecl main(int argc, char *argv[])
     // Initialize AGC
     ZSucceeded(hr = _Module.InitAGC()); //dies here if the "Event Log" service is not started -Imago
     RETURN_FAILED(hr);
-
-    char szSvcName[64];
-	strcpy(szSvcName, c_szSvcName);
-#if defined(SRV_PARENT)
-    SERVICE_TABLE_ENTRY rgSTE[] =
-    {
-        { szSvcName, (LPSERVICE_MAIN_FUNCTION) MPServiceMain },
-        { NULL, NULL }
-    };
-#else
-    SERVICE_TABLE_ENTRY rgSTE[] =
-    {
-        { szSvcName, (LPSERVICE_MAIN_FUNCTION)_ServiceMain },
-        { NULL, NULL }
-    };
 #endif
-    bool fShowUsage = false;
 
     g.hInst = GetModuleHandle(NULL);
 
     if (argc < 1)
     {
-      //printf ("Hell has frozen over.\n"); // this should never happen
-      // Terminate AGC
-      _Module.TermAGC();
+      printf ("Hell has frozen over.\n"); // this should never happen
       return 0;
     }
 
-    // if registering (after an AutoUpdate)--be sure to keep existing install data intact
-    if (argc > 1 && (*argv[1]=='-' || *argv[1]=='/') && !lstrcmpi ("reregister", argv[1]+1))
+	// cmd line args parsing
+	bool fShowUsage = false;
+	if (argc > 1 && (*argv[1]=='-' || *argv[1]=='/'))
     {
-      RegisterAllSrv(TRUE, _Module.IsInstalledAsService(), argc, argv);
-      // Terminate AGC
-      _Module.TermAGC();
-      return 0;
-    }
 
-    // Check for a weird/busted installation...this really can happen
-    if (_Module.IsInstalledAsService() && !_Module.IsInServiceControlManager())
-    {
-      printf("Incomplete installation detected. Removing incomplete installation...\n");
-
-      UnregisterAllSrv(argv[0]);
-    }
-
-	// BT - STEAM
-	uint32 unIP = INADDR_ANY;
-	uint32 steamAuthenticationPort = 8766;
-	uint32 gamePort = 27115; // We will manage our own network communications with game clients, so this will not be used directly by us.
-	uint32 masterUpdaterPort = 27116;
-	EServerMode eMode = eServerModeAuthenticationAndSecure;
-	const char *lobbyVersion = "1.0.0.4";
-
-	if (SteamGameServer_Init(unIP, steamAuthenticationPort, gamePort, masterUpdaterPort, eMode, lobbyVersion) == false)
-	{
-		printf("failed on steam server init.\n");
-		exit(-1);
-	}
-
-	// Only for SteamAPI, not SteamGameServerAPI.
-	//SteamUtils()->SetWarningMessageHook(&SteamAPIDebugTextHook);
-	SteamGameServer()->LogOnAnonymous();
-
-    _Module.SetCOMStarted(argc == 2 && !lstrcmpi("-Embedding",argv[1]));
-
-    #if defined(ALLSRV_STANDALONE)
-    #ifndef DEBUG //Imago changed from _DEBUG to allow DEBUG in retail builds w/o requiring debug run-times
-    if (argc == 1 && !_Module.IsInstalledAsService() && !_Module.WasCOMStarted())
-    {
-		//multi-process setup can only be debugged /w console windows - Imago
-		//NYI: should be released as service module only
-#if defined(SRV_PARENT) || defined(SRV_CHILD)
-		_Module.RunAsExecutable();
-#else
-      printf("\nUse AllSrvUI.exe to run the Allegiance Server.\n");
-      // Terminate AGC
-      _Module.TermAGC();
-#endif
-      return 0;
-    }
-    #endif
-    #endif
-
-	// Imago run a single game on this process
-#if defined(SRV_CHILD)
-	if(argc > 3) {
-		g.strArgName = ZString(argv[1]);
-		g.strArgCore = ZString(argv[2]);
-		g.dwArgCookie = strtoul(argv[3], NULL, 16);
-		_Module.RunAsExecutable();
-	} else {
-		printf("Error: Must be loaded by AllSrvMP.exe\n");
-		// Terminate AGC
-		_Module.TermAGC();
-
-		// Indicate success
-		return 0;
-	}
-#else // run multiple games on a single process
-    if (argc > 1 && (*argv[1]=='-' || *argv[1]=='/') && !_Module.WasCOMStarted())
-    {
-      BOOL fInstallAsService = !lstrcmpi("Service",argv[1]+1);
-
-      if (fInstallAsService || !lstrcmpi("RegServer",argv[1]+1))
-      {
-
-        RegisterAllSrv(FALSE, fInstallAsService, argc, argv);
-
-      }
-      else if (!lstrcmpi("UnregServer",argv[1]+1) || !lstrcmpi("Remove",argv[1]+1))
-      {
-        UnregisterAllSrv(argv[0]);
-      }
-	  //Imago ressurects the import/export functions (as structured text, not MSSQL)
-      else if (!lstrcmpi ("Core2Text", argv[1]+1))
+	       if (!lstrcmpi ("Core2Text", argv[1]+1))
       {
 		  char szFilename[MAX_PATH + 1];
 		  UTL::SetArtPath(g.strArtPath);
@@ -10426,7 +10099,7 @@ int __cdecl main(int argc, char *argv[])
 			fShowUsage = true;
 		  }
       }
-     else if (!lstrcmpi ("Text2Map", argv[1]+1))
+      else if (!lstrcmpi ("Text2Map", argv[1]+1))
       {
 		  if (argc > 2) {
             //ImportIGCObjs(argv[2]);
@@ -10437,7 +10110,7 @@ int __cdecl main(int argc, char *argv[])
 			fShowUsage = true;
 		  }
       }
-     else if (!lstrcmpi ("Text2Core", argv[1]+1))
+      else if (!lstrcmpi ("Text2Core", argv[1]+1))
       {
 		  char szFilename[MAX_PATH + 1];
 		  UTL::SetArtPath(g.strArtPath);
@@ -10473,66 +10146,122 @@ int __cdecl main(int argc, char *argv[])
             printf ("Please provide a text core IGC folder...\n");
 		  }
       }
-    #if !defined(ALLSRV_STANDALONE)
-      else if (!lstrcmpi ("BuildIGCFiles", argv[1]+1))
-      {
-        if (argc > 2)
-            BuildIGCFiles (argv[2], false, true);
-        else
-            printf ("Please provide a path for IGC files to get written to...\n");
-      }
-      else if (!lstrcmpi ("EncryptIGCFiles", argv[1]+1))
-      {
-        if (argc > 2)
-            BuildIGCFiles (argv[2], true, true);
-        else
-            printf ("Please provide a path for IGC files to get written to...\n");
-      }
-      else if (!lstrcmpi ("BuildIGCFilesNM", argv[1]+1))
-      {
-        if (argc > 2)
-            BuildIGCFiles (argv[2], false, false);
-        else
-            printf ("Please provide a path for IGC files to get written to...\n");
-      }
-      else if (!lstrcmpi ("EncryptIGCFilesNM", argv[1]+1))
-      {
-        if (argc > 2)
-            BuildIGCFiles (argv[2], true, false);
-        else
-            printf ("Please provide a path for IGC files to get written to...\n");
-      }
-    #endif // !defined(ALLSRV_STANDALONE)
+	 // noagc
+     //else if (!lstrcmpi ("BuildIGCFiles", argv[1]+1))
+     // {
+     //   if (argc > 2)
+     //       BuildIGCFiles (argv[2], false, true);
+     //   else
+     //       printf ("Please provide a path for IGC files to get written to...\n");
+     // }
+      //else if (!lstrcmpi ("EncryptIGCFiles", argv[1]+1))
+      //{
+      //  if (argc > 2)
+      //      BuildIGCFiles (argv[2], true, true);
+      //  else
+      //      printf ("Please provide a path for IGC files to get written to...\n");
+      //}
+      //else if (!lstrcmpi ("BuildIGCFilesNM", argv[1]+1))
+      //{
+      //  if (argc > 2)
+      //      BuildIGCFiles (argv[2], false, false);
+      //  else
+      //      printf ("Please provide a path for IGC files to get written to...\n");
+      //}
+      //else if (!lstrcmpi ("EncryptIGCFilesNM", argv[1]+1))
+      //{
+      //  if (argc > 2)
+      //      BuildIGCFiles (argv[2], true, false);
+      //  else
+      //      printf ("Please provide a path for IGC files to get written to...\n");
+      //}
+      // #endif // !defined(ALLSRV_STANDALONE)
       else
       {
             // if unknown args
            fShowUsage = true;
       }
     }
-    else
-    {
-      if (argc == 1 || _Module.WasCOMStarted())
-      {
-        if (_Module.IsInstalledAsService())
-        {
-          printf("Trying to run %s as an NT Service...\nType \"%s -RegServer\" to re-install as EXE.\n", argv[0], argv[0]);
-          //start as service
-          if (!StartServiceCtrlDispatcher(rgSTE))
-            _AGCModule.TriggerEvent(NULL, AllsrvEventID_StartingService, "", -1, -1, -1, 0);
 
-        }
-        else
-        {
-          if (!_Module.IsInstalled())
-          {
-            printf("\nInstalling %s as an EXE...\n", argv[0]);
-            RegisterAllSrv(FALSE, FALSE, argc, argv); // FALSE == register as EXE
-          }
-          _Module.RunAsExecutable();
-        }
-      }
-      else // if unknown args
-        fShowUsage = true;
+	if (!fShowUsage)
+	{
+		 // Load the global settings from the config file
+		 LoadSettings(argc > 1 ? argv[1] : NULL);
+
+		  ZVersionInfo vi;
+		  printf("%s\n%s\n\n",
+			  (LPCSTR)vi.GetFileDescription(),
+			  (LPCSTR)vi.GetLegalCopyright());
+
+		  printf("Initializing...\n");
+		  HRESULT hr = FedSrv_Init();
+
+		  if (SUCCEEDED(hr))
+		  {
+			  HANDLE hConsole;
+
+			  printf("\rType 'Q' to Quit.\n");
+			  printf("\rType 'P' to Pause.\n");
+			  printf("\rType 'C' to Continue.\n");
+
+			  hConsole = GetStdHandle(STD_INPUT_HANDLE);
+			  SetConsoleMode(hConsole, 0);
+
+			  SetConsoleCtrlHandler(HandlerRoutine, true);
+
+			  assert(g.hKillReceiveEvent);
+
+			  HANDLE hEventArray[] = { g.hKillReceiveEvent, hConsole };
+
+			  DWORD dwAwaker;
+
+			  //
+			  // Wait until Receive Thread dies; if Q is pressed, kill Receive Thread
+			  //
+			  do
+			  {
+				  dwAwaker = MsgWaitForMultipleObjects(2, hEventArray, FALSE, INFINITE, 0);
+
+				  if (dwAwaker == WAIT_OBJECT_0 + 1)
+				  {
+					  INPUT_RECORD Key;
+					  DWORD dwRead;
+
+					  ReadConsoleInput(hConsole, &Key, 1, &dwRead);
+
+					  if (Key.EventType == KEY_EVENT &&
+						  Key.Event.KeyEvent.wVirtualKeyCode == 'Q')
+					  {
+						  debugf("Q pressed\n");
+						  SetEvent(g.hKillReceiveEvent);
+					  }
+					  if (Key.EventType == KEY_EVENT &&
+						  Key.Event.KeyEvent.wVirtualKeyCode == 'P')
+					  {
+						  debugf("P pressed\n");
+						  FedSrv_Pause();
+					  }
+					  if (Key.EventType == KEY_EVENT &&
+						  Key.Event.KeyEvent.wVirtualKeyCode == 'C')
+					  {
+						  debugf("C pressed\n");
+						  FedSrv_Continue();
+					  }
+				  }
+
+			  } while (dwAwaker != WAIT_OBJECT_0);
+
+			  FedSrv_Terminate();
+
+			  // here is a good spot to restart -Imago
+			  // if (g.bRestarting) RunAsExecutable();
+		  }
+		  else
+		  {
+			  printf("\rInitialization failed. (%x)\n", hr);
+		  }
+
+         //  _Module.RunAsExecutable();
     }
 
     if (fShowUsage)
@@ -10541,39 +10270,15 @@ int __cdecl main(int argc, char *argv[])
       printf("%s\n%s\n\n",
         (LPCSTR)vi.GetFileDescription(), (LPCSTR)vi.GetLegalCopyright());
 
-      if (!_Module.IsInstalled())
-      {
-        printf("\nThe server needs to be installed before running.\n\n", argv[0]);
-      }
       //      ----+----1----+----2----+----3----+----4----+----5----+----6----+----7----+----8
       printf("usage is ONE of:\n\n");
-      printf("AllSrv                             starts the server if registered as an exe\n");
-      printf("AllSrv -RegServer                  install the server as an EXE\n");
-    if (IsWinNT())
-      printf("AllSrv -Service   [user pw]        install the server as an NT Service\n");
-      printf("AllSrv -UnregServer                uninstall the server\n");
+      printf("AllSrv                             starts the server\n");
 	  printf("AllSrv -Core2Text [core_name]      converts core igc to text\n");
 	  printf("AllSrv -Map2Text  [map_name]       converts map igc to text\n");
 	  printf("AllSrv -Text2Core [core_name]      converts text core to igc\n");
 	  printf("AllSrv -Text2Map  [map_name]       converts text map igc\n");
-    #if !defined(ALLSRV_STANDALONE)
-      printf("AllSrv -BuildIGCFiles <artpath>    builds igc files from database\n");
-      printf("                                   (see root makefile for required env vars).\n");
-      printf("AllSrv -EncryptIGCFiles <artpath>  builds & encrypts igc files from database\n");
-      printf("                                   (see root makefile for required env vars).\n");
-      printf("AllSrv -BuildIGCFilesNM <artpath>  as above, but no maps\n");
-      printf("                                   (see root makefile for required env vars).\n");
-      printf("AllSrv -EncryptIGCFilesNM <artpath> as above, but no maps\n");
-      printf("                                   (see root makefile for required env vars).\n");
-    #endif // !defined(ALLSRV_STANDALONE)
-    if (IsWinNT())
-      printf("\nTo start this service (when installed as NT service): net start %s\n",c_szSvcName);
-      //      ----+----1----+----2----+----3----+----4----+----5----+----6----+----7----+----8
+      //        ----+----1----+----2----+----3----+----4----+----5----+----6----+----7----+----8
     }
-#endif // Imago
-
-    // Terminate AGC
-    _Module.TermAGC();
 
 	// Indicate success
     return 0;
@@ -10617,7 +10322,7 @@ HRESULT pascal FedSrv_Init()
   int iCon = 0;
   HRESULT hr = S_OK;
 
-  _AGCModule.TriggerEvent(NULL, AllsrvEventID_Initialize, "", -1, -1, -1, 0);
+  //noagc _AGCModule.TriggerEvent(NULL, AllsrvEventID_Initialize, "", -1, -1, -1, 0);
 
   // Set cur dir = exe dir
   HMODULE hmod = GetModuleHandle(NULL);
@@ -11452,13 +11157,14 @@ void FedSrvSiteBase::BuildStation(IasteroidIGC* pasteroid,
 	pasteroid->Terminate();
 	//
 	// TE: Fire AGCEvent informing of station created
-	 LPCSTR pszContext = m_pfsMission->GetIGCMission() ? m_pfsMission->GetIGCMission()->GetContextName() : NULL; // this is a timestamp.
-	 _AGCModule.TriggerContextEvent(NULL, EventID_StationCreated, pszContext,
-						pside->GetName(), pside->GetObjectID(), -1, -1, 4,
-						"MissionID", VT_I4, m_pfsMission->GetMissionID(),
-						"TeamID"    , VT_I4   , pside->GetObjectID(),
-						"TeamName", VT_LPSTR, pside->GetName(),
-						"zStationName", VT_LPSTR, pstationNew->GetName());
+	// noagc
+	 //LPCSTR pszContext = m_pfsMission->GetIGCMission() ? m_pfsMission->GetIGCMission()->GetContextName() : NULL; // this is a timestamp.
+	 //_AGCModule.TriggerContextEvent(NULL, EventID_StationCreated, pszContext,
+		//				pside->GetName(), pside->GetObjectID(), -1, -1, 4,
+		//				"MissionID", VT_I4, m_pfsMission->GetMissionID(),
+		//				"TeamID"    , VT_I4   , pside->GetObjectID(),
+		//				"TeamName", VT_LPSTR, pside->GetName(),
+		//				"zStationName", VT_LPSTR, pstationNew->GetName());
     // TE end
 
     // yp: Add event for players who escorted a constructor
@@ -12288,12 +11994,13 @@ void FedSrvSiteBase::KillStationEvent(IstationIGC* pstation, ImodelIGC* plaunche
 
   // TE: fire AGCEvent when base is destroyed
   LPCSTR pszContext = m_pfsMission->GetIGCMission() ? m_pfsMission->GetIGCMission()->GetContextName() : NULL;
-  _AGCModule.TriggerContextEvent(NULL, EventID_StationDeleted, pszContext,
-    szLauncherName, iLauncherUniqueID, iLauncherSideUniqueID, -1, 4,
-	"MissionID", VT_I4, m_pfsMission->GetMissionID(),
-    "TeamID", VT_I4, pstation->GetSide()->GetUniqueID(),
-	"TeamName", VT_LPSTR, pstation->GetSide()->GetName(),
-    "zStationName", VT_LPSTR, pstation->GetName());
+	//noagc
+	// _AGCModule.TriggerContextEvent(NULL, EventID_StationDeleted, pszContext,
+	//   szLauncherName, iLauncherUniqueID, iLauncherSideUniqueID, -1, 4,
+	//"MissionID", VT_I4, m_pfsMission->GetMissionID(),
+	//   "TeamID", VT_I4, pstation->GetSide()->GetUniqueID(),
+	//"TeamName", VT_LPSTR, pstation->GetSide()->GetName(),
+	//   "zStationName", VT_LPSTR, pstation->GetName());
   // parameter is named zStationName so it appears at end of alphabetical list, keeping compatibility with allsrv1.0
   // End-TE
 
@@ -14068,7 +13775,7 @@ IshipIGC*   PickNewLeader(const ShipListIGC*    pships,
 
     void FedSrvApp::DebugOutput(const char *psz)
     {
-        static TCAutoCriticalSection critsec;
+        static ZAutoCriticalSection critsec; // noagc
         Time    tStart = Time::Now();
         critsec.Lock();
           if (m_dwDebug & FED_DEBUG_FILE)
@@ -14095,10 +13802,10 @@ IshipIGC*   PickNewLeader(const ShipListIGC*    pships,
 
     bool FedSrvApp::OnAssert(const char* psz, const char* pszFile, int line, const char* pszModule)
     {
-        _AGCModule.TriggerEvent(NULL, EventID_AGCAssert, "", -1, -1, -1, 3,
-            "File", VT_LPSTR, pszFile,
-            "Line", VT_I4, line,
-            "Text", VT_LPSTR, psz);
+        //noagc _AGCModule.TriggerEvent(NULL, EventID_AGCAssert, "", -1, -1, -1, 3,
+        //    "File", VT_LPSTR, pszFile,
+        //    "Line", VT_I4, line,
+        //    "Text", VT_LPSTR, psz);
 
         return g.fWantInt3;
     }

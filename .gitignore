@@ -319,6 +319,7 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+<<<<<<< HEAD
 /VS2017/allsrv_appweb.log.old
 *.old
 *.idb
@@ -328,3 +329,6 @@ $RECYCLE.BIN/
 # Allow boost library
 !src/Lib/boost/boost/preprocessor/debug
 /src/Pigs/Piglets/Junk
+=======
+*.old
+>>>>>>> kgwork

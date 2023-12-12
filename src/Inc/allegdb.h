@@ -11,6 +11,10 @@
 #ifndef _ALLEGDB_H_
 #define _ALLEGDB_H_
 
+//noagc
+//todo: refactor
+#ifdef false
+
 #include <oledb.h>
 #include <sqloledb.h>
 #include <atldbcli.h>
@@ -368,12 +372,14 @@ private:
   HANDLE      m_hEventDie;
   CSQLCore *  m_psql;
 };
+#endif
 
-
+#pragma message("this must go!")
 #define WM_SQL (WM_APP + 0x2000) // somewhat random, hopefully safe, range
 #define wm_sql_addquery  WM_SQL     // Sent from outside in. LPARAM: CSQLQuery*, WPARAM: unused
 #define wm_sql_querydone WM_SQL + 1 // Sent inside out.      LPARAM: CSQLQuery*, WPARAM: unused 
 
+#if false
 /*-------------------------------------------------------------------------
  * CQuery
  *-------------------------------------------------------------------------
@@ -538,7 +544,42 @@ public: // just so the macro can easily set this
   static GUID   s_guid;
 };
 
+#endif
 
+//noagc
+
+template <class TQueryData, bool TfResultSet>
+class CQuery
+{
+public:
+	CQuery(void (pfDataReady)(CQuery*)) :
+		m_pargQueryData(NULL),
+		m_cRows(0),
+		m_cRowsAlloc(0)
+	{
+	}
+	~CQuery()
+	{
+	}
+	TQueryData * GetData()
+	{
+		return &m_cmd;
+	}
+	TQueryData * GetOutputRows(int * pcRows)
+	{
+		if (pcRows)
+			*pcRows = (int)m_cRows;
+		return m_pargQueryData;
+	}
+
+	TQueryData	  m_cmd;
+	TQueryData *  m_pargQueryData;
+	ULONG         m_cRows;
+	ULONG         m_cRowsAlloc;
+
+public: // just so the macro can easily set this  
+	static GUID   s_guid;
+};
 // ------------- MACROS USED FOR CREATING QUERIES -----------------
 
 // The queries get memmove'd, so NO objects that require special construction or external storage!
@@ -557,6 +598,12 @@ struct N##Data \
 }; \
 typedef class CQuery<N##Data, R> N;
 
-  
+//noagc
+#define BEGIN_COLUMN_MAP(s)
+#define END_COLUMN_MAP()
+#define BEGIN_PARAM_MAP(s)
+#define SET_PARAM_TYPE(s)
+#define END_PARAM_MAP()
+#define COLUMN_ENTRY_TYPE(s1,s2,s3)
 
 #endif 

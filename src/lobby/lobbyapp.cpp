@@ -57,15 +57,14 @@ bool CLobbyApp::ProcessMsgPump()
     TranslateMessage(&msg);
     switch (msg.message)
     {
-//Imago removed
-//#ifdef USECLUB
+#ifdef USECLUB
       case wm_sql_querydone:
       {
         CSQLQuery * pQuery = (CSQLQuery *) msg.lParam;
         pQuery->DataReady();
         break;
       }
-//#endif
+#endif
 
       case WM_QUIT:
         fQuit = true;

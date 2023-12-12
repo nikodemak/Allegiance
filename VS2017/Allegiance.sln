@@ -1,13 +1,21 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
+<<<<<<< HEAD
 VisualStudioVersion = 15.0.27130.2020
+=======
+VisualStudioVersion = 15.0.26430.12
+>>>>>>> kgwork
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Doc", "Doc", "{A20534F2-783B-48FF-95FE-FCEC104F86EA}"
 	ProjectSection(SolutionItems) = preProject
 		How To Run a Local Lobby and Server.txt = How To Run a Local Lobby and Server.txt
 		..\src\license.txt = ..\src\license.txt
+<<<<<<< HEAD
 		lobby config file.txt = lobby config file.txt
 		screens.txt = screens.txt
+=======
+		..\src\screens.txt = ..\src\screens.txt
+>>>>>>> kgwork
 		..\src\SolapReadme.txt = ..\src\SolapReadme.txt
 		..\src\todo.txt = ..\src\todo.txt
 	EndProjectSection
@@ -26,51 +34,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Includes", "Includes", "{CB
 		..\src\Inc\VerRes.rc = ..\src\Inc\VerRes.rc
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{29B93072-BF20-474E-B687-39BCF1292357}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Zone", "Zone", "{097F1EE3-FC08-412F-9A1A-1BD960818F05}"
 	ProjectSection(SolutionItems) = preProject
 		..\src\Zone\Medal.h = ..\src\Zone\Medal.h
 		..\src\Zone\Member.h = ..\src\Zone\Member.h
 		..\src\Zone\Squad.h = ..\src\Zone\Squad.h
 		..\src\Zone\Zone.h = ..\src\Zone\Zone.h
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TCAtl", "TCAtl", "{9F5D9D72-749F-4B6C-B134-416F54D3B7F6}"
-	ProjectSection(SolutionItems) = preProject
-		..\src\test\TCAtl\ComboBoxWindow.h = ..\src\test\TCAtl\ComboBoxWindow.h
-		..\src\test\TCAtl\ComModule.h = ..\src\test\TCAtl\ComModule.h
-		..\src\test\TCAtl\DualEventCall.h = ..\src\test\TCAtl\DualEventCall.h
-		..\src\test\TCAtl\DualEventsCP.h = ..\src\test\TCAtl\DualEventsCP.h
-		..\src\test\TCAtl\EditWindow.h = ..\src\test\TCAtl\EditWindow.h
-		..\src\test\TCAtl\ErrorFormatter.h = ..\src\test\TCAtl\ErrorFormatter.h
-		..\src\test\TCAtl\EventCall.h = ..\src\test\TCAtl\EventCall.h
-		..\src\test\TCAtl\EventsCP.h = ..\src\test\TCAtl\EventsCP.h
-		..\src\test\TCAtl\ExternalConnectionImpl.h = ..\src\test\TCAtl\ExternalConnectionImpl.h
-		..\src\test\TCAtl\InsidePropPage.cpp = ..\src\test\TCAtl\InsidePropPage.cpp
-		..\src\test\TCAtl\InsidePropPage.h = ..\src\test\TCAtl\InsidePropPage.h
-		..\src\test\TCAtl\Message.txt = ..\src\test\TCAtl\Message.txt
-		..\src\test\TCAtl\ObjectMap.h = ..\src\test\TCAtl\ObjectMap.h
-		..\src\test\TCAtl\PageEntry.h = ..\src\test\TCAtl\PageEntry.h
-		..\src\test\TCAtl\Persist.h = ..\src\test\TCAtl\Persist.h
-		..\src\test\TCAtl\PropertyClass.cpp = ..\src\test\TCAtl\PropertyClass.cpp
-		..\src\test\TCAtl\PropertyClass.h = ..\src\test\TCAtl\PropertyClass.h
-		..\src\test\TCAtl\PropertyPageBase.cpp = ..\src\test\TCAtl\PropertyPageBase.cpp
-		..\src\test\TCAtl\PropertyPageBase.h = ..\src\test\TCAtl\PropertyPageBase.h
-		..\src\test\TCAtl\PropertyPageImpl.h = ..\src\test\TCAtl\PropertyPageImpl.h
-		..\src\test\TCAtl\RangeValueImpl.h = ..\src\test\TCAtl\RangeValueImpl.h
-		..\src\test\TCAtl\RangeValueSlider.cpp = ..\src\test\TCAtl\RangeValueSlider.cpp
-		..\src\test\TCAtl\RangeValueSlider.h = ..\src\test\TCAtl\RangeValueSlider.h
-		..\src\test\TCAtl\SimpleNotifyReflector.h = ..\src\test\TCAtl\SimpleNotifyReflector.h
-		..\src\test\TCAtl\SimpleStream.h = ..\src\test\TCAtl\SimpleStream.h
-		..\src\test\TCAtl\SliderWindow.h = ..\src\test\TCAtl\SliderWindow.h
-		..\src\test\TCAtl\TCNullStreamImpl.cpp = ..\src\test\TCAtl\TCNullStreamImpl.cpp
-		..\src\test\TCAtl\TCNullStreamImpl.h = ..\src\test\TCAtl\TCNullStreamImpl.h
-		..\src\test\TCAtl\UserAcct.cpp = ..\src\test\TCAtl\UserAcct.cpp
-		..\src\test\TCAtl\UserAcct.h = ..\src\test\TCAtl\UserAcct.h
-		..\src\test\TCAtl\VersionInfoImpl.h = ..\src\test\TCAtl\VersionInfoImpl.h
-		..\src\test\TCAtl\VersionInfoImpl.idl = ..\src\test\TCAtl\VersionInfoImpl.idl
-		..\src\test\TCAtl\WindowThread.h = ..\src\test\TCAtl\WindowThread.h
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Zlib", "ZLibrary.vcxproj", "{21C70CA0-24C5-475B-8C47-6F0226A374B0}"
@@ -85,24 +54,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Utility", "Utility.vcxproj"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SoundEngine", "SoundEngine.vcxproj", "{F81BB9EE-DD86-415E-87E3-B60732EFD72F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mdlc", "mdlc.vcxproj", "{9F998B06-078F-4D01-BE26-0302B4772FE3}"
-	ProjectSection(ProjectDependencies) = postProject
-		{D619B179-7FC4-4DB6-9794-1D3C75717D15} = {D619B179-7FC4-4DB6-9794-1D3C75717D15}
-		{4F83287A-FF3C-4333-AD5F-C00B86CF0895} = {4F83287A-FF3C-4333-AD5F-C00B86CF0895}
-	EndProjectSection
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Igc", "Igc.vcxproj", "{BF99DCB8-4127-4403-82C9-72190C6ABF5F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ClintLib", "ClintLib.vcxproj", "{557CA42C-AA39-4C44-A998-0452F8C55851}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AGC", "AGC.vcxproj", "{1CBF6569-F71C-422A-81DD-8D30A736DB21}"
-	ProjectSection(ProjectDependencies) = postProject
-		{1695996C-F698-4509-BF5C-ADE10ADA67F9} = {1695996C-F698-4509-BF5C-ADE10ADA67F9}
-		{FA223B93-BCFB-48FA-B9DD-DB9DBBC8F314} = {FA223B93-BCFB-48FA-B9DD-DB9DBBC8F314}
-		{21C70CA0-24C5-475B-8C47-6F0226A374B0} = {21C70CA0-24C5-475B-8C47-6F0226A374B0}
-		{BF99DCB8-4127-4403-82C9-72190C6ABF5F} = {BF99DCB8-4127-4403-82C9-72190C6ABF5F}
-		{3853A2C5-F219-4C7D-841A-9407A7AEAE9D} = {3853A2C5-F219-4C7D-841A-9407A7AEAE9D}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Allegiance", "Allegiance.vcxproj", "{3702DB5A-C966-4133-824F-5958F4BF9BCF}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -120,7 +74,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Allegiance", "Allegiance.vc
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Server", "Server.vcxproj", "{05EAD557-56B0-4070-83F0-8A2B6FB9C54D}"
 	ProjectSection(ProjectDependencies) = postProject
-		{1695996C-F698-4509-BF5C-ADE10ADA67F9} = {1695996C-F698-4509-BF5C-ADE10ADA67F9}
 		{A8E7888A-84AC-485E-9FB2-35382C003E0B} = {A8E7888A-84AC-485E-9FB2-35382C003E0B}
 		{FA223B93-BCFB-48FA-B9DD-DB9DBBC8F314} = {FA223B93-BCFB-48FA-B9DD-DB9DBBC8F314}
 		{BF99DCB8-4127-4403-82C9-72190C6ABF5F} = {BF99DCB8-4127-4403-82C9-72190C6ABF5F}
@@ -134,24 +87,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lobby", "Lobby.vcxproj", "{
 		{3853A2C5-F219-4C7D-841A-9407A7AEAE9D} = {3853A2C5-F219-4C7D-841A-9407A7AEAE9D}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cvh", "cvh.vcxproj", "{3A317555-E8A3-494D-BF0D-CE93E40C920B}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sharemem", "sharemem.vcxproj", "{A8E7888A-84AC-485E-9FB2-35382C003E0B}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TCLib", "TCLib.vcxproj", "{1695996C-F698-4509-BF5C-ADE10ADA67F9}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mdledit", "mdledit.vcxproj", "{F150276A-D7D8-4C24-AA41-170A6F3D4CF9}"
-	ProjectSection(ProjectDependencies) = postProject
-		{D619B179-7FC4-4DB6-9794-1D3C75717D15} = {D619B179-7FC4-4DB6-9794-1D3C75717D15}
-		{4F83287A-FF3C-4333-AD5F-C00B86CF0895} = {4F83287A-FF3C-4333-AD5F-C00B86CF0895}
-		{21C70CA0-24C5-475B-8C47-6F0226A374B0} = {21C70CA0-24C5-475B-8C47-6F0226A374B0}
-	EndProjectSection
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AllSrvUI", "AllSrvUI.vcxproj", "{97B8370B-16BC-4A2F-A0FE-4BEEF2EAED42}"
-	ProjectSection(ProjectDependencies) = postProject
-		{05EAD557-56B0-4070-83F0-8A2B6FB9C54D} = {05EAD557-56B0-4070-83F0-8A2B6FB9C54D}
-		{1CBF6569-F71C-422A-81DD-8D30A736DB21} = {1CBF6569-F71C-422A-81DD-8D30A736DB21}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "training", "training.vcxproj", "{281F3AC6-FAD1-40F4-B798-F634A6162D39}"
 EndProject
@@ -159,6 +95,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Engine", "Engine.vcxproj", 
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "effect", "effect.vcxproj", "{4F83287A-FF3C-4333-AD5F-C00B86CF0895}"
 EndProject
+<<<<<<< HEAD
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Reloader", "Reloader.vcxproj", "{92B20638-9867-4DF3-B7EB-297352479E19}"
 	ProjectSection(ProjectDependencies) = postProject
 		{21C70CA0-24C5-475B-8C47-6F0226A374B0} = {21C70CA0-24C5-475B-8C47-6F0226A374B0}
@@ -236,6 +173,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PigJSDocGenerator", "..\src
 EndProject
 Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "Piglets", "..\src\Pigs\Piglets\Piglets.njsproj", "{ADA13B14-1D2E-4397-8DD4-1B3134D8CAE0}"
 EndProject
+=======
+>>>>>>> kgwork
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -354,6 +293,7 @@ Global
 		{F81BB9EE-DD86-415E-87E3-B60732EFD72F}.FZRetail|Any CPU.Build.0 = FZRetail|Win32
 		{F81BB9EE-DD86-415E-87E3-B60732EFD72F}.FZRetail|Win32.ActiveCfg = FZRetail|Win32
 		{F81BB9EE-DD86-415E-87E3-B60732EFD72F}.FZRetail|Win32.Build.0 = FZRetail|Win32
+<<<<<<< HEAD
 		{F81BB9EE-DD86-415E-87E3-B60732EFD72F}.FZRetail|x64.ActiveCfg = FZRetail|Win32
 		{F81BB9EE-DD86-415E-87E3-B60732EFD72F}.Release|Any CPU.ActiveCfg = FZRetail|Win32
 		{F81BB9EE-DD86-415E-87E3-B60732EFD72F}.Release|Any CPU.Build.0 = FZRetail|Win32
@@ -397,6 +337,8 @@ Global
 		{BF99DCB8-4127-4403-82C9-72190C6ABF5F}.Debug|x64.Build.0 = FZDebug-NoYellowComm|Win32
 		{BF99DCB8-4127-4403-82C9-72190C6ABF5F}.FZDebug|Any CPU.ActiveCfg = FZDebug|Win32
 		{BF99DCB8-4127-4403-82C9-72190C6ABF5F}.FZDebug|Any CPU.Build.0 = FZDebug|Win32
+=======
+>>>>>>> kgwork
 		{BF99DCB8-4127-4403-82C9-72190C6ABF5F}.FZDebug|Win32.ActiveCfg = FZDebug|Win32
 		{BF99DCB8-4127-4403-82C9-72190C6ABF5F}.FZDebug|Win32.Build.0 = FZDebug|Win32
 		{BF99DCB8-4127-4403-82C9-72190C6ABF5F}.FZDebug|x64.ActiveCfg = FZDebug|Win32
@@ -434,6 +376,7 @@ Global
 		{557CA42C-AA39-4C44-A998-0452F8C55851}.FZRetail|Any CPU.Build.0 = FZRetail|Win32
 		{557CA42C-AA39-4C44-A998-0452F8C55851}.FZRetail|Win32.ActiveCfg = FZRetail|Win32
 		{557CA42C-AA39-4C44-A998-0452F8C55851}.FZRetail|Win32.Build.0 = FZRetail|Win32
+<<<<<<< HEAD
 		{557CA42C-AA39-4C44-A998-0452F8C55851}.FZRetail|x64.ActiveCfg = FZRetail|Win32
 		{557CA42C-AA39-4C44-A998-0452F8C55851}.Release|Any CPU.ActiveCfg = FZDebug-NoYellowComm|Win32
 		{557CA42C-AA39-4C44-A998-0452F8C55851}.Release|Any CPU.Build.0 = FZDebug-NoYellowComm|Win32
@@ -477,6 +420,8 @@ Global
 		{3702DB5A-C966-4133-824F-5958F4BF9BCF}.Debug|x64.Build.0 = FZRetail|Win32
 		{3702DB5A-C966-4133-824F-5958F4BF9BCF}.FZDebug|Any CPU.ActiveCfg = FZDebug|Win32
 		{3702DB5A-C966-4133-824F-5958F4BF9BCF}.FZDebug|Any CPU.Build.0 = FZDebug|Win32
+=======
+>>>>>>> kgwork
 		{3702DB5A-C966-4133-824F-5958F4BF9BCF}.FZDebug|Win32.ActiveCfg = FZDebug|Win32
 		{3702DB5A-C966-4133-824F-5958F4BF9BCF}.FZDebug|Win32.Build.0 = FZDebug|Win32
 		{3702DB5A-C966-4133-824F-5958F4BF9BCF}.FZDebug|x64.ActiveCfg = FZDebug|Win32
@@ -546,6 +491,7 @@ Global
 		{181139DC-F4E7-446B-B8DD-C195691B34CA}.FZRetail|Any CPU.Build.0 = FZRetail|Win32
 		{181139DC-F4E7-446B-B8DD-C195691B34CA}.FZRetail|Win32.ActiveCfg = FZRetail|Win32
 		{181139DC-F4E7-446B-B8DD-C195691B34CA}.FZRetail|Win32.Build.0 = FZRetail|Win32
+<<<<<<< HEAD
 		{181139DC-F4E7-446B-B8DD-C195691B34CA}.FZRetail|x64.ActiveCfg = FZRetail|Win32
 		{181139DC-F4E7-446B-B8DD-C195691B34CA}.Release|Any CPU.ActiveCfg = FZRetail|Win32
 		{181139DC-F4E7-446B-B8DD-C195691B34CA}.Release|Any CPU.Build.0 = FZRetail|Win32
@@ -589,6 +535,8 @@ Global
 		{A8E7888A-84AC-485E-9FB2-35382C003E0B}.Debug|x64.Build.0 = FZRetail|Win32
 		{A8E7888A-84AC-485E-9FB2-35382C003E0B}.FZDebug|Any CPU.ActiveCfg = FZDebug|Win32
 		{A8E7888A-84AC-485E-9FB2-35382C003E0B}.FZDebug|Any CPU.Build.0 = FZDebug|Win32
+=======
+>>>>>>> kgwork
 		{A8E7888A-84AC-485E-9FB2-35382C003E0B}.FZDebug|Win32.ActiveCfg = FZDebug|Win32
 		{A8E7888A-84AC-485E-9FB2-35382C003E0B}.FZDebug|Win32.Build.0 = FZDebug|Win32
 		{A8E7888A-84AC-485E-9FB2-35382C003E0B}.FZDebug|x64.ActiveCfg = FZDebug|Win32
@@ -602,6 +550,7 @@ Global
 		{A8E7888A-84AC-485E-9FB2-35382C003E0B}.FZRetail|Any CPU.Build.0 = FZRetail|Win32
 		{A8E7888A-84AC-485E-9FB2-35382C003E0B}.FZRetail|Win32.ActiveCfg = FZRetail|Win32
 		{A8E7888A-84AC-485E-9FB2-35382C003E0B}.FZRetail|Win32.Build.0 = FZRetail|Win32
+<<<<<<< HEAD
 		{A8E7888A-84AC-485E-9FB2-35382C003E0B}.FZRetail|x64.ActiveCfg = FZRetail|Win32
 		{A8E7888A-84AC-485E-9FB2-35382C003E0B}.Release|Any CPU.ActiveCfg = FZRetail|Win32
 		{A8E7888A-84AC-485E-9FB2-35382C003E0B}.Release|Any CPU.Build.0 = FZRetail|Win32
@@ -701,6 +650,8 @@ Global
 		{281F3AC6-FAD1-40F4-B798-F634A6162D39}.Debug|x64.Build.0 = FZRetail|Win32
 		{281F3AC6-FAD1-40F4-B798-F634A6162D39}.FZDebug|Any CPU.ActiveCfg = FZDebug|Win32
 		{281F3AC6-FAD1-40F4-B798-F634A6162D39}.FZDebug|Any CPU.Build.0 = FZDebug|Win32
+=======
+>>>>>>> kgwork
 		{281F3AC6-FAD1-40F4-B798-F634A6162D39}.FZDebug|Win32.ActiveCfg = FZDebug|Win32
 		{281F3AC6-FAD1-40F4-B798-F634A6162D39}.FZDebug|Win32.Build.0 = FZDebug|Win32
 		{281F3AC6-FAD1-40F4-B798-F634A6162D39}.FZDebug|x64.ActiveCfg = FZDebug|Win32
@@ -770,6 +721,7 @@ Global
 		{4F83287A-FF3C-4333-AD5F-C00B86CF0895}.FZRetail|Any CPU.Build.0 = FZRetail|Win32
 		{4F83287A-FF3C-4333-AD5F-C00B86CF0895}.FZRetail|Win32.ActiveCfg = FZRetail|Win32
 		{4F83287A-FF3C-4333-AD5F-C00B86CF0895}.FZRetail|Win32.Build.0 = FZRetail|Win32
+<<<<<<< HEAD
 		{4F83287A-FF3C-4333-AD5F-C00B86CF0895}.FZRetail|x64.ActiveCfg = FZRetail|Win32
 		{4F83287A-FF3C-4333-AD5F-C00B86CF0895}.Release|Any CPU.ActiveCfg = FZRetail|Win32
 		{4F83287A-FF3C-4333-AD5F-C00B86CF0895}.Release|Any CPU.Build.0 = FZRetail|Win32
@@ -1102,12 +1054,15 @@ Global
 		{ADA13B14-1D2E-4397-8DD4-1B3134D8CAE0}.Release|Win32.Build.0 = Release|Any CPU
 		{ADA13B14-1D2E-4397-8DD4-1B3134D8CAE0}.Release|x64.ActiveCfg = Release|Any CPU
 		{ADA13B14-1D2E-4397-8DD4-1B3134D8CAE0}.Release|x64.Build.0 = Release|Any CPU
+=======
+>>>>>>> kgwork
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{097F1EE3-FC08-412F-9A1A-1BD960818F05} = {CB653E02-7BBE-42DD-B662-71792DFD0513}
+<<<<<<< HEAD
 		{9F5D9D72-749F-4B6C-B134-416F54D3B7F6} = {CB653E02-7BBE-42DD-B662-71792DFD0513}
 		{9F998B06-078F-4D01-BE26-0302B4772FE3} = {29B93072-BF20-474E-B687-39BCF1292357}
 		{3A317555-E8A3-494D-BF0D-CE93E40C920B} = {29B93072-BF20-474E-B687-39BCF1292357}
@@ -1127,5 +1082,7 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {50D5DBD5-BA52-4482-9F62-10968E5B27C6}
+=======
+>>>>>>> kgwork
 	EndGlobalSection
 EndGlobal

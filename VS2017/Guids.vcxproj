@@ -88,6 +88,7 @@
       <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Midl>
+<<<<<<< HEAD
       <AdditionalIncludeDirectories>$(Outdir)..\Guids;..\src\Inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DllDataFileName>%(Filename)_dlldata.c</DllDataFileName>
       <TypeLibraryName>$(IntDir)$(ProjectName)_%(Filename).tlb</TypeLibraryName>
@@ -115,13 +116,25 @@
       <AdditionalIncludeDirectories>$(Outdir)..\Guids;..\src\Inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DllDataFileName>%(Filename)_dlldata.c</DllDataFileName>
       <TypeLibraryName>$(IntDir)$(ProjectName)_%(Filename).tlb</TypeLibraryName>
+=======
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
+      <OutputDirectory>$(TargetDir)\</OutputDirectory>
+      <HeaderFileName>
+      </HeaderFileName>
+      <TypeLibraryName>
+      </TypeLibraryName>
+      <GenerateTypeLibrary>false</GenerateTypeLibrary>
+>>>>>>> kgwork
     </Midl>
     <PreLinkEvent>
-      <Command>lib /out:$(OutDir)AGCGuid.lib $(OutDir)AGCGuid.obj</Command>
+      <Command>
+      </Command>
     </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">
     <Midl>
+<<<<<<< HEAD
       <AdditionalIncludeDirectories>$(Outdir)..\Guids;..\src\Inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <GenerateTypeLibrary>true</GenerateTypeLibrary>
       <TypeLibraryName>$(IntDir)$(ProjectName)_%(Filename).tlb</TypeLibraryName>
@@ -129,6 +142,16 @@
       </OutputDirectory>
       <HeaderFileName>%(Filename)_h.h</HeaderFileName>
       <DllDataFileName>%(Filename)_dlldata.c</DllDataFileName>
+=======
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
+      <TypeLibraryName>
+      </TypeLibraryName>
+      <OutputDirectory>$(TargetDir)\</OutputDirectory>
+      <HeaderFileName>
+      </HeaderFileName>
+      <GenerateTypeLibrary>false</GenerateTypeLibrary>
+>>>>>>> kgwork
     </Midl>
     <ClCompile>
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
@@ -154,11 +177,15 @@
       <LinkTimeCodeGeneration>false</LinkTimeCodeGeneration>
     </Lib>
     <PreLinkEvent>
-      <Command>lib /out:$(OutDir)AGCGuid.lib $(OutDir)AGCGuid.obj</Command>
+      <Command>
+      </Command>
     </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\AGC\AGCGuid.c" />
+    <ClCompile Include="..\src\AGC\AGCGuid.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\src\guids\guids.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -171,6 +198,7 @@
       <HeaderFileName Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">$(TargetDir)%(FileName).h</HeaderFileName>
       <HeaderFileName Condition="'$(Configuration)|$(Platform)'=='FZDebug-NoYellowComm|Win32'">$(TargetDir)%(FileName).h</HeaderFileName>
       <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">$(TargetDir)AGC.tlb</TypeLibraryName>
+<<<<<<< HEAD
       <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='FZDebug-NoYellowComm|Win32'">$(TargetDir)AGC.tlb</TypeLibraryName>
       <OutputDirectory Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">$(TargetDir)</OutputDirectory>
       <HeaderFileName Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">$(TargetDir)%(FileName).h</HeaderFileName>
@@ -192,6 +220,17 @@
       <DllDataFileName Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">$(TargetDir)%(Filename)_dlldata.c</DllDataFileName>
       <DllDataFileName Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">$(TargetDir)%(Filename)_dlldata.c</DllDataFileName>
       <DllDataFileName Condition="'$(Configuration)|$(Platform)'=='FZDebug-NoYellowComm|Win32'">$(TargetDir)%(Filename)_dlldata.c</DllDataFileName>
+=======
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">true</ExcludedFromBuild>
+    </Midl>
+    <Midl Include="..\src\Inc\AGCIDL.idl">
+      <OutputDirectory Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">$(TargetDir)</OutputDirectory>
+      <HeaderFileName Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">%(FileName).h</HeaderFileName>
+      <TypeLibraryName Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">$(TargetDir)AGC.tlb</TypeLibraryName>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">true</ExcludedFromBuild>
+>>>>>>> kgwork
     </Midl>
   </ItemGroup>
   <ItemGroup>
@@ -205,9 +244,15 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">Transforming AGCEvents.xml through AGCEventsIDL.xsl</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='FZDebug-NoYellowComm|Win32'">Transforming AGCEvents.xml through AGCEventsIDL.xsl</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">$(OutDir)AGCEventsIDL.idl;%(Outputs)</Outputs>
+<<<<<<< HEAD
       <Outputs Condition="'$(Configuration)|$(Platform)'=='FZDebug-NoYellowComm|Win32'">$(OutDir)AGCEventsIDL.idl;%(Outputs)</Outputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">..\src\AGC\XMLXForm.js;..\src\AGC\AGCEvents.xml;%(AdditionalInputs)</AdditionalInputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='FZDebug-NoYellowComm|Win32'">..\src\AGC\XMLXForm.js;..\src\AGC\AGCEvents.xml;%(AdditionalInputs)</AdditionalInputs>
+=======
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">..\src\AGC\XMLXForm.js ..\src\AGC\AGCEvents.xml;%(AdditionalInputs)</AdditionalInputs>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">true</ExcludedFromBuild>
+>>>>>>> kgwork
     </CustomBuild>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

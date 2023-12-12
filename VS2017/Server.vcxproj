@@ -77,8 +77,13 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
+<<<<<<< HEAD
       <AdditionalIncludeDirectories>..\src\lib\AllegianceSecurity;..\src\lib\Steam;.\;..\src\guids;..\src\zlib;..\src\_Utility;..\src\Igc;..\src\Inc;..\src\AGC;..\src\test\Inc;..\src\lobby;..\src\Zone;.\$(IntDir)..\Igc;.\$(IntDir)..\FedSrv;.\$(IntDir)..\AGC;.\$(IntDir)..\Guids;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NOMINMAX;_TEST;ALLSRV_STANDALONE;FEDSRV;AGC_HOST;DEBUG;_DEBUG;_WIN32;_WINDOWS;_AFXDLL;_CONSOLE;WIN;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+=======
+      <AdditionalIncludeDirectories>.\;..\src\guids;..\src\zlib;..\src\_Utility;..\src\Igc;..\src\Inc;..\src\lobby;..\src\Zone;.\$(IntDir)..\Igc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>ALLSRV_STANDALONE;FEDSRV;AGC_HOST;DEBUG;_DEBUG;_WIN32;_WINDOWS;_AFXDLL;_CONSOLE;WIN;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+>>>>>>> kgwork
       <ExceptionHandling>Sync</ExceptionHandling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -96,7 +101,11 @@
       <PreprocessorDefinitions>FLAVOR=\"$(ConfigurationName)\";FEDMSG=\"FedMsg.rc\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
+<<<<<<< HEAD
       <AdditionalDependencies>..\src\Lib\AllegianceSecurity\AllegianceSecurityd.lib;..\src\Lib\Steam\steam_api.lib;Rpcrt4.lib;dbghelp.lib;$(OutDir)..\_utility\Utility.lib;$(OutDir)..\zlib\zlib.lib;$(OutDir)..\igc\igc.lib;$(OutDir)..\sharemem\sharemem.lib;$(OutDir)..\test\TCLib\TCLib.lib;$(OutDir)..\Guids\AGCGuid.lib;$(OutDir)..\Guids\guids.lib;winmm.lib;version.lib;urlmon.lib;..\src\Lib\DirectPlay\dxguid.lib;comctl32.lib;ws2_32.lib;delayimp.lib;wininet.lib;lz32.lib;netapi32.lib;comsupp.lib;oledb.lib;%(AdditionalDependencies)</AdditionalDependencies>
+=======
+      <AdditionalDependencies>$(OutDir)..\_utility\Utility.lib;$(OutDir)..\zlib\zlib.lib;$(OutDir)..\igc\igc.lib;$(OutDir)..\sharemem\sharemem.lib;$(OutDir)..\Guids\guids.lib;winmm.lib;version.lib;urlmon.lib;..\src\Lib\DirectPlay\dxguid.lib;..\src\Lib\appweb\appweb.lib;comctl32.lib;ws2_32.lib;delayimp.lib;wininet.lib;lz32.lib;netapi32.lib;comsupp.lib;oledb.lib;%(AdditionalDependencies)</AdditionalDependencies>
+>>>>>>> kgwork
       <SuppressStartupBanner>false</SuppressStartupBanner>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <DelayLoadDLLs>netapi32.dll;advapi32.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
@@ -126,8 +135,13 @@ xcopy $(ProjectDir)..\src\Inc\steam_appid.txt $(OutDir) /s /d /y</Command>
     </Midl>
     <ClCompile>
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+<<<<<<< HEAD
       <AdditionalIncludeDirectories>..\src\lib\AllegianceSecurity;..\src\lib\Steam;.\$(IntDir)..\Guids;.\;..\src\guids;..\src\zlib;..\src\_Utility;..\src\Igc;..\src\Inc;..\src\AGC;..\src\test\Inc;..\src\lobby;..\src\Zone;.\$(IntDir)..\Igc;.\$(IntDir)..\FedSrv;.\$(IntDir)..\AGC;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NOMINMAX;DEBUG;ALLSRV_STANDALONE;FEDSRV;AGC_HOST;SRVLOG;_WIN32;_WINDOWS;_AFXDLL;_CONSOLE;WIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+=======
+      <AdditionalIncludeDirectories>.\$(IntDir)..\Guids;.\;..\src\guids;..\src\zlib;..\src\_Utility;..\src\Igc;..\src\Inc;..\src\test\Inc;..\src\lobby;..\src\Zone;.\$(IntDir)..\Igc;.\$(IntDir)..\FedSrv;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>DEBUG;ALLSRV_STANDALONE;FEDSRV;AGC_HOST;SRVLOG;_WIN32;_WINDOWS;_AFXDLL;_CONSOLE;WIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+>>>>>>> kgwork
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
@@ -149,8 +163,13 @@ xcopy $(ProjectDir)..\src\Inc\steam_appid.txt $(OutDir) /s /d /y</Command>
       <PreprocessorDefinitions>FLAVOR=\"$(ConfigurationName)\";FEDMSG=\"FedMsg.rc\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
+<<<<<<< HEAD
       <AdditionalDependencies>..\src\Lib\AllegianceSecurity\AllegianceSecurity.lib;..\src\Lib\Steam\steam_api.lib;Rpcrt4.lib;dbghelp.lib;$(OutDir)..\_utility\Utility.lib;$(OutDir)..\zlib\zlib.lib;$(OutDir)..\igc\igc.lib;$(OutDir)..\sharemem\sharemem.lib;$(OutDir)..\test\TCLib\TCLib.lib;$(OutDir)..\Guids\AGCGuid.lib;$(OutDir)..\Guids\guids.lib;winmm.lib;version.lib;urlmon.lib;..\src\Lib\DirectPlay\dxguid.lib;comctl32.lib;ws2_32.lib;delayimp.lib;wininet.lib;lz32.lib;netapi32.lib;comsupp.lib;oledb.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+=======
+      <AdditionalDependencies>$(OutDir)..\_utility\Utility.lib;$(OutDir)..\zlib\zlib.lib;$(OutDir)..\igc\igc.lib;$(OutDir)..\sharemem\sharemem.lib;$(OutDir)..\Guids\guids.lib;winmm.lib;version.lib;urlmon.lib;..\src\Lib\DirectPlay\dxguid.lib;..\src\Lib\appweb\appweb.lib;comctl32.lib;ws2_32.lib;delayimp.lib;wininet.lib;lz32.lib;netapi32.lib;comsupp.lib;oledb.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\src\Inc\appWeb;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+>>>>>>> kgwork
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>msvcrtd;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <DelayLoadDLLs>netapi32.dll;advapi32.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
@@ -168,20 +187,16 @@ xcopy $(ProjectDir)..\src\Inc\steam_appid.txt $(OutDir) /s /d /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CustomBuild Include="..\src\FedSrv\fedmsg.msg">
-      <Command Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">mc "%(FullPath)" -r $(IntDir) -h $(IntDir)
-</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">$(IntDir)%(FileName).rc;%(Outputs)</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">mc "%(FullPath)" -r $(IntDir) -h $(IntDir)
-</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">$(IntDir)%(FileName).rc;%(Outputs)</Outputs>
-    </CustomBuild>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\src\FedSrv\AdminEventLoggerHook.cpp" />
-    <ClCompile Include="..\src\FedSrv\AdminGame.cpp" />
-    <ClCompile Include="..\src\FedSrv\AdminGames.cpp" />
+    <ClCompile Include="..\src\FedSrv\AdminGame.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\FedSrv\AdminGames.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\src\FedSrv\AdminServer.cpp" />
+<<<<<<< HEAD
     <ClCompile Include="..\src\FedSrv\AdminSession.cpp" />
     <ClCompile Include="..\src\FedSrv\AdminSessionClass.cpp" />
     <ClCompile Include="..\src\FedSrv\AdminSessionEventSink.cpp" />
@@ -193,6 +208,24 @@ xcopy $(ProjectDir)..\src\Inc\steam_appid.txt $(OutDir) /s /d /y</Command>
     <ClCompile Include="..\src\FedSrv\CSteamAchievements.cpp" />
     <ClCompile Include="..\src\FedSrv\CSteamUserGroupStatus.cpp" />
     <ClCompile Include="..\src\FedSrv\CSteamValidation.cpp" />
+=======
+    <ClCompile Include="..\src\FedSrv\AdminSession.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\FedSrv\AdminShip.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\FedSrv\AdminUser.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\src\FedSrv\AdminUsers.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+>>>>>>> kgwork
     <ClCompile Include="..\src\FedSrv\FedSrv.CPP" />
     <ClCompile Include="..\src\FedSrv\fscluster.cpp" />
     <ClCompile Include="..\src\FedSrv\fslobby.cpp" />
@@ -203,20 +236,8 @@ xcopy $(ProjectDir)..\src\Inc\steam_appid.txt $(OutDir) /s /d /y</Command>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\src\FedSrv\sqlhelp.cpp" />
-    <ClCompile Include="..\src\FedSrv\srvqguids.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\src\FedSrv\AdminGame.rgs" />
-    <None Include="..\src\FedSrv\AdminGames.rgs" />
-    <None Include="..\src\FedSrv\AdminServer.rgs" />
-    <None Include="..\src\FedSrv\AdminSession.rgs" />
-    <None Include="..\src\FedSrv\AdminShip.rgs" />
-    <None Include="..\src\FedSrv\AdminUser.rgs" />
-    <None Include="..\src\FedSrv\AdminUsers.rgs" />
-    <None Include="..\src\FedSrv\allsrv.rgs" />
-    <None Include="..\src\FedSrv\AllSrv32.rgs" />
-    <None Include="..\src\FedSrv\DPMono.rgs" />
     <None Include="..\src\FedSrv\fedsrv.ico" />
     <None Include="..\src\FedSrv\fedsrv.rc2" />
     <None Include="..\src\FedSrv\regini.txt" />
@@ -225,26 +246,39 @@ xcopy $(ProjectDir)..\src\Inc\steam_appid.txt $(OutDir) /s /d /y</Command>
     <ResourceCompile Include="..\src\FedSrv\FedSrv.RC" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\FedSrv\AdminEventLoggerHook.h" />
-    <ClInclude Include="..\src\FedSrv\AdminGame.h" />
-    <ClInclude Include="..\src\FedSrv\AdminGames.h" />
+    <ClInclude Include="..\src\FedSrv\AdminGame.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\src\FedSrv\AdminGames.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="..\src\FedSrv\AdminServer.h" />
-    <ClInclude Include="..\src\FedSrv\AdminSession.h" />
-    <ClInclude Include="..\src\FedSrv\AdminSessionClass.h" />
-    <ClInclude Include="..\src\FedSrv\AdminSessionEventSink.h" />
-    <ClInclude Include="..\src\FedSrv\AdminSessionSecure.h" />
-    <ClInclude Include="..\src\FedSrv\AdminSessionSecureHost.h" />
-    <ClInclude Include="..\src\FedSrv\AdminShip.h" />
-    <ClInclude Include="..\src\FedSrv\AdminUser.h" />
-    <ClInclude Include="..\src\FedSrv\AdminUsers.h" />
-    <ClInclude Include="..\src\FedSrv\AdminUtil.h" />
-    <ClInclude Include="..\src\FedSrv\allsrvmodule.h" />
-    <ClInclude Include="..\src\FedSrv\BitArray.h" />
+    <ClInclude Include="..\src\FedSrv\AdminSession.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\src\FedSrv\AdminShip.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\src\FedSrv\AdminUser.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\src\FedSrv\AdminUsers.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZDebug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FZRetail|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="..\src\FedSrv\counters.h" />
+<<<<<<< HEAD
     <ClInclude Include="..\src\FedSrv\CSteamAchievements.h" />
     <ClInclude Include="..\src\FedSrv\CSteamUserGroupStatus.h" />
     <ClInclude Include="..\src\FedSrv\CSteamValidation.h" />
     <ClInclude Include="..\src\FedSrv\dbgutil.h" />
+=======
+>>>>>>> kgwork
     <ClInclude Include="..\src\FedSrv\FedSrv.H" />
     <ClInclude Include="..\src\FedSrv\FedSrvApp.h" />
     <ClInclude Include="..\src\FedSrv\fedsrvsql.h" />
@@ -257,14 +291,17 @@ xcopy $(ProjectDir)..\src\Inc\steam_appid.txt $(OutDir) /s /d /y</Command>
     <ClInclude Include="..\src\FedSrv\srvqueries.h" />
   </ItemGroup>
   <ItemGroup>
-    <Midl Include="..\src\FedSrv\AllSrvModuleIDL.idl" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="Igc.vcxproj">
       <Project>{bf99dcb8-4127-4403-82c9-72190c6abf5f}</Project>
     </ProjectReference>
     <ProjectReference Include="sharemem.vcxproj">
       <Project>{a8e7888a-84ac-485e-9fb2-35382c003e0b}</Project>
+    </ProjectReference>
+    <ProjectReference Include="Utility.vcxproj">
+      <Project>{3853a2c5-f219-4c7d-841a-9407a7aeae9d}</Project>
+    </ProjectReference>
+    <ProjectReference Include="ZLibrary.vcxproj">
+      <Project>{21c70ca0-24c5-475b-8c47-6f0226a374b0}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

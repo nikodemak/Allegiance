@@ -10,13 +10,13 @@
 
 #include "pch.h"
 
-#include <atlbase.h>
+//noagc #include <atlbase.h>
 
 #ifdef _ATL_STATIC_REGISTRY
-#include <statreg.h>
+//#include <statreg.h>
 //#include <statreg.cpp> Imago removed (again)
 #endif
 
 //#include <atlimpl.cpp>
 
-#include <../TCAtl/UserAcct.cpp>
+// noagc #include <../TCAtl/UserAcct.cpp>

@@ -42,11 +42,7 @@
 #include <mmsystem.h> 
 
 // ZLib Includes
-#if !defined(ALLSRV_STANDALONE)
-  #define __MODULE__ "AllSrv"
-#else // !defined(ALLSRV_STANDALONE)
-  #define __MODULE__ "AllSrv"
-#endif // !defined(ALLSRV_STANDALONE)
+#define __MODULE__ "AllSrv"
 #include <guids.h>
 #include <zlib.h>
 
@@ -61,7 +57,7 @@
 #include "AllegianceSecurity.h"
 #include "CSteamAchievements.h"
 
-#include "..\AGC\GameParamData.h"
+#include <GameParamData.h>
 
 //#include <atlbase.h>
 //extern CServiceModule _Module;
@@ -71,16 +67,17 @@
 //#include <ZoneAuthDecrypt.h>
 
 // This also includes <atlbase.h> and <atlcom.h>
-#include "AllSrvModule.h"
+// kg- noagc#include "AllSrvModule.h"
+//#include <TCLib.h>
+//#include <..\TCLib\AutoHandle.h>
 
-#include <TCLib.h>
-#include <..\TCLib\AutoHandle.h>
-
-#include <TCAtl.h>
-#include <..\TCAtl\ObjectMap.h>
-#include <..\TCAtl\UserAcct.h>
-#include <..\TCLib\TCThread.h>
-
+//kg- noagc
+//#include <TCAtl.h>
+//#include <..\TCAtl\ObjectMap.h>
+//#include <..\TCAtl\UserAcct.h>
+//#include <..\TCLib\TCThread.h>
+#pragma message("fix me later")
+#include "..\zlib\AutoCriticalSection.h"
 
 #include "Zone.h"
 
@@ -89,7 +86,7 @@
 #include <MessagesLS.h>
 
 //#include "SWMRG.h" Imago removed (again)
-#include "BitArray.h"
+//#include "BitArray.h"
 #include "point.h"
 //#include "srvdbg.h"
 
@@ -98,8 +95,8 @@
 #include "counters.h"
 #include "srvqueries.h" // and allegdb.h
 
-#include "AllSrvModuleIDL.h" 
-#include "AdminUtil.h" 
+//kg- noagc #include "AllSrvModuleIDL.h" 
+//#include "AdminUtil.h" 
 #include "fsside.h"
 #include "fscluster.h"
 #include "fsmission.h"
@@ -114,17 +111,17 @@
 extern Global g;
 #include "fsship.h"
 
-#include "AdminGame.h"
-#include "AdminGames.h"
-#include "AdminSession.h"
-
-
-#include "AdminUser.h"
-#include "AdminUsers.h"
+// new API: we will revive/rebuild as needed
+//#include "AdminGame.h"
+//#include "AdminGames.h"
+//#include "AdminSession.h"
+//#include "AdminUser.h"
+//#include "AdminUsers.h"
 #include "AdminServer.h"
-#include "AdminShip.h"
+//#include "AdminShip.h"
 
-#include "dbgutil.h"
+//noagc - is this used?
+//#include "dbgutil.h"
 
 
 #include "regkey.h"
@@ -139,9 +136,8 @@ extern Global g;
 // indirectly by <TCAtl.h>.
 //
 #include <windowsx.h> // For GlobalAllocPtr and GlobalFreePtr
-
-
 /////////////////////////////////////////////////////////////////////////////
+
 
 #endif // _FEDSRV_PCH_
 

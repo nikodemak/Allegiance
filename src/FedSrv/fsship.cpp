@@ -621,12 +621,13 @@ void CFSShip::CaptureStation(IstationIGC * pstation)
   // TE: Fire AGCEvent when base is captured
   CFSMission * pfsMission = this->GetMission();
   LPCSTR pszContext = pfsMission->GetIGCMission() ? pfsMission->GetIGCMission()->GetContextName() : NULL;
-  _AGCModule.TriggerContextEvent(NULL, EventID_StationChangesSides, pszContext,
-    GetName(), GetShipID(), pside->GetUniqueID(), -1, 4,
-	"GameID"	 , VT_I4   , pfsMission->GetMissionID(),
-	"OldTeam"    , VT_I4   , psideOld->GetUniqueID(),
-    "OldTeamName", VT_LPSTR, psideOld->GetName(),
-	"StationName", VT_LPSTR, pstation->GetName());
+  // noagc
+  // _AGCModule.TriggerContextEvent(NULL, EventID_StationChangesSides, pszContext,
+  //   GetName(), GetShipID(), pside->GetUniqueID(), -1, 4,
+	//"GameID"	 , VT_I4   , pfsMission->GetMissionID(),
+	//"OldTeam"    , VT_I4   , psideOld->GetUniqueID(),
+  //   "OldTeamName", VT_LPSTR, psideOld->GetName(),
+  //"StationName", VT_LPSTR, pstation->GetName());
   // TE end
 
 	// yp: Add event for players who were involved in the capture of an enemy base.
@@ -955,11 +956,12 @@ CFSPlayer::CFSPlayer(CFMConnection * pcnxn, int characterID, const char * szCDKe
 
   ShipID    shipID = pShip->GetObjectID();
 
-  LPCSTR pszContext = pShip->GetMission()->GetContextName();
+  //noagc
+  //LPCSTR pszContext = pShip->GetMission()->GetContextName();
 
-  _AGCModule.TriggerContextEvent(NULL, EventID_LoginServer, pszContext,
-    pShip->GetName(), GetConnection()->GetID(), -1, -1, 1,
-    "User", VT_I4, GetConnection()->GetID());
+  //_AGCModule.TriggerContextEvent(NULL, EventID_LoginServer, pszContext,
+  //  pShip->GetName(), GetConnection()->GetID(), -1, -1, 1,
+  //  "User", VT_I4, GetConnection()->GetID());
 }
 
 
@@ -979,11 +981,11 @@ CFSPlayer::~CFSPlayer()
   */
   m_pcnxn->SetPrivateData(0); // disconnect two-way link between connection and this
 
-  LPCSTR pszContext = GetIGCShip() ? GetIGCShip()->GetMission()->GetContextName() : NULL;
-
-  _AGCModule.TriggerContextEvent(NULL, EventID_LogoutServer, pszContext,
-    GetName(), GetConnection()->GetID(), -1, -1, 1,
-    "User", VT_I4, GetConnection()->GetID());
+  // noagc
+  //LPCSTR pszContext = GetIGCShip() ? GetIGCShip()->GetMission()->GetContextName() : NULL;
+  //_AGCModule.TriggerContextEvent(NULL, EventID_LogoutServer, pszContext,
+  //  GetName(), GetConnection()->GetID(), -1, -1, 1,
+  //  "User", VT_I4, GetConnection()->GetID());
 
   ShipID shipID = GetShipID();
   if (NULL != g.pServerCounters)
@@ -1087,28 +1089,31 @@ void CFSPlayer::SetSide(CFSMission * pfsMission, IsideIGC * pside)
     {
         const char * szName = pfsmOld->GetIGCMission() && pfsmOld->GetIGCMission()->GetMissionParams() ? pfsmOld->GetIGCMission()->GetMissionParams()->strGameName : "?" ;
         int id = pfsmOld->GetIGCMission() ? pfsmOld->GetIGCMission()->GetMissionID() : -1;
-        long idShip = (AGC_AdminUser << 16) | CAdminUser::DetermineID(this->GetPlayer());
+		//noagc
 
-        LPCSTR pszContext = pfsmOld->GetIGCMission() ? pfsmOld->GetIGCMission()->GetContextName() : NULL;
+   //		long idShip = (AGC_AdminUser << 16) | CAdminUser::DetermineID(this->GetPlayer());
 
-      _AGCModule.TriggerContextEvent(NULL, EventID_LogoutGame, pszContext,
-        GetName(), idShip, -1, -1, 2,
-        "GameID",   VT_I4,    id,
-        "GameName", VT_LPSTR, szName);
+   //     LPCSTR pszContext = pfsmOld->GetIGCMission() ? pfsmOld->GetIGCMission()->GetContextName() : NULL;
+
+   //     _AGCModule.TriggerContextEvent(NULL, EventID_LogoutGame, pszContext,
+			//GetName(), idShip, -1, -1, 2,
+			//"GameID",   VT_I4,    id,
+			//"GameName", VT_LPSTR, szName);
     }
 
     if (pfsMission) // if joining a game
     {
         const char * szName = pfsMission->GetIGCMission() && pfsMission->GetIGCMission()->GetMissionParams() ? pfsMission->GetIGCMission()->GetMissionParams()->strGameName : "?" ;
         int id = pfsMission->GetIGCMission() ? pfsMission->GetIGCMission()->GetMissionID() : -1;
-        long idShip = (AGC_AdminUser << 16) | CAdminUser::DetermineID(this->GetPlayer());
+	  //noagc
+      //  long idShip = (AGC_AdminUser << 16) | CAdminUser::DetermineID(this->GetPlayer());
 
-        LPCSTR pszContext = pfsMission->GetIGCMission() ? pfsMission->GetIGCMission()->GetContextName() : NULL;
+      //  LPCSTR pszContext = pfsMission->GetIGCMission() ? pfsMission->GetIGCMission()->GetContextName() : NULL;
 
-      _AGCModule.TriggerContextEvent(NULL, EventID_LoginGame, pszContext,
-        GetName(), idShip, -1, -1, 2,
-        "GameID",   VT_I4,    id,
-        "GameName", VT_LPSTR, szName);
+      //_AGCModule.TriggerContextEvent(NULL, EventID_LoginGame, pszContext,
+      //  GetName(), idShip, -1, -1, 2,
+      //  "GameID",   VT_I4,    id,
+      //  "GameName", VT_LPSTR, szName);
     }
   }
 
@@ -1121,7 +1126,7 @@ void CFSPlayer::SetSide(CFSMission * pfsMission, IsideIGC * pside)
 	  if ( (psideOld && psideOld->GetObjectID() == SIDE_TEAMLOBBY) || (pside && pside->GetObjectID() == SIDE_TEAMLOBBY))
 		 if (pfsMission)
 			 pfsMission->SetLobbyIsDirty();
-
+/* nogac
     long idShip = (AGC_AdminUser << 16) | CAdminUser::DetermineID(this->GetPlayer());
 
     if (psideOld ) // if leaving a side
@@ -1141,7 +1146,7 @@ void CFSPlayer::SetSide(CFSMission * pfsMission, IsideIGC * pside)
       //  "TeamName", VT_LPSTR, psideOld->GetName());
 	}
 
-    if (pside) // if joining a side
+	if (pside) // if joining a side
     {
         // TE Modify JoinTeam AGCEvent to include MissionID, and change UniqueID to ObjectID
 		_AGCModule.TriggerEvent(NULL, EventID_JoinTeam, GetName(), idShip,
@@ -1156,6 +1161,7 @@ void CFSPlayer::SetSide(CFSMission * pfsMission, IsideIGC * pside)
         //"Team"    , VT_I4   , pside->GetUniqueID(),
         //"TeamName", VT_LPSTR, pside->GetName());
     }
+*/
   }
 }
 
