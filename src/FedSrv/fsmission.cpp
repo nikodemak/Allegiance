@@ -2735,14 +2735,17 @@ void CFSMission::MakeOverrideTechBits()
 // Loran - make a POST request with JSON data to export game data
 void POSTGameStats(std::string& url, std::string& postData)
 {
-    std::string host = url.substr(0, url.find_first_of("/", 8));
-    std::string path = url.substr(url.find_first_of("/", 8));
-    httplib::Client client(host);
+    try {
+        std::string host = url.substr(0, url.find_first_of("/", 8));
+        std::string path = url.substr(url.find_first_of("/", 8));
+        httplib::Client client(host);
 
-    httplib::Result result = client.Post(path, postData, "application/json");
-    int response = result->status;
-
-    debugf("Game Stats Update(%ld): %s\n", response, url);
+        httplib::Result result = client.Post(path, postData, "application/json");
+        int response = result->status;
+        debugf("Game Stats Update(%ld): %s\n", response, url);
+    } catch(...) {
+        debugf("Game Stats Update Exception, check if url is valid (e.g. begins with http://)");
+    }
 }
 
 /*-------------------------------------------------------------------------
@@ -2811,8 +2814,10 @@ void CFSMission::RecordGameResults()
       RecordTeamResults(pside, &jGame);
     }
 
-    std::thread UpdateGameStatsThread(POSTGameStats, std::string(g.szGameStatsUpdateUrl), jGame.dump());
-    UpdateGameStatsThread.detach();
+    if (strlen(g.szGameStatsUpdateUrl) > 0) { //check if registry was set
+        std::thread UpdateGameStatsThread(POSTGameStats, std::string(g.szGameStatsUpdateUrl), jGame.dump());
+        UpdateGameStatsThread.detach();
+    }
 
 	// BT - STEAM - players who are not currently connected to the mission do not have initialized CSteamAchievement objects
 	// available, so skipping this one for now. Players who disconnect before the end of the game will not get any stats recorded.
